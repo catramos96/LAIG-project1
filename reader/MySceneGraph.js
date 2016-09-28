@@ -65,6 +65,7 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 	console.log("Globals read from file: {Root=" + this.root + ", axis_length=" + this.axis_length +"}");
 
 	//chama o parseViews ?
+	var error = this.parseScene(rootElement);
 
 };
 	
@@ -99,16 +100,18 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		this.from_list = [];
 		
 		//vai buscar os filhos
-		var temp = tempList[0].children[i];
+		var temp = tempList[0].children[0];
+		this.from_list[0] = temp.attributes.getNamedItem("x").value;
+		this.from_list[1] = temp.attributes.getNamedItem("y").value;
+		this.from_list[2] = temp.attributes.getNamedItem("z").value;
 
-
-		this.to_list[0]=e.attributes.getNamedItem("x").value;
+		temp = tempList[0].children[1];
+		this.to_list[0] = temp.attributes.getNamedItem("x").value;
+		this.to_list[1] = temp.attributes.getNamedItem("y").value;
+		this.to_list[2] = temp.attributes.getNamedItem("z").value;
 
 		//fazer console Log
 	};
-
-
-
 
 }
 
