@@ -1,4 +1,6 @@
-
+/*
+ * Scene Graph
+ */
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -8,6 +10,9 @@ function MySceneGraph(filename, scene) {
 		
 	// File reading 
 	this.reader = new CGFXMLreader();
+
+	//parameters
+	this.globals = new MyGlobals(scene);
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -27,7 +32,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	var rootElement = this.reader.xmlDoc.documentElement; //neste caso, dsx
 	
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseScene(rootElement);
+	var error = this.parseGlobals(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -41,13 +46,10 @@ MySceneGraph.prototype.onXMLReady=function()
 };
 
 
-
 /*
  * Example of method that parses elements of one block and stores information in a specific data structure
  */
-MySceneGraph.prototype.parseScene = function(rootElement) {
-	
-	// ------ scene ----- //
+MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
 	var scene_elems =  rootElement.getElementsByTagName('scene');
 	if (scene_elems == null) {
@@ -59,13 +61,10 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 
 	// various examples of different types of access
 	var scene = scene_elems[0];
-	this.root = this.reader.getString(scene, 'root');
-	this.axis_length = this.reader.getFloat(scene, 'axis_length');
+	this.globals.root = this.reader.getString(scene, 'root');
+	this.globals.axis_length = this.reader.getFloat(scene, 'axis_length');
 
 	console.log("Globals read from file: {Root=" + this.root + ", axis_length=" + this.axis_length +"}");
-
-	//chama o parseViews ?
-	var error = this.parseScene(rootElement);
 
 };
 	
