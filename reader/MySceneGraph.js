@@ -1,5 +1,7 @@
 /*
  * Scene Graph
+ *
+ * Pensar numa maneira de por a perspetiva default
  */
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
@@ -12,8 +14,9 @@ function MySceneGraph(filename, scene) {
 	this.reader = new CGFXMLreader();
 
 	//parameters
-	this.globals = new MyGlobals(scene);
-
+	this.globals = new MyGlobals(scene);	//variaveis globais do grafo
+	this.perspectiveList = [];  			//lista com as diversas perspetivas
+	
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -33,6 +36,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	
 	// Here should go the calls for different functions to parse the various blocks
 	var error = this.parseGlobals(rootElement);
+	var error1 = this.parseViews(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -47,7 +51,7 @@ MySceneGraph.prototype.onXMLReady=function()
 
 
 /*
- * Example of method that parses elements of one block and stores information in a specific data structure
+ * Method that parses elements of one block (Scene) and stores information in a specific data structure (MyGlobals)
  */
 MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
@@ -67,10 +71,11 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 	console.log("Globals read from file: {Root=" + this.root + ", axis_length=" + this.axis_length +"}");
 
 };
-	
-MySceneGraph.prototype.parseViews = function(rootElement) {
 
-	//--------- views ---------- //
+/*
+ * Method that parses elements of one block (Views) and stores information in a specific data structure (perspectiveList)
+ */
+MySceneGraph.prototype.parseViews = function(rootElement) {
 
 	var views_elems = rootElement.getElementsByTagName('views'); 
 
@@ -78,39 +83,51 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		return "views is missing.";
 	}
 
-	this.default = this.reader.getString(scene, 'default');
+	//this.default = this.reader.getString(scene, 'default'); FALTA ISTO
 
-	var nnodes = views_elems[0].children.length; // vai ser um porque só existe uma perspetiva, por agora
+	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
 
-	for (var i=0; i< nnodes; i++)
+	//percorre cada perspetiva
+	for (var i=0; i < nnodes; i++)
 	{
-		var e = views_elems[0].children[i]; // varias perspetivas
-		this.map = [];
+		var e = views_elems[0].children[i]; // informacao sobre a perspetiva
+
+		var p = new MyPerspective(scene);
 
 		// process each element and store its information
-		this.map["id"] = e.attributes.getNamedItem("id").value;
-		this.map["near"] = e.attributes.getNamedItem("near").value;
-		this.map["far"] = e.attributes.getNamedItem("far").value;
-		this.map["angle"] = e.attributes.getNamedItem("angle").value;
+		p.id = e.attributes.getNamedItem("id").value;
+		p.near = e.attributes.getNamedItem("near").value;
+		p.far = e.attributes.getNamedItem("far").value;
+		p.angle = e.attributes.getNamedItem("angle").value;
 
-		// ler os filhos 'from' e 'to' guardados em listas
 
-		this.to_list = [];
-		this.from_list = [];
+		// ler os filhos 'from' e 'to'
+
+		var toList = [];
+		var fromList = [];
 		
-		//vai buscar os filhos
+		//vai buscar os valores dos filhos
 		var temp = tempList[0].children[0];
-		this.from_list[0] = temp.attributes.getNamedItem("x").value;
-		this.from_list[1] = temp.attributes.getNamedItem("y").value;
-		this.from_list[2] = temp.attributes.getNamedItem("z").value;
+		fromList[0] = temp.attributes.getNamedItem("x").value;
+		fromList[1] = temp.attributes.getNamedItem("y").value;
+		fromList[2] = temp.attributes.getNamedItem("z").value;
 
 		temp = tempList[0].children[1];
-		this.to_list[0] = temp.attributes.getNamedItem("x").value;
-		this.to_list[1] = temp.attributes.getNamedItem("y").value;
-		this.to_list[2] = temp.attributes.getNamedItem("z").value;
+		toList[0] = temp.attributes.getNamedItem("x").value;
+		toList[1] = temp.attributes.getNamedItem("y").value;
+		toList[2] = temp.attributes.getNamedItem("z").value;
+
+		//coloca-os na perspetiva
+		p.toList = toList;
+		p.fromList = fromList;
+
+		//adiciona a perspetiva a lista de perspetivas
+		this.perspectiveList[i] = p;
 
 		//fazer console Log
 	};
+
+	//fazer console Log
 
 }
 
