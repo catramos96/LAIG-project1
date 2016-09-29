@@ -6,14 +6,23 @@
 
     <!-- varias vistas, com uma perspetiva default. -->
     <!-- v/V para mudar para a proxima da lista (da ultima volta para a primeira) -->
-    
+
     <views default="perspective1" >
     		
         <perspective id="perspective1" near="0.1" far="1000" angle="60">
+
             <from x="0" y="5" z="15" />
             <to x="0" y="0" z="0" />
+            
         </perspective>
         
     </views>
+
+    <illumination doublesided="1" local="1" >
+    
+        <ambient r="0.2" g="0.2" b="0.2" a="1" />
+        <background r="0" g="0" b="0" a="0.5" />					
+        
+    </illumination>
 
 </dsx>

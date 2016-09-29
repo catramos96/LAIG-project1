@@ -8,6 +8,6 @@ function MyPerspective(scene) {
  	this.near = 0;
  	this.far = 0;
  	this.angle = 0;
- 	this.toList = [];
- 	this.fromList = [];
+ 	this.toPoint = new MyPoint(scene);
+ 	this.fromPoint = new MyPoint(scene);
 }

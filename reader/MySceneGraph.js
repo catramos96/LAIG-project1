@@ -94,6 +94,8 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		var perspective = new MyPerspective(this.scene);
 
+		var ppp = new MyPoint(this.scene);
+
 		// process each element and store its information
 		perspective.id = tempP.attributes.getNamedItem("id").value;
 		perspective.near = tempP.attributes.getNamedItem("near").value;
@@ -103,23 +105,24 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		// ler os filhos 'from' e 'to'
 
-		var toList = [];
-		var fromList = [];
+		var a,b,c;
 		
-		//vai buscar os valores dos filhos
+		//vai buscar os valores dos filhos e coloca-os na perspetiva
 		var elem = tempP.children[0];
-		fromList[0] = elem.attributes.getNamedItem("x").value;
-		fromList[1] = elem.attributes.getNamedItem("y").value;
-		fromList[2] = elem.attributes.getNamedItem("z").value;
-
-		elem = tempP.children[1];
-		toList[0] = elem.attributes.getNamedItem("x").value;
-		toList[1] = elem.attributes.getNamedItem("y").value;
-		toList[2] = elem.attributes.getNamedItem("z").value;
+		perspective.fromPoint.x = elem.attributes.getNamedItem("x").value;
+		perspective.fromPoint.y = elem.attributes.getNamedItem("y").value;
+		perspective.fromPoint.z = elem.attributes.getNamedItem("z").value;
 
 		//coloca-os na perspetiva
-		perspective.toList = toList;
-		perspective.fromList = fromList;
+		//perspective.fromPoint.setCoordinates(a,b,c);
+
+		elem = tempP.children[1];
+		perspective.toPoint.x = elem.attributes.getNamedItem("x").value;
+		perspective.toPoint.y = elem.attributes.getNamedItem("y").value;
+		perspective.toPoint.z = elem.attributes.getNamedItem("z").value;
+
+		//coloca-os na perspetiva
+		//perspective.toPoint.setCoordinates(a,b,c);
 
 		//adiciona a perspetiva a lista de perspetivas
 		this.perspectiveList[i] = perspective;
@@ -129,12 +132,12 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	{
 		console.log("Perspetive "+i+"{id=" + this.perspectiveList[i].id + ", near=" + this.perspectiveList[i].near + 
 		", far=" + this.perspectiveList[i].far+ ", angle=" + this.perspectiveList[i].angle + 
-		", to[x]=" + this.perspectiveList[i].toList[0]+ 
-		", to[y]=" + this.perspectiveList[i].toList[1]+
-		", to[z]=" + this.perspectiveList[i].toList[2]+
-		", from[x]=" + this.perspectiveList[i].fromList[0]+
-		", from[y]=" + this.perspectiveList[i].fromList[1]+
-		", from[z]=" + this.perspectiveList[i].fromList[2]+"}");
+		", to[x]=" + this.perspectiveList[i].toPoint.x+ 
+		", to[y]=" + this.perspectiveList[i].toPoint.y+
+		", to[z]=" + this.perspectiveList[i].toPoint.z+
+		", from[x]=" + this.perspectiveList[i].fromPoint.x+
+		", from[y]=" + this.perspectiveList[i].fromPoint.y+
+		", from[z]=" + this.perspectiveList[i].fromPoint.z+"}");
 	}
 
 }
