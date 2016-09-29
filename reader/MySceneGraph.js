@@ -16,7 +16,6 @@ function MySceneGraph(filename, scene) {
 	//parameters
 	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
 	this.perspectiveList = [];  			//lista com as diversas perspetivas
-	this.illumination = new MyIllumination(this.scene);
 	
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -80,9 +79,9 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
 	// various examples of different types of access
 	var scene = scene_elems[0];
-	this.globals.root = this.reader.getString(scene, 'root');
-	this.globals.axis_length = this.reader.getFloat(scene, 'axis_length');
-
+	this.globals.setRoot(this.reader.getString(scene, 'root'));
+	this.globals.setAxisLength(this.reader.getFloat(scene, 'axis_length'));
+	
 	console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
 };
 
@@ -112,35 +111,32 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		var perspective = new MyPerspective(this.scene);
 
-		var ppp = new MyPoint(this.scene);
-
 		// process each element and store its information
-		perspective.id = tempP.attributes.getNamedItem("id").value;
-		perspective.near = tempP.attributes.getNamedItem("near").value;
-		perspective.far = tempP.attributes.getNamedItem("far").value;
-		perspective.angle = tempP.attributes.getNamedItem("angle").value;
-
+		perspective.setId(tempP.attributes.getNamedItem("id").value);
+		perspective.setNear(tempP.attributes.getNamedItem("near").value);
+		perspective.setFar(tempP.attributes.getNamedItem("far").value);
+		perspective.setAngle(tempP.attributes.getNamedItem("angle").value);
 
 		// ler os filhos 'from' e 'to'
-
-		var a,b,c;
-		
 		//vai buscar os valores dos filhos e coloca-os na perspetiva
+		var a,b,c;
 		var elem = tempP.children[0];
-		perspective.fromPoint.x = elem.attributes.getNamedItem("x").value;
-		perspective.fromPoint.y = elem.attributes.getNamedItem("y").value;
-		perspective.fromPoint.z = elem.attributes.getNamedItem("z").value;
+
+		a = elem.attributes.getNamedItem("x").value;
+		b = elem.attributes.getNamedItem("y").value;
+		c = elem.attributes.getNamedItem("z").value;
 
 		//coloca-os na perspetiva
-		//perspective.fromPoint.setCoordinates(a,b,c);
+		perspective.setFromPoint(new MyPoint(a,b,c));
 
 		elem = tempP.children[1];
-		perspective.toPoint.x = elem.attributes.getNamedItem("x").value;
-		perspective.toPoint.y = elem.attributes.getNamedItem("y").value;
-		perspective.toPoint.z = elem.attributes.getNamedItem("z").value;
+
+		a = elem.attributes.getNamedItem("x").value;
+		b = elem.attributes.getNamedItem("y").value;
+		c = elem.attributes.getNamedItem("z").value;
 
 		//coloca-os na perspetiva
-		//perspective.toPoint.setCoordinates(a,b,c);
+		perspective.setToPoint(new MyPoint(a,b,c));
 
 		//adiciona a perspetiva a lista de perspetivas
 		this.perspectiveList[i] = perspective;
@@ -175,8 +171,9 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	// various examples of different types of access
 	var illumination = illumination_elems[0];
-	this.illumination.doublesided = this.reader.getFloat(illumination, 'doublesided');
-	this.illumination.local = this.reader.getFloat(illumination, 'local');
+
+	this.globals.setDoublesided(this.reader.getFloat(illumination, 'doublesided'));
+	this.globals.setLocal(this.reader.getFloat(illumination, 'local'));
 
 	//obter componentes de ambiente e background
 	var nodes = illumination_elems[0].children.length;
@@ -187,26 +184,30 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	//obter iluminacao ambiente
 	var temp = illumination_elems[0].children[0];
-	var ambient = new MyColor(this.scene);
-	ambient.r = temp.attributes.getNamedItem("r").value;
-	ambient.g = temp.attributes.getNamedItem("g").value;
-	ambient.b = temp.attributes.getNamedItem("b").value;
-	ambient.a = temp.attributes.getNamedItem("a").value;
+	var a,b,c,d;
+
+	a = temp.attributes.getNamedItem("r").value;
+	b = temp.attributes.getNamedItem("g").value;
+	c = temp.attributes.getNamedItem("b").value;
+	d = temp.attributes.getNamedItem("a").value;
+
+	var ambient = new MyColor(a,b,c,d);
+	this.globals.setAmbient(ambient);
 
 	//obter iluminacao local
 	temp = illumination_elems[0].children[1];
-	var background = new MyColor(this.scene);
-	background.r = temp.attributes.getNamedItem("r").value;
-	background.g = temp.attributes.getNamedItem("g").value;
-	background.b = temp.attributes.getNamedItem("b").value;
-	background.a = temp.attributes.getNamedItem("a").value;
 
-	this.illumination.ambient = ambient;
-	this.illumination.background = background;
+	a = temp.attributes.getNamedItem("r").value;
+	b = temp.attributes.getNamedItem("g").value;
+	c = temp.attributes.getNamedItem("b").value;
+	d = temp.attributes.getNamedItem("a").value;
+
+	var background = new MyColor(a,b,c,d);
+	this.globals.setBackground(background);
 	
-	console.log("Illumination read from file: {Doublesided=" + this.illumination.doublesided + ", local=" + this.illumination.local +"}");
-	console.log("Ambient r" + this.illumination.ambient.r + ", Ambient g" + this.illumination.ambient.r + ", Ambient b" + this.illumination.ambient.b + ", Ambient a" + this.illumination.ambient.a + "}");
-	console.log("background r" + this.illumination.background.r + ", background g" + this.illumination.background.r + ", Ambient b" + this.illumination.background.b + ", background a" + this.illumination.background.a + "}");
+	console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
+	console.log("Ambient r" + this.globals.colorAmbient.r + ", Ambient g" + this.globals.colorAmbient.g + ", Ambient b" + this.globals.colorAmbient.b + ", Ambient a" + this.globals.colorAmbient.a + "}");
+	console.log("background r" + this.globals.colorBackground.r + ", background g" + this.globals.colorBackground.g + ", Ambient b" + this.globals.colorBackground.b + ", background a" + this.globals.colorBackground.a + "}");
 
 };
 
