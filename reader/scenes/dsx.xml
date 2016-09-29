@@ -1,37 +1,15 @@
-<!-- Os comentarios devem ter espacos no inicio e no fim, a -->
-<!-- separar dos hifens -->
-<!-- Nao devem ser usados caracteres especiais (p.ex. acentos) -->
-<!-- Os comentarios devem ter espacos no inicio e no fim, a -->
-<!-- separar dos hifens -->
-<!-- Nao devem ser usados caracteres especiais (p.ex. acentos) -->
-<!-- Todas as tags e atributos sao obrigatorios, exceto onde for -->
-<!-- referido o contrario -->
-
-<!-- Na descricao abaixo, os simbolos utilizados tem o seguinte significado: -->
-    <!-- ii: integer value -->
-    <!-- ff: float value -->
-    <!-- ss: string value -->
-    <!-- cc: character "x" or "y" or "z" -->
-    <!-- tt: "0" or "1" with Boolean significance -->
-
-    
 <dsx>
 
-
-    <!-- deve definir-se um objeto para raiz do grafo , assim -->
-    <!-- como o comprimento dos tres eixos (cilindros) -->
+    <!-- objeto para raiz do grafo e comprimento dos tres eixos (cilindros) -->
 
     <scene root="scene" axis_length="3" />
 
-    <views default="1" >
+    <!-- varias vistas, com uma perspetiva default. -->
+    <!-- v/V para mudar para a proxima da lista (da ultima volta para a primeira) -->
     
-        <!-- declaracao obrigatoria de pelo menos uma vista; -->
-        <!-- se varias vistas declaradas, o default e' a -->
-        <!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
-        <!-- a vista muda para a proxima da lista; da --> 
-        <!-- ultima vista da lista volta 'a primeira -->
-		
-        <perspective id="1" near="0.1" far="1000" angle="60">
+    <views default="perspective1" >
+    		
+        <perspective id="perspective1" near="0.1" far="1000" angle="60">
             <from x="0" y="5" z="15" />
             <to x="0" y="0" z="0" />
         </perspective>
