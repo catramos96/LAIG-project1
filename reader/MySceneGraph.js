@@ -16,6 +16,7 @@ function MySceneGraph(filename, scene) {
 	//parameters
 	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
 	this.perspectiveList = [];  			//lista com as diversas perspetivas
+	this.illumination = new MyIllumination(this.scene);
 	
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -35,13 +36,8 @@ MySceneGraph.prototype.onXMLReady=function()
 	var rootElement = this.reader.xmlDoc.documentElement; //neste caso, dsx
 	
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseGlobals(rootElement);
-	var error1 = this.parseViews(rootElement);
-
-	if ((error || error1) != null) {
-		this.onXMLError(error);
-		return;
-	}	
+	
+	this.readSceneGraphFile(rootElement);		
 
 	this.loadedOk=true;
 	
@@ -49,6 +45,25 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.scene.onGraphLoaded();
 };
 
+
+MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
+	var error;
+	//Parse Globals
+	if ((error = this.parseGlobals(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Views
+	if ((error = this.parseViews(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Illumination
+	if ((error = this.parseIllumination(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+}
 
 /*
  * Method that parses elements of one block (Scene) and stores information in a specific data structure (MyGlobals)
@@ -69,7 +84,6 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 	this.globals.axis_length = this.reader.getFloat(scene, 'axis_length');
 
 	console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
-
 };
 
 /*
@@ -86,6 +100,10 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	//this.default = this.reader.getString(scene, 'default'); FALTA ISTO
 
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
+
+	if (nnodes.length == 0) {
+		return "0 perspectives";
+	}
 
 	//percorre cada perspetiva
 	for (var i=0; i < nnodes; i++)
@@ -139,9 +157,58 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		", from[y]=" + this.perspectiveList[i].fromPoint.y+
 		", from[z]=" + this.perspectiveList[i].fromPoint.z+"}");
 	}
+};
 
-}
 
+/*
+ * Method that parses elements of one block (ILUMINATION) and stores information in a specific data structure (MyGlobals)
+ */
+MySceneGraph.prototype.parseIllumination = function(rootElement) {
+
+	var illumination_elems =  rootElement.getElementsByTagName('illumination');
+	if (illumination_elems == null) {
+		return "ilumination element is missing.";
+	}
+	if (illumination_elems.length != 1) {
+		return "either zero or more than one 'ilumination' element found.";
+	}
+
+	// various examples of different types of access
+	var illumination = illumination_elems[0];
+	this.illumination.doublesided = this.reader.getFloat(illumination, 'doublesided');
+	this.illumination.local = this.reader.getFloat(illumination, 'local');
+
+	//obter componentes de ambiente e background
+	var nodes = illumination_elems[0].children.length;
+
+	if (nodes != 2) {
+		return "There are more/less components then ambient and background on illumination";
+	}
+
+	//obter iluminacao ambiente
+	var temp = illumination_elems[0].children[0];
+	var ambient = new MyColor(this.scene);
+	ambient.r = temp.attributes.getNamedItem("r").value;
+	ambient.g = temp.attributes.getNamedItem("g").value;
+	ambient.b = temp.attributes.getNamedItem("b").value;
+	ambient.a = temp.attributes.getNamedItem("a").value;
+
+	//obter iluminacao local
+	temp = illumination_elems[0].children[1];
+	var background = new MyColor(this.scene);
+	background.r = temp.attributes.getNamedItem("r").value;
+	background.g = temp.attributes.getNamedItem("g").value;
+	background.b = temp.attributes.getNamedItem("b").value;
+	background.a = temp.attributes.getNamedItem("a").value;
+
+	this.illumination.ambient = ambient;
+	this.illumination.background = background;
+	
+	console.log("Illumination read from file: {Doublesided=" + this.illumination.doublesided + ", local=" + this.illumination.local +"}");
+	console.log("Ambient r" + this.illumination.ambient.r + ", Ambient g" + this.illumination.ambient.r + ", Ambient b" + this.illumination.ambient.b + ", Ambient a" + this.illumination.ambient.a + "}");
+	console.log("background r" + this.illumination.background.r + ", background g" + this.illumination.background.r + ", Ambient b" + this.illumination.background.b + ", background a" + this.illumination.background.a + "}");
+
+};
 
 /*
  * Callback to be executed on any read error
