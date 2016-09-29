@@ -14,7 +14,7 @@ function MySceneGraph(filename, scene) {
 	this.reader = new CGFXMLreader();
 
 	//parameters
-	this.globals = new MyGlobals(scene);	//variaveis globais do grafo
+	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
 	this.perspectiveList = [];  			//lista com as diversas perspetivas
 	
 	/*
@@ -38,7 +38,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	var error = this.parseGlobals(rootElement);
 	var error1 = this.parseViews(rootElement);
 
-	if (error != null) {
+	if ((error || error1) != null) {
 		this.onXMLError(error);
 		return;
 	}	
@@ -68,7 +68,7 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 	this.globals.root = this.reader.getString(scene, 'root');
 	this.globals.axis_length = this.reader.getFloat(scene, 'axis_length');
 
-	console.log("Globals read from file: {Root=" + this.root + ", axis_length=" + this.axis_length +"}");
+	console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
 
 };
 
@@ -90,15 +90,15 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	//percorre cada perspetiva
 	for (var i=0; i < nnodes; i++)
 	{
-		var e = views_elems[0].children[i]; // informacao sobre a perspetiva
+		var tempP = views_elems[0].children[i]; // informacao sobre a perspetiva
 
-		var p = new MyPerspective(scene);
+		var perspective = new MyPerspective(this.scene);
 
 		// process each element and store its information
-		p.id = e.attributes.getNamedItem("id").value;
-		p.near = e.attributes.getNamedItem("near").value;
-		p.far = e.attributes.getNamedItem("far").value;
-		p.angle = e.attributes.getNamedItem("angle").value;
+		perspective.id = tempP.attributes.getNamedItem("id").value;
+		perspective.near = tempP.attributes.getNamedItem("near").value;
+		perspective.far = tempP.attributes.getNamedItem("far").value;
+		perspective.angle = tempP.attributes.getNamedItem("angle").value;
 
 
 		// ler os filhos 'from' e 'to'
@@ -107,27 +107,35 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		var fromList = [];
 		
 		//vai buscar os valores dos filhos
-		var temp = tempList[0].children[0];
-		fromList[0] = temp.attributes.getNamedItem("x").value;
-		fromList[1] = temp.attributes.getNamedItem("y").value;
-		fromList[2] = temp.attributes.getNamedItem("z").value;
+		var elem = tempP.children[0];
+		fromList[0] = elem.attributes.getNamedItem("x").value;
+		fromList[1] = elem.attributes.getNamedItem("y").value;
+		fromList[2] = elem.attributes.getNamedItem("z").value;
 
-		temp = tempList[0].children[1];
-		toList[0] = temp.attributes.getNamedItem("x").value;
-		toList[1] = temp.attributes.getNamedItem("y").value;
-		toList[2] = temp.attributes.getNamedItem("z").value;
+		elem = tempP.children[1];
+		toList[0] = elem.attributes.getNamedItem("x").value;
+		toList[1] = elem.attributes.getNamedItem("y").value;
+		toList[2] = elem.attributes.getNamedItem("z").value;
 
 		//coloca-os na perspetiva
-		p.toList = toList;
-		p.fromList = fromList;
+		perspective.toList = toList;
+		perspective.fromList = fromList;
 
 		//adiciona a perspetiva a lista de perspetivas
-		this.perspectiveList[i] = p;
-
-		//fazer console Log
+		this.perspectiveList[i] = perspective;
 	};
 
-	//fazer console Log
+	for (var i=0; i < nnodes; i++)
+	{
+		console.log("Perspetive "+i+"{id=" + this.perspectiveList[i].id + ", near=" + this.perspectiveList[i].near + 
+		", far=" + this.perspectiveList[i].far+ ", angle=" + this.perspectiveList[i].angle + 
+		", to[x]=" + this.perspectiveList[i].toList[0]+ 
+		", to[y]=" + this.perspectiveList[i].toList[1]+
+		", to[z]=" + this.perspectiveList[i].toList[2]+
+		", from[x]=" + this.perspectiveList[i].fromList[0]+
+		", from[y]=" + this.perspectiveList[i].fromList[1]+
+		", from[z]=" + this.perspectiveList[i].fromList[2]+"}");
+	}
 
 }
 

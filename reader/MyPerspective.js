@@ -1,7 +1,7 @@
 /*
  * Data Struct to perspective
  */
-function MyGlobals(scene) {
+function MyPerspective(scene) {
  	CGFobject.call(this,scene);
 
  	this.id = "";
