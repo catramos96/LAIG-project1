@@ -25,4 +25,28 @@
         
     </illumination>
 
+    <lights>
+    
+        <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+		
+        <omni id="lightOmni1" enabled="1" >
+            <location x="3" y="3" z="3" w="ff" />							<!-- w - ????????? -->
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="0.8" />
+            <specular r="0.5" g="0.5" b="0.5" a="0.5" />
+        </omni>
+        
+        <spot id="lightSpot1" enabled="1" angle="0.785" exponent="2">  		<!-- ang = 0.785 = pi/4 -->
+		
+            <!-- atencao, "target" e' diferente de "direction" -->
+			
+            <target x="0" y="1.5" z="1.5" />
+            <location x="3" y="3" z="3" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="0.8" />
+            <specular r="0.5" g="0.5" b="0.5" a="0.5" />
+        </spot>
+    </lights>
+
 </dsx>
