@@ -10,8 +10,4 @@
 
 * quando criamos um objeto mandamos lhe a scene?
 
-* Criar função n classe MyColor que recebe uma outra cor e funciona como um "equal" atribuindo os valores do mesmo ao nosso objeto
-
-* Criar classe LightSpot derivada da classe MyLights (Cat)
-
-* Fazer Bloco Light no MySceneGraph (Cat)
+* garantir que em cada ista não existem id's repetidos
