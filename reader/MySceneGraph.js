@@ -19,6 +19,7 @@ function MySceneGraph(filename, scene) {
 	this.lightsList = [];						//lista com as diversas luzes
 	this.texturesList = [];						//lista com as diversas texturas
 	this.materialsList = [];					//lista com os diversos materiais
+	this.transformationsList = [][];			//lista com as diversas transformações
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -76,6 +77,11 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	//Parse Materials
 	if ((error = this.parseMaterials(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Transformations
+	if ((error = this.parseTransformations(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
@@ -159,7 +165,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		this.perspectiveList[i] = perspective;
 	};
 
-	for (var i=0; i < nnodes; i++)
+	/*for (var i=0; i < nnodes; i++)
 	{
 		console.log("Perspetive "+i+"{id=" + this.perspectiveList[i].id + ", near=" + this.perspectiveList[i].near + 
 		", far=" + this.perspectiveList[i].far+ ", angle=" + this.perspectiveList[i].angle + 
@@ -169,7 +175,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		", from[x]=" + this.perspectiveList[i].fromPoint.x+
 		", from[y]=" + this.perspectiveList[i].fromPoint.y+
 		", from[z]=" + this.perspectiveList[i].fromPoint.z+"}");
-	}
+	}*/
 };
 
 
@@ -218,8 +224,8 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	this.globals.setBackground(background);
 	
 	//console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
-	ambient.printInfo();
-	background.printInfo();
+	//ambient.printInfo();
+	//background.printInfo();
 
 }
 
@@ -305,14 +311,14 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		else{			//OMNI
 			this.lightsList[i] = new MyLight(id,enable,location,ambient,diffuse,specular);
 		}
-		this.lightsList[i].printInfo();
+	//	this.lightsList[i].printInfo();
 
 	}
 
 }
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
-
+/*
 	var texture_elems =  rootElement.getElementsByTagName('textures');
 	if (texture_elems == null) {
 		return "texture element is missing.";
@@ -341,12 +347,12 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	for (var i=0; i < nnodes; i++)
 	{
 		console.log("Textura "+this.texturesList[i].getId() + " , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
-	}
+	}*/
 	
 };
 
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
-
+/*
 	var material_elems =  rootElement.getElementsByTagName('materials');
 	if (material_elems == null) {
 		return "materials element is missing.";
@@ -385,8 +391,57 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 	for(var i = 0; i < nnodes; i++){
 		console.log("Material "+ this.materialsList[i].getId()); //acabar isto?
+	}*/
+};
+
+/*
+ * PARSE TRANSFORMATIONS
+ */
+
+MySceneGraph.prototype.parseTransformations = function(rootElement) {
+
+	var transformations_elems =  rootElement.getElementsByTagName('transformations');
+	if (transformations_elems == null) {
+		return "transformations element is missing.";
+	}
+
+	var n_transformation = transformations_elems[0].children.length;
+
+	if(n_transformation == 0){
+		return "0 transformations";
+	}
+
+	var id, transformation, transformation_info;
+
+	//saves data info of each transformation
+	for (var i=0; i < n_transformation; i++)
+	{
+		transformation = transformations_elems[0].children[i];
+
+		id = transformation.attributes.getNamedItem("id").value;
+
+		if(transformation.children.length == 0){
+			return "Transformation without information";
+		}
+
+		//transformations of each one (transformation)
+		for(var j = 0; j < transformation.children.length; j++){
+			if(transformation.children[j].tagName == "translate"){
+				//...
+			}
+			else if(transformation.children[j].tagName == "rotate"){
+				//...
+			}
+			else if(transformation.children[j].tagName == "scale"){
+				//...
+			}
+			//inserir em transformationsList[i][j];
+		}
+
+
 	}
 };
+
 
 /*
  * Callback to be executed on any read error
