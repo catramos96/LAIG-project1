@@ -16,7 +16,8 @@ function MySceneGraph(filename, scene) {
 	//parameters
 	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
 	this.perspectiveList = [];  			//lista com as diversas perspetivas
-	
+	this.texturesList = [];						//lista com as diversas texturas
+
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -59,6 +60,11 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	//Parse Illumination
 	if ((error = this.parseIllumination(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Textures
+	if ((error = this.parseTextures(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
@@ -109,7 +115,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	{
 		var tempP = views_elems[0].children[i]; // informacao sobre a perspetiva
 
-		var perspective = new MyPerspective(this.scene);
+		var perspective = new MyPerspective();
 
 		// process each element and store its information
 		perspective.setId(tempP.attributes.getNamedItem("id").value);
@@ -210,6 +216,37 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	console.log("background r" + this.globals.colorBackground.r + ", background g" + this.globals.colorBackground.g + ", Ambient b" + this.globals.colorBackground.b + ", background a" + this.globals.colorBackground.a + "}");
 
 };
+
+MySceneGraph.prototype.parseTextures = function(rootElement) {
+
+	var texture_elems =  rootElement.getElementsByTagName('textures');
+	if (texture_elems == null) {
+		return "texture element is missing.";
+	}
+
+	// various examples of different types of access
+	var nnodes = texture_elems[0].children.length;
+
+	for (var i=0; i < nnodes; i++)
+	{
+		var texture = texture_elems[0].children[i];
+
+		var id = texture.attributes.getNamedItem("id").value;
+		var file = texture.attributes.getNamedItem("file").value;
+		var length_t = texture.attributes.getNamedItem("length_t").value;
+		var length_s = texture.attributes.getNamedItem("length_s").value;
+
+		//adiciona a lista de texturas
+		this.texturesList[i] = new MyTexture(id,file,length_t,length_s);
+	}
+
+	for (var i=0; i < nnodes; i++)
+	{
+		console.log("Textura "+this.texturesList[i].getId() +" , from file "+ this.texturesList[i].getFile()+
+						" , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
+	}
+	
+}
 
 /*
  * Callback to be executed on any read error
