@@ -15,8 +15,9 @@ function MySceneGraph(filename, scene) {
 
 	//parameters
 	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
-	this.perspectiveList = [];  			//lista com as diversas perspetivas
+	this.perspectiveList = [];  				//lista com as diversas perspetivas
 	this.texturesList = [];						//lista com as diversas texturas
+	this.materialsList = [];					//lista com os diversos materiais
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -65,6 +66,11 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	//Parse Textures
 	if ((error = this.parseTextures(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Materials
+	if ((error = this.parseMaterials(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
@@ -246,6 +252,17 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 						" , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
 	}
 	
+}
+
+MySceneGraph.prototype.parseMaterials = function(rootElement) {
+
+	var material_elems =  rootElement.getElementsByTagName('materials');
+	if (texture_elems == null) {
+		return "materials element is missing.";
+	}
+
+
+	//falta acabar isto
 }
 
 /*
