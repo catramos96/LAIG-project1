@@ -49,4 +49,26 @@
         </spot>
     </lights>
 
+    <textures>
+    
+        <!-- Deve existir um ou mais blocos "texture" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <!-- length_s e length_t sao fatores de escala de textura.-->
+        <texture id="texture1" file="scenes/flor.png" length_s="1" length_t="1" />  
+        
+    </textures>
+
+    <materials>
+    
+        <!-- Os identificadores "id" nao podem ser repetidos, e deve existir pelo menos 1 material -->
+        <material id="shiny" >
+            <emission r="0.01" g="0.01" b="0.01" a="1" />
+            <ambient r="0.3" g="0.3" b="0.3" a="1" />
+            <diffuse r="1" g="0.6" b="0" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+            <shininess value="1000" />
+        </material>
+        
+    </materials>
+
 </dsx>
