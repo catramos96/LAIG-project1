@@ -16,6 +16,7 @@ function MySceneGraph(filename, scene) {
 	//parameters
 	this.globals = new MyGlobals(this.scene);	//variaveis globais do grafo
 	this.perspectiveList = [];  				//lista com as diversas perspetivas
+	this.lightsList = [];						//lista com as diversas luzes
 	this.texturesList = [];						//lista com as diversas texturas
 	this.materialsList = [];					//lista com os diversos materiais
 
@@ -63,6 +64,10 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	if ((error = this.parseIllumination(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
+	}
+	//Parse Lights
+	if ((error = this.parseLights(rootElement)) != null) {
+		this.onXMLError(error);
 	}
 	//Parse Textures
 	if ((error = this.parseTextures(rootElement)) != null) {
@@ -181,47 +186,130 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 		return "either zero or more than one 'ilumination' element found.";
 	}
 
-	// various examples of different types of access
+	
 	var illumination = illumination_elems[0];
 
 	this.globals.setDoublesided(this.reader.getFloat(illumination, 'doublesided'));
 	this.globals.setLocal(this.reader.getFloat(illumination, 'local'));
 
-	//obter componentes de ambiente e background
-	var nodes = illumination_elems[0].children.length;
 
-	if (nodes != 2) {
+	var n_illumination = illumination_elems[0].children.length;
+
+	if (n_illumination != 2) {
 		return "There are more/less components then ambient and background on illumination";
 	}
 
-	//obter iluminacao ambiente
+	//AMBIENT
 	var temp = illumination_elems[0].children[0];
-	var a,b,c,d;
 
-	a = temp.attributes.getNamedItem("r").value;
-	b = temp.attributes.getNamedItem("g").value;
-	c = temp.attributes.getNamedItem("b").value;
-	d = temp.attributes.getNamedItem("a").value;
-
-	var ambient = new MyColor(a,b,c,d);
+	var ambient = new MyColor(temp.attributes.getNamedItem("r").value,
+								temp.attributes.getNamedItem("g").value,
+								temp.attributes.getNamedItem("b").value,
+								temp.attributes.getNamedItem("a").value);
 	this.globals.setAmbient(ambient);
 
-	//obter iluminacao local
+	//LOCAL
 	temp = illumination_elems[0].children[1];
 
-	a = temp.attributes.getNamedItem("r").value;
-	b = temp.attributes.getNamedItem("g").value;
-	c = temp.attributes.getNamedItem("b").value;
-	d = temp.attributes.getNamedItem("a").value;
-
-	var background = new MyColor(a,b,c,d);
+	var background = new MyColor(temp.attributes.getNamedItem("r").value,
+									temp.attributes.getNamedItem("g").value,
+									temp.attributes.getNamedItem("b").value,
+									temp.attributes.getNamedItem("a").value);
 	this.globals.setBackground(background);
 	
-	console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
-	console.log("Ambient r" + this.globals.colorAmbient.r + ", Ambient g" + this.globals.colorAmbient.g + ", Ambient b" + this.globals.colorAmbient.b + ", Ambient a" + this.globals.colorAmbient.a + "}");
-	console.log("background r" + this.globals.colorBackground.r + ", background g" + this.globals.colorBackground.g + ", Ambient b" + this.globals.colorBackground.b + ", background a" + this.globals.colorBackground.a + "}");
+	//console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
+	ambient.printInfo();
+	background.printInfo();
 
-};
+}
+
+/*
+ * Method that parses elements of one block (LIGHTS) and stores information in a specific data structure (MyGlobals)
+ */
+MySceneGraph.prototype.parseLights = function(rootElement) {
+
+	var lights_elems =  rootElement.getElementsByTagName('lights');
+
+	if (lights_elems == null) {
+		return "lights element is missing.";
+	}
+
+	if (lights_elems.length != 1) {
+		return "either zero or more than one 'lights' element found.";
+	}
+
+	n_lights = lights_elems[0].children.length;
+
+	if (n_lights == 0) {
+		return "There are 0 lights";
+	}
+
+	var id, enable, location, ambient,diffuse, specular, angle, target, exponent;
+	var temp;
+	var spot;
+
+	var lights;
+
+	for(var i = 0; i < n_lights;i++){
+
+		lights = lights_elems[0].children[i];
+
+		if(lights.children.length == 4){	//OMNI
+			spot = 0;
+		}
+		else{								//SPOT
+			spot = 1;
+		}
+		
+		id = this.reader.getString(lights, 'id');
+		enable = this.reader.getFloat(lights, 'enabled');
+
+		if(spot == 1){
+			angle = this.reader.getFloat(lights, 'angle');
+			exponent = this.reader.getFloat(lights, 'exponent');
+
+			lights = lights_elems[0].children[i].children[0];
+			target = new MyPoint(lights.attributes.getNamedItem("x").value,
+								lights.attributes.getNamedItem("y").value,
+								lights.attributes.getNamedItem("z").value);
+		}
+
+		lights = lights_elems[0].children[i].children[spot];
+		location = new MyPoint(lights.attributes.getNamedItem("x").value,
+								lights.attributes.getNamedItem("y").value,
+								lights.attributes.getNamedItem("z").value); //FALTA O WW !!!!!!!!!!!
+
+
+		lights = lights_elems[0].children[i].children[1 + spot];
+		ambient = new MyColor(lights.attributes.getNamedItem("r").value,
+								lights.attributes.getNamedItem("g").value,
+								lights.attributes.getNamedItem("b").value,
+								lights.attributes.getNamedItem("a").value);
+
+		lights = lights_elems[0].children[i].children[2 + spot];
+		diffuse = new MyColor(lights.attributes.getNamedItem("r").value,
+								lights.attributes.getNamedItem("g").value,
+								lights.attributes.getNamedItem("b").value,
+								lights.attributes.getNamedItem("a").value);
+
+		lights = lights_elems[0].children[i].children[3 + spot];
+		specular = new MyColor(lights.attributes.getNamedItem("r").value,
+								lights.attributes.getNamedItem("g").value,
+								lights.attributes.getNamedItem("b").value,
+								lights.attributes.getNamedItem("a").value);
+
+		//GUARDAR NA LISTA DE LIGHTS
+		if(spot == 1){ //SPOT
+			this.lightsList[i] = new MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target);
+		}
+		else{			//OMNI
+			this.lightsList[i] = new MyLight(id,enable,location,ambient,diffuse,specular);
+		}
+		this.lightsList[i].printInfo();
+
+	}
+
+}
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 

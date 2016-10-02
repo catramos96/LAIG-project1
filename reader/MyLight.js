@@ -1,35 +1,93 @@
 /*
- * Data Struct of light (omni - geral)
+ * Data Struct of Light
  */
-function MyLight() {
- 	this.enable = 1;
- 	this.id = "";
- 	this.ambient = new MyColor();
- 	this.diffuse = new MyColor();
- 	this.specular = new MyColor();
-}
 
-function MyLight(id) {
- 	this.enable = 1;
- 	this.id = id;
-}
+ function MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target){
+   this.id = id;
+   this.enable = enable;
 
- MyLight.prototype.setEnable = function(b){
- 	this.enable = b;
+   if(angle != null){           //SPOT
+     this.spot = 1;
+     this.angle = angle;
+     this.exponent = exponent;
+     this.target = target;
+   }
+   
+    else{                       //OMNI
+     this.spot = 0;
+     this.angle = 0;
+     this.exponent = 0;
+     this.target = new MyPoint(0,0,0);
+    }
+
+   this.location = location;
+   this.ambient = ambient;
+   this.diffuse = diffuse;
+   this.specular = specular;
  }
 
- MyLight.prototype.setId = function(id){
- 	this.id = id;
+  /*
+   * PRINT
+   */
+
+MyLight.prototype.printInfo = function(){   
+ 
+   if(this.spot == 1){
+     console.log("Light - Spot; Id - " + this.id + " ; enable - " + this.enable);
+     console.log("Angle - " + this.angle + "; Exponent - " + this.exponent);
+     this.target.printInfo();
+   }
+   else{
+     console.log("Light - Omni; Id - " + this.id + " ; enable - " + this.enable);
+   }
+   this.location.printInfo();
+   this.ambient.printInfo();
+   this.diffuse.printInfo();
+   this.specular.printInfo();
  }
 
- MyLight.prototype.setAmbient = function(r,g,b,a){
- 	this.ambient.setCoordinates(r,g,b,a);
+  /*
+   * GETS
+   */
+
+ MyLight.prototype.getId = function(){          // ID
+   return this.id;
  }
 
- MyLight.prototype.setDiffuse = function(r,g,b,a){
- 	this.diffuset.setCoordinates(r,g,b,a);
+ MyLight.prototype.getEnable = function(){      // ENABLE
+   return this.enable;
  }
 
-  MyLight.prototype.setSpecular = function(r,g,b,a){
- 	this.specular.setCoordinates(r,g,b,a);
+ MyLight.prototype.getLocation = function(){    // LOCATION
+   return this.location;
  }
+
+
+ MyLight.prototype.getAmbient = function(){     // AMBIENT
+   return this.ambient;
+ }
+
+ MyLight.prototype.getDiffuse = function(){     // DIFFUSE
+   return this.diffuse;
+ }
+
+ MyLight.prototype.getSpecular = function(){    // SPECULAR
+   return this.specular;
+ }
+  
+ MyLight.prototype.getAngle = function(){       // ANGLE (only spot or = 0)
+   return this.angle;
+ }
+
+ MyLight.prototype.getExponent = function(){    // EXPONENT (only exponent or = 0)
+   return this.exponent;
+ }
+
+ MyLight.prototype.getTarget = function(){      // TARGET (only spot or x,y,z = 0)
+   return this.id;
+ }
+
+ MyLight.prototype.isSpot = function(){         // SPOT ?
+   return this.spot;
+ }
+ 

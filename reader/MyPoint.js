@@ -1,12 +1,36 @@
 /*
  * Data Struct with a coordinate (x,y,z)
+ *  x coordinate
+ *  y coordinate
+ *  z coordinate
  */
 function MyPoint(x,y,z) {
  	this.x = x;
  	this.y = y;
  	this.z = z;
-
 }
+
+/*
+ * Print Info
+ */
+   
+ MyPoint.prototype.printInfo = function(){
+ 	console.log("x - " + this.x + " y - " + this.y + " z - " + this.z);
+ }
+
+
+/*
+ * Function that equals our point to another
+ */
+ MyPoint.prototype.equals = function(point){
+ 	this.x = point.getX();
+ 	this.y = point.getY();
+ 	this.z = point.getZ();
+ }
+
+/*
+ * Gets
+ */
 
  MyPoint.prototype.getX = function(){
  	return this.x;
@@ -19,6 +43,10 @@ function MyPoint(x,y,z) {
  MyPoint.prototype.getZ = function(){
  	return this.z;
  }
+
+/*
+ * Sets
+ */
 
   MyPoint.prototype.setX = function(x){
  	this.x = x;

@@ -1,29 +1,69 @@
 /*
  * Data Struct with a color (r,g,b,a)
+ *  r - red component
+ *  g - green component
+ *  b - blue component
+ *  a - alpha component (transparency)
  */
-function MyColor() {
- 	this.r = 0;
- 	this.g = 0;
- 	this.b = 0;
- 	this.a = 0;
-}
-
 function MyColor(r,g,b,a) {
+  if(r < 0 || r > 255 || g < 0 || g >255 || b < 0 || b > 255 || a < 0 || a > 255)
+    return "color values to high or low";
  	this.r = r;
- 	this.g = g;
+ 	this.g = g; 
  	this.b = b;
  	this.a = a;
 }
 
-//compor isto
-/*CAT : Não seria melhor fazer uma função que recebesse uma cor e atribuia
-        os valores da mesma à nossa color. 
-*/
+/*
+ * PRINT INFO
+ */
+
+ MyColor.prototype.printInfo = function(){
+ 	console.log(this.r + " " + this.g + " " + this.b + " " + this.a);
+ }
+
+/*
+ * Functions that equals our color to another
+ */
+
+MyColor.prototype.equals = function(color){
+ 	this.r = color.getR();
+ 	this.g = color.getG();
+ 	this.b = color.getB();
+ 	this.a = color.getA();
+ }
+
+/*
+ * SETS
+ */
+
  MyColor.prototype.setCoordinates = function(r,g,b,a){
+   if(r < 0 || r > 255 || g < 0 || g >255 || b < 0 || b > 255 || a < 0 || a > 255)
+    return "color values to high or low";
  	this.r = r;
  	this.g = g;
  	this.b = b;
  	this.a = a;
  }
 
- // ter erros quando está fora da gama 0-255
+/*
+ * GETS
+ */
+
+ MyColor.prototype.getR = function(){
+   return this.r;
+ }
+
+ MyColor.prototype.getG = function(){
+   return this.g;
+ }
+
+ MyColor.prototype.getB = function(){
+   return this.b;
+ }
+
+ MyColor.prototype.getA = function(){
+   return this.a;
+ }
+
+ 
