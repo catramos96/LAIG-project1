@@ -26,7 +26,7 @@ function MySceneGraph(filename, scene) {
 	 */
 	 
 	this.reader.open('scenes/'+filename, this);  
-}
+};
 
 /*
  * Callback to be executed after successful reading
@@ -74,7 +74,7 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 		this.onXMLError(error);
 		return;
 	}
-}
+};
 
 /*
  * Method that parses elements of one block (Scene) and stores information in a specific data structure (MyGlobals)
@@ -235,35 +235,70 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 
 	for (var i=0; i < nnodes; i++)
 	{
-		var texture = texture_elems[0].children[i];
+		var temp = texture_elems[0].children[i];
 
-		var id = texture.attributes.getNamedItem("id").value;
-		var file = texture.attributes.getNamedItem("file").value;
-		var length_t = texture.attributes.getNamedItem("length_t").value;
-		var length_s = texture.attributes.getNamedItem("length_s").value;
+		var id = temp.attributes.getNamedItem("id").value;
+		var file = temp.attributes.getNamedItem("file").value;
+		var length_t = temp.attributes.getNamedItem("length_t").value;
+		var length_s = temp.attributes.getNamedItem("length_s").value;
+
+		//cria o material
+		var texture = new MyTexture(id,length_t,length_s);
+		texture.setTexture(file);
 
 		//adiciona a lista de texturas
-		this.texturesList[i] = new MyTexture(id,file,length_t,length_s);
+		this.texturesList[i] = texture;
 	}
 
 	for (var i=0; i < nnodes; i++)
 	{
-		console.log("Textura "+this.texturesList[i].getId() +" , from file "+ this.texturesList[i].getFile()+
-						" , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
+		console.log("Textura "+this.texturesList[i].getId() + " , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
 	}
 	
-}
+};
 
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 	var material_elems =  rootElement.getElementsByTagName('materials');
-	if (texture_elems == null) {
+	if (material_elems == null) {
 		return "materials element is missing.";
 	}
 
+	var nnodes = material_elems[0].children.length;
 
-	//falta acabar isto
-}
+	for (var i=0; i < nnodes; i++)
+	{
+		var temp = material_elems[0].children[i];
+
+		var material = new MyMaterial(temp.attributes.getNamedItem("id").value);
+
+		//ler os filhos deste material
+		for(var j = 0; j < 4; j++)
+		{
+			var r,g,b,a;
+			var child = temp.children[j]; //emission
+
+			r = child.attributes.getNamedItem("r").value;
+			g = child.attributes.getNamedItem("g").value;
+			b = child.attributes.getNamedItem("b").value;
+			a = child.attributes.getNamedItem("a").value;
+
+			if(j==0) material.setEmission(r,g,b,a);
+			if(j==1) material.setAmbient(r,g,b,a);
+			if(j==2) material.setDiffuse(r,g,b,a);
+			if(j==3) material.setSpecular(r,g,b,a);
+		}
+
+		material.setShininess(temp.children[4].attributes.getNamedItem("value").value);
+
+		//juntar a lista de materias
+		this.materialsList[i] = material;
+	}
+
+	for(var i = 0; i < nnodes; i++){
+		console.log("Material "+ this.materialsList[i].getId()); //acabar isto?
+	}
+};
 
 /*
  * Callback to be executed on any read error

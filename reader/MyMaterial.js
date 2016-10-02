@@ -23,9 +23,13 @@ function MyMaterial(id) {
  }
 
  MyMaterial.prototype.setShininess = function(a){
- 	this.appearance.setShininess(r,g,b,a);
+ 	this.appearance.setShininess(a);
  }
 
  MyMaterial.prototype.getMaterial = function(a){
  	return this.appearance;
+ }
+
+ MyMaterial.prototype.getId = function(){
+ 	return this.id;
  }
