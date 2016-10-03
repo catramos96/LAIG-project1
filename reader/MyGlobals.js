@@ -15,7 +15,12 @@ function MyGlobals() {
  }
 
  MyGlobals.prototype.setAxisLength = function(axisLength){
- 	this.axis_length = axisLength;
+   if(!isNaN(parseFloat(axisLength)) && isFinite(axisLength))
+   {
+     this.axis_length = axisLength;
+     return;
+   }
+   return "axis_length isn't a number!";
  }
 
  MyGlobals.prototype.setDoublesided = function(b){

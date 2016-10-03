@@ -10,6 +10,10 @@ function MyPerspective() {
  	this.fromPoint = new MyPoint(0,0,0);
 }
 
+ MyPerspective.prototype.getId = function(){
+ 	return this.id;
+ }
+
  MyPerspective.prototype.setId = function(id){
  	this.id = id;
  }

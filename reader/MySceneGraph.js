@@ -1,7 +1,5 @@
 /*
  * Scene Graph
- *
- * Pensar numa maneira de por a perspetiva default
  */
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
@@ -27,7 +25,6 @@ function MySceneGraph(filename, scene) {
 	 * After the file is read, the reader calls onXMLReady on this object.
 	 * If any error occurs, the reader calls onXMLError on this object, with an error message
 	 */
-	 
 	this.reader.open('scenes/'+filename, this);  
 };
 
@@ -39,17 +36,19 @@ MySceneGraph.prototype.onXMLReady=function()
 	console.log("XML Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement; //neste caso, dsx
 	
-	// Here should go the calls for different functions to parse the various blocks
-	
+	// method that calls all parse functions and verifies errors
 	this.readSceneGraphFile(rootElement);		
 
+	// no errors
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 	this.scene.onGraphLoaded();
 };
 
-
+/**
+ * Calls all parsers and verifies errors
+ */
 MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	var error;
 	//Parse Globals
@@ -94,11 +93,20 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 };
 
 /*
+ * Callback to be executed on any read error
+ */
+MySceneGraph.prototype.onXMLError=function (message) {
+	console.error("XML Loading Error: "+message+" Exiting...");	
+	this.loadedOk=false;
+};
+
+/*
  * Method that parses elements of one block (Scene) and stores information in a specific data structure (MyGlobals)
  */
 MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
 	var scene_elems =  rootElement.getElementsByTagName('scene');
+	//error cases
 	if (scene_elems == null) {
 		return "scene element is missing.";
 	}
@@ -106,16 +114,26 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 		return "either zero or more than one 'scene' element found.";
 	}
 
-	// various examples of different types of access
+	//get scene
 	var scene = scene_elems[0];
-	this.globals.setRoot(this.reader.getString(scene, 'root'));
-	this.globals.setAxisLength(this.reader.getFloat(scene, 'axis_length'));
+
+	var name = this.reader.getString(scene, 'root');
+	if(name == ""){
+		console.log("WARNING : root without name!");
+	}
+
+	this.globals.setRoot(name);
+
+	//verifies if axis_length is a number
+	var ret = this.globals.setAxisLength(this.reader.getFloat(scene, 'axis_length'));
+	if(ret != null) return ret;
 	
 	console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
 };
 
 /*
  * Method that parses elements of one block (Views) and stores information in a specific data structure (perspectiveList)
+ * perspectiveList is a list of Objects of type MyPerspective.
  */
 MySceneGraph.prototype.parseViews = function(rootElement) {
 
@@ -130,7 +148,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
 
 	if (nnodes.length == 0) {
-		return "0 perspectives";
+		return "zero perspectives";
 	}
 
 	//percorre cada perspetiva
@@ -141,9 +159,19 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		var perspective = new MyPerspective();
 
 		// process each element and store its information
-		perspective.setId(tempP.attributes.getNamedItem("id").value);
+		var id = tempP.attributes.getNamedItem("id").value;
+		if(!this.verifyExistingId(id,this.perspectiveList)) 
+			perspective.setId(id);
+		else
+			return "id repetead!";
+
 		perspective.setNear(tempP.attributes.getNamedItem("near").value);
+
 		perspective.setFar(tempP.attributes.getNamedItem("far").value);
+
+		var angle=tempP.attributes.getNamedItem("angle").value;
+		if(angle < -180 || angle >180)
+			console.log("WARNING : angle not adjusted...");
 		perspective.setAngle(tempP.attributes.getNamedItem("angle").value);
 
 		// ler os filhos 'from' e 'to'
@@ -562,13 +590,10 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	}
 }
 
-/*
- * Callback to be executed on any read error
- */
- 
-MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("XML Loading Error: "+message);	
-	this.loadedOk=false;
-};
-
-
+MySceneGraph.prototype.verifyExistingId = function(id, list) {
+	for(var i = 0; i < list.length; i++)
+	{
+		if(id == list[i].getId())	return true;
+	}
+	return false;
+}
