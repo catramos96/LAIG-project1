@@ -483,68 +483,81 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		return "0 primitives";
 	}
 
-	var primitive,id,p,tagName;
+	var primitive,prim,tagName;
 
 	for(var i = 0; i < n_primitives; i++){
 
 		primitive = primitives_elems[0].children[i];
-		id = primitive.attributes.getNamedItem("id").value;
 
 		if(primitive.children.length != 1){
 			return "more/less than one primitive component";
 		}
 		
 		tagName = primitive.children[0].tagName;
-
-		p = new MyPrimitive(id,tagName);
+		var id = primitive.attributes.getNamedItem("id").value;
 
 		switch(tagName){
 			case "rectangle":{
-				p.setPoint1(new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
-										primitive.children[0].attributes.getNamedItem("y1").value,
-										0));
-				p.setPoint2(new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
-										primitive.children[0].attributes.getNamedItem("y2").value,
-										0));
+				var p1 = new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
+								 primitive.children[0].attributes.getNamedItem("y1").value,
+								 0);
+				var p2 = new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
+								 primitive.children[0].attributes.getNamedItem("y2").value,
+								 0);
+
+				prim = new MyRectangle(id,p1,p2);
 				break;
 			}
 			case "triangle":{
-				p.setPoint1(new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
-										primitive.children[0].attributes.getNamedItem("y1").value,
-										primitive.children[0].attributes.getNamedItem("z1").value));
+				var p1 = new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
+							     primitive.children[0].attributes.getNamedItem("y1").value,
+								 primitive.children[0].attributes.getNamedItem("z1").value);
 
-				p.setPoint2(new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
-										primitive.children[0].attributes.getNamedItem("y2").value,
-										primitive.children[0].attributes.getNamedItem("z2").value));
+				var p2 = new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
+								 primitive.children[0].attributes.getNamedItem("y2").value,
+								 primitive.children[0].attributes.getNamedItem("z2").value);
 
-				p.setPoint3(new MyPoint(primitive.children[0].attributes.getNamedItem("x3").value,
-										primitive.children[0].attributes.getNamedItem("y3").value,
-										primitive.children[0].attributes.getNamedItem("z3").value));
+				var p3 = new MyPoint(primitive.children[0].attributes.getNamedItem("x3").value,
+								 primitive.children[0].attributes.getNamedItem("y3").value,
+								 primitive.children[0].attributes.getNamedItem("z3").value);
+
+				prim = new MyTriangle(id,p1,p2,p3);
 				break;
 			}
 			case "cylinder": {
-				p.setCylinderProp(primitive.children[0].attributes.getNamedItem("base").value,
-									primitive.children[0].attributes.getNamedItem("top").value,
-									primitive.children[0].attributes.getNamedItem("height").value,
-									primitive.children[0].attributes.getNamedItem("slices").value,
-									primitive.children[0].attributes.getNamedItem("stacks").value);
+				var b,t,h,sl,st;
+
+				b = primitive.children[0].attributes.getNamedItem("base").value;
+				t = primitive.children[0].attributes.getNamedItem("top").value;
+				h = primitive.children[0].attributes.getNamedItem("height").value;
+				sl = primitive.children[0].attributes.getNamedItem("slices").value;
+				st = primitive.children[0].attributes.getNamedItem("stacks").value;
+
+				prim = new MyCylinder(id,b,t,h,sl,st);
 				break;
 			}
 			case "sphere": {
-				p.setSphereProp(primitive.children[0].attributes.getNamedItem("radius").value,
-								primitive.children[0].attributes.getNamedItem("slices").value,
-								primitive.children[0].attributes.getNamedItem("stacks").value);
+				var r,sl,st;
+				r = primitive.children[0].attributes.getNamedItem("radius").value;
+				sl = primitive.children[0].attributes.getNamedItem("slices").value;
+				st = primitive.children[0].attributes.getNamedItem("stacks").value;
+
+				prim = new MySphere(id,r,sl,st);
 				break;
 			}
 			case "torus" : {
-				p.setTorusProp(primitive.children[0].attributes.getNamedItem("inner").value,
-								primitive.children[0].attributes.getNamedItem("outer").value,
-								primitive.children[0].attributes.getNamedItem("slices").value,
-								primitive.children[0].attributes.getNamedItem("loops").value);
+				var inn, o, l,sl;
+
+				inn = primitive.children[0].attributes.getNamedItem("inner").value;
+				o = primitive.children[0].attributes.getNamedItem("outer").value,
+				sl = primitive.children[0].attributes.getNamedItem("slices").value;
+				l = primitive.children[0].attributes.getNamedItem("loops").value;
+
+				prim = new MyTorus(id,inn,o,sl,l);
 				break;
 			}
 		}
-		this.primitivesList[i] = p;
+		this.primitivesList[i] = prim;
 		this.primitivesList[i].printInfo();
 	}
 }
