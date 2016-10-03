@@ -5,6 +5,10 @@ function MyPrimitive(id) {
     this.id = id;
 }
 
+ MyPrimitive.prototype.getId = function(){
+    return this.id;
+ }
+
  /*
   * SETS
   *

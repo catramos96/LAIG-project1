@@ -11,6 +11,10 @@ function MyTransformation(id){
 
 }
 
+ MyTransformation.prototype.getId = function(){
+     return this.id;
+ }
+
 /**
  * Só funciona para matrizes 4x4
  */

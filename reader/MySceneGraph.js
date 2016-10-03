@@ -461,69 +461,82 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 };
 
 /*
- * PARSE TRANSFORMATIONS
+ * Method that parses elements of one block (TRANSFORMATIONS) and stores information in a specific data structure (transformationsList).
+ * transformationsList is a list of Objects of type MyTransformation.
  */
 MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	var transformations_elems =  rootElement.getElementsByTagName('transformations');
+	//errors
 	if (transformations_elems == null) {
 		return "transformations element is missing.";
 	}
 
 	var n_transformation = transformations_elems[0].children.length;
-
 	if(n_transformation == 0){
-		return "0 transformations";
+		return "zero 'transformation' elements";
 	}
 
 	var transformation;
 	var final_t; //final transformation
 
-	//saves data info of each final transformation
+	//courses throught transformations
 	for (var i=0; i < n_transformation; i++)
 	{
 		transformation = transformations_elems[0].children[i];
 
-		final_t = new MyTransformation(transformation.attributes.getNamedItem("id").value);
+		var id = transformation.attributes.getNamedItem("id").value;
+		if(this.verifyExistingId(id,this.transformationsList)){
+			return "id "+id+" from block 'transformations' already exists!";
+		}
 
+		//Identity matrix at the beggining
+		final_t = new MyTransformation(id);
+
+		//error (we need at least 1 transformation)
 		if(transformation.children.length == 0){
 			return "Transformation without information";
 		}
 
-		//transformations that are part of the dfinal transformation
+		//multiply all transformations to final_t
 		for(var j = 0; j < transformation.children.length; j++){
-		
-			if(transformation.children[j].tagName == "translate"){
-				final_t.translate(transformation.children[j].attributes.getNamedItem("x").value,
-												transformation.children[j].attributes.getNamedItem("y").value,
-												transformation.children[j].attributes.getNamedItem("z").value);
+			var tag_name = transformation.children[j].tagName;
 
-				
-			}
-			else if(transformation.children[j].tagName == "rotate"){
-				final_t.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
-												transformation.children[j].attributes.getNamedItem("angle").value);
-			}
-			else if(transformation.children[j].tagName == "scale"){
-				final_t.scale(transformation.children[j].attributes.getNamedItem("x").value,
-												transformation.children[j].attributes.getNamedItem("y").value,
-												transformation.children[j].attributes.getNamedItem("z").value);
+			switch(tag_name){
+				case "translate":
+					final_t.translate(transformation.children[j].attributes.getNamedItem("x").value,
+									  transformation.children[j].attributes.getNamedItem("y").value,
+									  transformation.children[j].attributes.getNamedItem("z").value);
+					break;
+				case "rotate":
+					final_t.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
+								   transformation.children[j].attributes.getNamedItem("angle").value);
+					break;
+				case "scale":
+					final_t.scale(transformation.children[j].attributes.getNamedItem("x").value,
+								  transformation.children[j].attributes.getNamedItem("y").value,
+								  transformation.children[j].attributes.getNamedItem("z").value);
+					break;
+				default:
+					return "inexisting tag name";
+
 			}
 		}
-		final_t.display();
+		//saves final matrix at transformationsList
 		this.transformationsList[i] = final_t;
 
+		//final_t.display();
 	}
 }
 
 /*
- * PARSE PRIMITIVES
+ * Method that parses elements of one block (PRIMITIVES) and stores information in a specific data structure (primitivesList).
+ * primitivesList is a list of Objects of type MyPrimitive.
  */
-
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
 	var primitives_elems =  rootElement.getElementsByTagName('primitives');
-
+	//errors
 	if (primitives_elems == null) {
 		return "primitives element is missing.";
 	}
@@ -531,30 +544,35 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	var n_primitives = primitives_elems[0].children.length;
 
 	if(n_primitives == 0){
-		return "0 primitives";
+		return "zero 'primitive' elements";
 	}
 
+	//courses throught 'primitives' childrens
 	var primitive,prim,tagName;
-
 	for(var i = 0; i < n_primitives; i++){
 
 		primitive = primitives_elems[0].children[i];
 
+		//error -> just one element for primitive
 		if(primitive.children.length != 1){
 			return "more/less than one primitive component";
 		}
 		
 		tagName = primitive.children[0].tagName;
 		var id = primitive.attributes.getNamedItem("id").value;
+		if(this.verifyExistingId(id,this.primitivesList)){
+			return "id "+id+" from block 'primitives' already exists!";
+		}
 
+		//different primitives for different tag names
 		switch(tagName){
 			case "rectangle":{
 				var p1 = new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
-								 primitive.children[0].attributes.getNamedItem("y1").value,
-								 0);
+								 	 primitive.children[0].attributes.getNamedItem("y1").value,
+								 	 0);
 				var p2 = new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
-								 primitive.children[0].attributes.getNamedItem("y2").value,
-								 0);
+								 	 primitive.children[0].attributes.getNamedItem("y2").value,
+								 	 0);
 
 				prim = new MyRectangle(id,p1,p2);
 				break;
@@ -609,10 +627,14 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			}
 		}
 		this.primitivesList[i] = prim;
-		this.primitivesList[i].printInfo();
+		//this.primitivesList[i].printInfo();
 	}
 }
 
+/**
+ * This method returns true if 'list' has any element with id 'id'.
+ * Returns false, otherwise.
+ */
 MySceneGraph.prototype.verifyExistingId = function(id, list) {
 	for(var i = 0; i < list.length; i++)
 	{
