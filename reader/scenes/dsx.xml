@@ -97,17 +97,17 @@
         <transformation id="teste1">
            <!-- instrucoes a usar sem limite nem ordem -->
            <!-- deve existir pelo menos uma transformacao -->
-           <translate x="ff" y="ff" z="ff" />
-           <rotate axis="cc" angle="ff" />
-           <scale x="ff" y="ff" z="ff" />
+           <translate x="0.1" y="2" z="3" />
+           <rotate axis="x" angle="0.5" />
+           <scale x="4" y="9" z="-1" />
         </transformation>
 
          <transformation id="teste2">
            <!-- instrucoes a usar sem limite nem ordem -->
            <!-- deve existir pelo menos uma transformacao -->
-           <translate x="ff" y="ff" z="ff" />
-           <rotate axis="cc" angle="ff" />
-           <scale x="ff" y="ff" z="ff" />
+           <translate x="0" y="1" z="4" />
+           <rotate axis="y" angle="2" />
+           <scale x="-2" y="1" z="7" />
         </transformation>
         
     </transformations>

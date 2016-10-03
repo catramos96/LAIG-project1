@@ -19,7 +19,7 @@ function MySceneGraph(filename, scene) {
 	this.lightsList = [];						//lista com as diversas luzes
 	this.texturesList = [];						//lista com as diversas texturas
 	this.materialsList = [];					//lista com os diversos materiais
-	this.transformationsList = [][];			//lista com as diversas transformações
+	this.transformationsList = [];			//lista com as diversas transformações
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -346,7 +346,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 
 	for (var i=0; i < nnodes; i++)
 	{
-		console.log("Textura "+this.texturesList[i].getId() + " , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
+		//console.log("Textura "+this.texturesList[i].getId() + " , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
 	}*/
 	
 };
@@ -411,36 +411,49 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		return "0 transformations";
 	}
 
-	var id, transformation, transformation_info;
+	var transformation, transformation_info;
+	var final_t; //final transformation
 
-	//saves data info of each transformation
+	//saves data info of each final transformation
 	for (var i=0; i < n_transformation; i++)
 	{
 		transformation = transformations_elems[0].children[i];
 
-		id = transformation.attributes.getNamedItem("id").value;
+		final_t = new MyFinalTransformation(transformation.attributes.getNamedItem("id").value);
 
 		if(transformation.children.length == 0){
 			return "Transformation without information";
 		}
 
-		//transformations of each one (transformation)
+		//transformations that are part of the dfinal transformation
 		for(var j = 0; j < transformation.children.length; j++){
+
+			//console.log(transformation.children[j]);
+		
 			if(transformation.children[j].tagName == "translate"){
-				//...
+				final_t.addTranslation(transformation.children[j].attributes.getNamedItem("x").value,
+												transformation.children[j].attributes.getNamedItem("y").value,
+												transformation.children[j].attributes.getNamedItem("z").value);
+
+				
 			}
 			else if(transformation.children[j].tagName == "rotate"){
-				//...
+				final_t.addRotation(transformation.children[j].attributes.getNamedItem("axis").value,
+												transformation.children[j].attributes.getNamedItem("angle").value);
 			}
 			else if(transformation.children[j].tagName == "scale"){
-				//...
+				final_t.addScaling(transformation.children[j].attributes.getNamedItem("x").value,
+												transformation.children[j].attributes.getNamedItem("y").value,
+												transformation.children[j].attributes.getNamedItem("z").value);
 			}
-			//inserir em transformationsList[i][j];
-		}
 
+			//final_t.getTransformations()[j].printInfo();
+		}
+		this.transformationsList[i] = final_t;
+		this.transformationsList[i].printInfo();
 
 	}
-};
+}
 
 
 /*
