@@ -124,12 +124,23 @@
             <!-- os parametros devem ser interpretados, genericamente como-->
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
 			
-            <rectangle x1="0" y1="0" x2="1" y2="1" />
-            <triangle x1="0" y1="0" z1="0" x2="0" y2="1" z2="0" x3="0" y3="1" z3="1" />		<!-- no plano yOz -->
+            <rectangle x1="0.3" y1="-0.9" x2="1" y2="1" />					<!-- ????????? -->
+        </primitive>
+
+        <primitive id="primitive2">
+            <triangle x1="0" y1="0" z1="0" x2="0" y2="1" z2="0" x3="0" y3="1" z3="1" />
+        </primitive>
+
+        <primitive id="primitive3">
             <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
+        </primitive>
+
+        <primitive id="primitive4">
             <sphere radius="1" slices="10" stacks="10" />
-            <torus inner="ff" outer="ff" slices="ii" loops="ii" />							<!-- ????????? -->
-            
+        </primitive>
+
+        <primitive id="primitive5">
+            <torus inner="3" outer="2" slices="12" loops="8" />
         </primitive>
         
     </primitives>

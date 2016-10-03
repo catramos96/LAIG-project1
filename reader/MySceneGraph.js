@@ -19,7 +19,8 @@ function MySceneGraph(filename, scene) {
 	this.lightsList = [];						//lista com as diversas luzes
 	this.texturesList = [];						//lista com as diversas texturas
 	this.materialsList = [];					//lista com os diversos materiais
-	this.transformationsList = [];			//lista com as diversas transformações
+	this.transformationsList = [];				//lista com as diversas transformações
+	this.primitivesList = [];					//lista com as diversas primitivas
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -82,6 +83,11 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	//Parse Transformations
 	if ((error = this.parseTransformations(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Primitives
+	if ((error = this.parsePrimitives(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
@@ -317,8 +323,12 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 }
 
-MySceneGraph.prototype.parseTextures = function(rootElement) {
 /*
+ * PARSE TEXTURES
+ */
+
+MySceneGraph.prototype.parseTextures = function(rootElement) {
+
 	var texture_elems =  rootElement.getElementsByTagName('textures');
 	if (texture_elems == null) {
 		return "texture element is missing.";
@@ -347,12 +357,16 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	for (var i=0; i < nnodes; i++)
 	{
 		//console.log("Textura "+this.texturesList[i].getId() + " , length_t = "+this.texturesList[i].getLengthT()+" , length_s = "+this.texturesList[i].getLengthS());
-	}*/
+	}
 	
 };
 
-MySceneGraph.prototype.parseMaterials = function(rootElement) {
 /*
+ * PARSE MATERIALS
+ */
+
+MySceneGraph.prototype.parseMaterials = function(rootElement) {
+
 	var material_elems =  rootElement.getElementsByTagName('materials');
 	if (material_elems == null) {
 		return "materials element is missing.";
@@ -391,7 +405,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 	for(var i = 0; i < nnodes; i++){
 		console.log("Material "+ this.materialsList[i].getId()); //acabar isto?
-	}*/
+	}
 };
 
 /*
@@ -427,8 +441,6 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 		//transformations that are part of the dfinal transformation
 		for(var j = 0; j < transformation.children.length; j++){
-
-			//console.log(transformation.children[j]);
 		
 			if(transformation.children[j].tagName == "translate"){
 				final_t.addTranslation(transformation.children[j].attributes.getNamedItem("x").value,
@@ -446,15 +458,96 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 												transformation.children[j].attributes.getNamedItem("y").value,
 												transformation.children[j].attributes.getNamedItem("z").value);
 			}
-
-			//final_t.getTransformations()[j].printInfo();
 		}
 		this.transformationsList[i] = final_t;
-		this.transformationsList[i].printInfo();
+		//this.transformationsList[i].printInfo();
 
 	}
 }
 
+/*
+ * PARSE PRIMITIVES
+ */
+
+MySceneGraph.prototype.parsePrimitives = function(rootElement) {
+
+	var primitives_elems =  rootElement.getElementsByTagName('primitives');
+
+	if (primitives_elems == null) {
+		return "primitives element is missing.";
+	}
+
+	var n_primitives = primitives_elems[0].children.length;
+
+	if(n_primitives == 0){
+		return "0 primitives";
+	}
+
+	var primitive,id,p,tagName;
+
+	for(var i = 0; i < n_primitives; i++){
+
+		primitive = primitives_elems[0].children[i];
+		id = primitive.attributes.getNamedItem("id").value;
+
+		if(primitive.children.length != 1){
+			return "more/less than one primitive component";
+		}
+		
+		tagName = primitive.children[0].tagName;
+
+		p = new MyPrimitive(id,tagName);
+
+		switch(tagName){
+			case "rectangle":{
+				p.setPoint1(new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
+										primitive.children[0].attributes.getNamedItem("y1").value,
+										0));
+				p.setPoint2(new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
+										primitive.children[0].attributes.getNamedItem("y2").value,
+										0));
+				break;
+			}
+			case "triangle":{
+				p.setPoint1(new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
+										primitive.children[0].attributes.getNamedItem("y1").value,
+										primitive.children[0].attributes.getNamedItem("z1").value));
+
+				p.setPoint2(new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
+										primitive.children[0].attributes.getNamedItem("y2").value,
+										primitive.children[0].attributes.getNamedItem("z2").value));
+
+				p.setPoint3(new MyPoint(primitive.children[0].attributes.getNamedItem("x3").value,
+										primitive.children[0].attributes.getNamedItem("y3").value,
+										primitive.children[0].attributes.getNamedItem("z3").value));
+				break;
+			}
+			case "cylinder": {
+				p.setCylinderProp(primitive.children[0].attributes.getNamedItem("base").value,
+									primitive.children[0].attributes.getNamedItem("top").value,
+									primitive.children[0].attributes.getNamedItem("height").value,
+									primitive.children[0].attributes.getNamedItem("slices").value,
+									primitive.children[0].attributes.getNamedItem("stacks").value);
+				break;
+			}
+			case "sphere": {
+				p.setSphereProp(primitive.children[0].attributes.getNamedItem("radius").value,
+								primitive.children[0].attributes.getNamedItem("slices").value,
+								primitive.children[0].attributes.getNamedItem("stacks").value);
+				break;
+			}
+			case "torus" : {
+				p.setTorusProp(primitive.children[0].attributes.getNamedItem("inner").value,
+								primitive.children[0].attributes.getNamedItem("outer").value,
+								primitive.children[0].attributes.getNamedItem("slices").value,
+								primitive.children[0].attributes.getNamedItem("loops").value);
+				break;
+			}
+		}
+		this.primitivesList[i] = p;
+		this.primitivesList[i].printInfo();
+	}
+}
 
 /*
  * Callback to be executed on any read error
