@@ -112,4 +112,26 @@
         
     </transformations>
 
+    <primitives>
+    
+        <!-- Deve existir um ou mais blocos "primitive" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+		
+        <primitive id="primitive1">
+           
+            <!-- apenas pode existir UMA das seguintes tags: -->
+            <!--     rectangle, triangle, cylinder, sphere, torus -->
+            <!-- os parametros devem ser interpretados, genericamente como-->
+            <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
+			
+            <rectangle x1="0" y1="0" x2="1" y2="1" />
+            <triangle x1="0" y1="0" z1="0" x2="0" y2="1" z2="0" x3="0" y3="1" z3="1" />		<!-- no plano yOz -->
+            <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
+            <sphere radius="1" slices="10" stacks="10" />
+            <torus inner="ff" outer="ff" slices="ii" loops="ii" />							<!-- ????????? -->
+            
+        </primitive>
+        
+    </primitives>
+
 </dsx>
