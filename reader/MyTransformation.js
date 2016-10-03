@@ -1,77 +1,93 @@
 /*
  * Data Struct of Transformation
- * type: "scale" ; "translate" ; "rotate"
  */
-function MyTransformation(type){ 
-  if(type != "translate" && type != "scale" && type != "rotate")
-    return "Wrong transformation info";
+function MyTransformation(id){ 
+    //comecamos com a matriz identidade
+    this.id = id;
+    this.matrix = [ 1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1];
 
-  this.type = type;
-  this.coord = new MyPoint(0,0,0);   //default
-  this.axis = 'x';                  //may not be used
-  this.angle = 0;                   //the same
 }
 
-/*
- * PRINT
+/**
+ * Só funciona para matrizes 4x4
  */
-MyTransformation.prototype.printInfo = function(){
-    switch(this.type){
-        case "translate":
-        {
-            console.log("translate");
-            this.coord.printInfo();
-            break;
-        }
-        case "scale":
-        {
-            console.log("scale");
-            this.coord.printInfo();
-            break;
-        }
-        case "rotate":
-        {
-            console.log("rotate");
-            console.log("axix - " + this.axis + " ; angle - " + this.angle);
-            break;
-        }
-    }
-}
+ MyTransformation.prototype.multiply = function(m1, m2){
 
-/*
- * GETS
- */
-MyTransformation.prototype.getType = function(){
-    return this.type;
-}
-
-MyTransformation.prototype.getCoord = function(){
-    return this.coord;
-}
-
-MyTransformation.prototype.getAxis = function(){
-    return this.axis;
-}
-
-MyTransformation.prototype.getAngle = function(){
-    return this.angle;
-}
-
-
-/*
- * SETS
- */
-
-MyTransformation.prototype.setCoord = function(newCoord){
-    this.coord.equals(newCoord);
-}
-
-MyTransformation.prototype.setAxis = function(a){
-    this.axis = a;
-}
-
-MyTransformation.prototype.setAngle = function(ang){
-    this.angle = ang;
-}
-
+    m3 = [];
+   
+   m3[0] = m1[0]*m2[0] + m1[1]*m2[4] + m1[2]*m2[8]+ m1[3]*m2[12];
+   m3[1] = m1[0]*m2[1] + m1[1]*m2[5] + m1[2]*m2[9]+ m1[3]*m2[13];
+   m3[2] = m1[0]*m2[2] + m1[1]*m2[6] + m1[2]*m2[10]+ m1[3]*m2[14];
+   m3[3] = m1[0]*m2[3] + m1[1]*m2[7] + m1[2]*m2[11]+ m1[3]*m2[15];
+   m3[4] = m1[4]*m2[0] + m1[5]*m2[4] + m1[6]*m2[8]+ m1[7]*m2[12];
+   m3[5] = m1[4]*m2[1] + m1[5]*m2[5] + m1[6]*m2[9]+ m1[7]*m2[13];
+   m3[6] = m1[4]*m2[2] + m1[5]*m2[6] + m1[6]*m2[10]+ m1[7]*m2[14];
+   m3[7] = m1[4]*m2[3] + m1[5]*m2[7] + m1[6]*m2[11]+ m1[7]*m2[15];
+   m3[8] = m1[8]*m2[0] + m1[9]*m2[4] + m1[10]*m2[8]+ m1[11]*m2[12];
+   m3[9] = m1[8]*m2[1] + m1[9]*m2[5] + m1[10]*m2[9]+ m1[11]*m2[13];
+   m3[10] = m1[8]*m2[2] + m1[9]*m2[6] + m1[10]*m2[10]+ m1[11]*m2[14];
+   m3[11] = m1[8]*m2[3] + m1[9]*m2[7] + m1[10]*m2[11]+ m1[11]*m2[15];
+   m3[12] = m1[12]*m2[0] + m1[13]*m2[4] + m1[14]*m2[8]+ m1[15]*m2[12];
+   m3[13] = m1[12]*m2[1] + m1[13]*m2[5] + m1[14]*m2[9]+ m1[15]*m2[13];
+   m3[14] = m1[12]*m2[2] + m1[13]*m2[6] + m1[14]*m2[10]+ m1[15]*m2[14];
+   m3[15] = m1[12]*m2[3] + m1[13]*m2[7] + m1[14]*m2[11]+ m1[15]*m2[15];
  
+   return m3;
+ }
+
+ MyTransformation.prototype.translate = function(x,y,z){
+   translMatrix =  [ 1, 0, 0, x,
+                    0, 1, 0, y,
+                    0, 0, 1, z,
+                    0, 0, 0, 1 ];
+
+   this.matrix = this.multiply(this.matrix, translMatrix);
+ }
+
+ MyTransformation.prototype.scale = function(x,y,z){
+   scaleMatrix =  [ x, 0, 0, 0,
+                    0, y, 0, 0,
+                    0, 0, z, 0,
+                    0, 0, 0, 1 ];
+
+   this.matrix = this.multiply(this.matrix, scaleMatrix);
+ }
+
+ MyTransformation.prototype.rotate = function(axis, angle){
+     if(axis == "x"){
+         rotMatrix = [ 1, 0, 0, 0,
+                       0, Math.cos(angle), -Math.sin(angle), 0,
+                       0, Math.sin(angle), Math.cos(angle), 0,
+                       0, 0, 0, 1 ];
+
+     }
+     if(axis == "y"){
+         rotMatrix = [ Math.cos(angle), 0, Math.sin(angle), 0,
+                       0, 1, 0, 0,
+                       -Math.sin(angle), 0, Math.cos(angle), 0,
+                       0, 0, 0, 1 ];
+
+     }
+     if(axis == "z"){
+         rotMatrix = [ Math.cos(angle), -Math.sin(angle), 0, 0,
+                       Math.sin(angle), Math.cos(angle), 0, 0,
+                       0, 0, 1, 0,
+                       0, 0, 0, 1 ];
+
+     }
+     this.matrix = this.multiply(this.matrix, rotMatrix);
+ }
+
+ MyTransformation.prototype.display = function(){
+
+    m = this.matrix;
+    console.log("Matriz : "+this.id);
+    console.log("[ "+m[0]+" "+m[1]+" "+m[2]+" "+m[3]+" ]");
+    console.log("[ "+m[4]+" "+m[5]+" "+m[6]+" "+m[7]+" ]");
+    console.log("[ "+m[8]+" "+m[9]+" "+m[10]+" "+m[11]+" ]");
+    console.log("[ "+m[12]+" "+m[13]+" "+m[14]+" "+m[15]+" ]");
+ }
+

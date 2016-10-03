@@ -425,7 +425,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		return "0 transformations";
 	}
 
-	var transformation, transformation_info;
+	var transformation;
 	var final_t; //final transformation
 
 	//saves data info of each final transformation
@@ -433,7 +433,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	{
 		transformation = transformations_elems[0].children[i];
 
-		final_t = new MyFinalTransformation(transformation.attributes.getNamedItem("id").value);
+		final_t = new MyTransformation(transformation.attributes.getNamedItem("id").value);
 
 		if(transformation.children.length == 0){
 			return "Transformation without information";
@@ -443,24 +443,24 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		for(var j = 0; j < transformation.children.length; j++){
 		
 			if(transformation.children[j].tagName == "translate"){
-				final_t.addTranslation(transformation.children[j].attributes.getNamedItem("x").value,
+				final_t.translate(transformation.children[j].attributes.getNamedItem("x").value,
 												transformation.children[j].attributes.getNamedItem("y").value,
 												transformation.children[j].attributes.getNamedItem("z").value);
 
 				
 			}
 			else if(transformation.children[j].tagName == "rotate"){
-				final_t.addRotation(transformation.children[j].attributes.getNamedItem("axis").value,
+				final_t.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
 												transformation.children[j].attributes.getNamedItem("angle").value);
 			}
 			else if(transformation.children[j].tagName == "scale"){
-				final_t.addScaling(transformation.children[j].attributes.getNamedItem("x").value,
+				final_t.scale(transformation.children[j].attributes.getNamedItem("x").value,
 												transformation.children[j].attributes.getNamedItem("y").value,
 												transformation.children[j].attributes.getNamedItem("z").value);
 			}
 		}
+		final_t.display();
 		this.transformationsList[i] = final_t;
-		//this.transformationsList[i].printInfo();
 
 	}
 }
