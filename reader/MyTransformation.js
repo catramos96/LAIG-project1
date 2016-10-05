@@ -11,12 +11,20 @@ function MyTransformation(id){
 
 }
 
+ MyTransformation.prototype.getMatrix = function(){
+     return this.matrix;
+ }
+
  MyTransformation.prototype.getId = function(){
      return this.id;
  }
 
+ MyTransformation.prototype.setMatrix = function(m){
+    this.matrix = m;
+ }
+
 /**
- * Só funciona para matrizes 4x4
+ * Só funciona para matrizes 4x4 
  */
  MyTransformation.prototype.multiply = function(m1, m2){
 

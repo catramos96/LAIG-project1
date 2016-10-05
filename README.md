@@ -35,8 +35,17 @@
 
 # atenção: #
 
+* não faz sentido n classe MyTranformation o multiply ser entre duas matrizes que nada teem a haver com o objecto da classe
+  *ex tempT = tempT.multiply(tempT,tempT2) em parseComponents
+
 * o comprimento e a largura de cada textura devem ser potências de 2).
+
+* melhorar tratamento de erros do bloco das componentes
 
 * O trabalho deve ser desenvolvido de forma incremental:
 	* Versão inicial do parser, estrutura interna de dados e rotinas de visualização que permitam ler, armazenar e visualizar primitivas e transformações simples, (ignorando inicialmente luzes, materiais e texturas.)
        * Versão progressivamente estendida do parser, estrutura e visualizador com as restantes funcionalidades
+
+* Verificar se a ordem pela qual as matrizes sao multiplicadas estão corretas (parseTransformations e parseComponents)
+
+* Tentar detectar ciclos nos childrens dos components

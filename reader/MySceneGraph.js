@@ -19,6 +19,7 @@ function MySceneGraph(filename, scene) {
 	this.materialsList = [];					//lista com os diversos materiais
 	this.transformationsList = [];				//lista com as diversas transformações
 	this.primitivesList = [];					//lista com as diversas primitivas
+	this.componentsList = [];					//lista com os diversos componentes
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -88,6 +89,11 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	//Parse Primitives
 	if ((error = this.parsePrimitives(rootElement)) != null) {
+		this.onXMLError(error);
+		return;
+	}
+	//Parse Components
+	if ((error = this.parseComponents(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
@@ -161,7 +167,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		// process each element and store its information
 		var id = tempP.attributes.getNamedItem("id").value;
-		if(!this.verifyExistingId(id,this.perspectiveList)) 
+		if(this.verifyExistingId(id,this.perspectiveList) == -1) //not found
 			perspective.setId(id);
 		else
 			return "id repetead!";
@@ -305,7 +311,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		
 		//verifies if 'id'' is unic on lightsList
 		id = this.reader.getString(lights, 'id');
-		if(this.verifyExistingId(id,this.lightsList))
+		if(this.verifyExistingId(id,this.lightsList) != -1) //found
 			return "id "+id+" from block 'lights' already exists!";
 
 		enable = this.reader.getFloat(lights, 'enabled');
@@ -319,14 +325,20 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			target = new MyPoint(lights.attributes.getNamedItem("x").value,
 								lights.attributes.getNamedItem("y").value,
 								lights.attributes.getNamedItem("z").value);
-		}
 
-		lights = lights_elems[0].children[i].children[spot];
-		location = new MyPoint(lights.attributes.getNamedItem("x").value,
+			lights = lights_elems[0].children[i].children[1];
+			location = [lights.attributes.getNamedItem("x").value,
 								lights.attributes.getNamedItem("y").value,
-								lights.attributes.getNamedItem("z").value); //FALTA O WW !!!!!!!!!!!
-
-
+								lights.attributes.getNamedItem("z").value];
+		}
+		else{
+			lights = lights_elems[0].children[i].children[0];
+			location = [lights.attributes.getNamedItem("x").value,
+								lights.attributes.getNamedItem("y").value,
+								lights.attributes.getNamedItem("z").value,
+								lights.attributes.getNamedItem("w").value];
+		}
+		
 		lights = lights_elems[0].children[i].children[1 + spot];
 		ambient = new MyColor(lights.attributes.getNamedItem("r").value,
 								lights.attributes.getNamedItem("g").value,
@@ -353,7 +365,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			this.lightsList[i] = new MyLight(id,enable,location,ambient,diffuse,specular);
 		}
 
-		//this.lightsList[i].printInfo();
+		this.lightsList[i].printInfo();
 	}
 }
 
@@ -366,7 +378,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	var texture_elems =  rootElement.getElementsByTagName('textures');
 
 	//errors
-	if (texture_elems == null) {
+	if (texture_elems == null || texture_elems.length != 1) {
 		return "texture element is missing.";
 	}
 
@@ -381,7 +393,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		var temp = texture_elems[0].children[i];
 
 		var id = temp.attributes.getNamedItem("id").value;
-		if(this.verifyExistingId(id,this.texturesList)){
+		if(this.verifyExistingId(id,this.texturesList) != -1){ //found
 			return "id "+id+" from block 'textures' already exists!";
 		}
 		var file = temp.attributes.getNamedItem("file").value;
@@ -410,8 +422,8 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 	var material_elems =  rootElement.getElementsByTagName('materials');
 	//errors
-	if (material_elems == null) {
-		return "materials element is missing.";
+	if (material_elems == null || material_elems.length == 1) {
+		return "materials element is missing or more than one block materials.";
 	}
 
 	var nnodes = material_elems[0].children.length;
@@ -426,7 +438,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 		//verifies repetead id
 		var id = temp.attributes.getNamedItem("id").value;
-		if(this.verifyExistingId(id,this.materialsList)){
+		if(this.verifyExistingId(id,this.materialsList) != -1){ //found
 			return "id "+id+" from block 'materials' already exists!";
 		}
 		var material = new MyMaterial(id);
@@ -468,7 +480,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	var transformations_elems =  rootElement.getElementsByTagName('transformations');
 	//errors
-	if (transformations_elems == null) {
+	if (transformations_elems == null || transformations_elems.length != 1) {
 		return "transformations element is missing.";
 	}
 
@@ -486,7 +498,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		transformation = transformations_elems[0].children[i];
 
 		var id = transformation.attributes.getNamedItem("id").value;
-		if(this.verifyExistingId(id,this.transformationsList)){
+		if(this.verifyExistingId(id,this.transformationsList) != -1){ //found
 			return "id "+id+" from block 'transformations' already exists!";
 		}
 
@@ -536,8 +548,8 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
 	var primitives_elems =  rootElement.getElementsByTagName('primitives');
-	//errors
-	if (primitives_elems == null) {
+	
+	if (primitives_elems == null || primitives_elems.length != 1) {
 		return "primitives element is missing.";
 	}
 
@@ -560,7 +572,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		
 		tagName = primitive.children[0].tagName;
 		var id = primitive.attributes.getNamedItem("id").value;
-		if(this.verifyExistingId(id,this.primitivesList)){
+		if(this.verifyExistingId(id,this.primitivesList) != -1){
 			return "id "+id+" from block 'primitives' already exists!";
 		}
 
@@ -631,14 +643,219 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	}
 }
 
+/*
+ * Method that parses elements of one block (Components) and stores information in a specific data structure (MyGlobals)
+ */
+MySceneGraph.prototype.parseComponents = function(rootElement) {
+
+	//<components>
+	var components_elems =  rootElement.getElementsByTagName('components');
+	
+	if (components_elems == null) {
+		return "components element is missing.";
+	}
+	if (components_elems.length != 1) {
+		return "either zero or more than one 'components' element found.";
+	}
+
+	var n_components = components_elems[0].children.length;
+
+	var component, id;								// id
+	var matrixT = []								// matrixT 
+	var materialsId = [];							// materialsId
+	var textureId = "";									// texture
+	var childrenPrimitivesId = [];					// children primitives id
+	var childrenCompId = [];						// children component id
+
+	var pos;		//position in the componentsList to be set with proper attributes
+
+	//Check all components
+	for(var i = 0 ; i < n_components ; i++){
+		
+		//reset values
+		id = "";					
+		matrixT = [];						
+		materialsId = [];						
+		textureId = "";							
+		childrenPrimitivesId = [];					
+		childrenCompId = [];					
+		pos = -1;	
+		
+		if(n_components < this.componentsList.length){
+			return "More components in the list than those who are defined";
+		}
+
+		//<component>
+		component = components_elems[0].children[i];
+		id = component.attributes.getNamedItem("id").value;
+
+		if(i == 0){
+			this.componentsList[0] = new MyComponent(id);
+		}
+
+		//It may be caused by wrong order of components (leitura é feita em profundidade)
+		if((pos = this.verifyExistingId(id,this.componentsList)) == -1){
+			return "Component with id '" + id + "' not found";
+		}
+		
+		//<transformation>
+		var transformation,n_transformations;
+
+		transformation = component.children[0];
+		n_transformations= transformation.children.length;		//inside <transformation>
+
+		/*Error for : 
+			 - more than one <transformationref>
+			 - just one <transformationref> or <rotate>/<scale>/<translate> transformations
+			 - none transformations
+			 - more than one or 0 block <transformation>
+		*/
+		if(transformation.length == 0 ||
+			(transformation.getElementsByTagName("transformationref").length != n_transformations &&
+			 transformation.getElementsByTagName("transformationref").length == 1) ||
+			transformation.getElementsByTagName("transformationref").length > 1){
+			return "component with 0 transformation or 'transformationref' and rot/scale/trans tranformations at the same time";
+		}
+
+		if(n_transformations == 1){		//<transformationref>
+			var pos, transformationId;
+			transformationId = transformation.getElementsByTagName("transformationref")[0].attributes.getNamedItem("id").value;
+			
+			if((pos = this.verifyExistingId(transformationId,this.transformationsList)) == -1){ //not found
+				return "transformationref id not found";
+			}
+			matrixT = this.transformationsList[pos].getMatrix();
+		}
+		else{							//<rotate>/<scale>/<translate>
+
+			for(var j = 0; j < n_transformations;j++){
+
+				var tag_name = transformation.children[j].tagName;
+				var temp = new MyTransformation("");
+				//temp.display();
+				switch(tag_name){
+					case "translate":
+						temp.translate(transformation.children[j].attributes.getNamedItem("x").value,
+										  transformation.children[j].attributes.getNamedItem("y").value,
+										  transformation.children[j].attributes.getNamedItem("z").value);
+						break;
+					case "rotate":
+						temp.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
+									   transformation.children[j].attributes.getNamedItem("angle").value);
+						break;
+					case "scale":
+						temp.scale(transformation.children[j].attributes.getNamedItem("x").value,
+									  transformation.children[j].attributes.getNamedItem("y").value,
+									  transformation.children[j].attributes.getNamedItem("z").value);
+						break;
+					default:
+						return "inexisting tag name";
+				
+				}
+				//temp.display();
+			}
+			matrixT = temp.getMatrix();
+		}
+
+		//<materials>
+		var materials, n_materials;
+
+		materials = component.children[1];
+		n_materials = materials.children.length;
+
+		for(var j = 0; j < n_materials ; j++){
+			
+			materialsId[j] = materials.children[j].attributes.getNamedItem("id").value;
+			
+			/*Error
+			 - id doesn't found on texturesList and id != "inherit" */
+			if(this.verifyExistingId(materialsId[j],this.materialsList) == -1 && materialsId[j] != "inherit")
+			{
+				return "Components '" + id + "' materialsId '" + materialsId[j] + "' not found";
+			}
+			//console.log(materialsId[j]);
+
+		}
+
+		//<texture>
+		var texture = component.getElementsByTagName("texture");
+		
+		if(texture.length != 1){
+			return "Components '" + id + "' has more than one component's texture";
+		}
+
+		var textureId = texture[0].attributes.getNamedItem("id").value;
+		
+		if(this.verifyExistingId(textureId,this.texturesList) == -1 && textureId != "inherit"){
+				return "Components '" + id + "' textureId '" + textureId + "' not found";
+		}
+
+		//<children>
+		
+        var children_elems = component.getElementsByTagName("children");
+		var children;
+
+        if(children_elems.length != 1){
+        	return "Component '" + id + "' has more than one children block";
+        }
+
+      			//<componentref>
+         var compRef = children_elems[0].getElementsByTagName("componentref");
+         for(var j = 0; j < compRef.length ;j++){
+
+         	children = compRef[j];
+         	childrenCompId[j] = children.attributes.getNamedItem("id").value;
+
+			//Os children dos nós são logo adicionados a this.componentList
+			//o primeiro nó é o unico que é adicionado
+			
+         	if(this.verifyExistingId(childrenCompId,this.componentsList) == -1 && i != 0){		//not found
+				return "Component '" + id + "' componentref '" + childrenCompId[j] + "' not in the list of components";
+         	}
+         	else{		//adds to componentsList
+         		this.componentsList[this.componentsList.length] = new MyComponent(childrenCompId[j]);
+         	}
+         //	console.log(childrenCompId);
+         //	console.log(this.componentsList.length);
+         }
+
+         		//<primitiveref>
+         var primitRef = children_elems[0].getElementsByTagName("primitiveref");
+
+         for(var j = 0; j < primitRef.length ;j++){
+
+         	children = primitRef[j];
+
+         	childrenPrimitivesId[j] = children.attributes.getNamedItem("id").value;
+
+			//Os children dos nós são logo adicionados a this.componentList
+			//o primeiro nó é o unico que é adicionado
+			
+         	if(this.verifyExistingId(childrenPrimitivesId[j],this.primitivesList) == -1){		//not found
+				return "Component '" + id + "' primitiveref '" + childrenPrimitivesId[j] + "' not in the list of primitives";
+         	}
+         }
+
+        //Set attributes
+        this.componentsList[pos].setMatrix(matrixT);
+        this.componentsList[pos].setMaterialsId(materialsId);
+        this.componentsList[pos].setTextureId(textureId);
+        this.componentsList[pos].setComponentsId(childrenCompId);
+       	this.componentsList[pos].setPrimitivesId(childrenPrimitivesId);
+       
+		this.componentsList[pos].display();
+	}
+
+}
+
 /**
  * This method returns true if 'list' has any element with id 'id'.
- * Returns false, otherwise.
+ * Returns the position or -1 if id it's not found in the list
  */
 MySceneGraph.prototype.verifyExistingId = function(id, list) {
 	for(var i = 0; i < list.length; i++)
 	{
-		if(id == list[i].getId())	return true;
+		if(id == list[i].getId())	return i;
 	}
-	return false;
+	return -1;
 }

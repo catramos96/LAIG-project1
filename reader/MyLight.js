@@ -40,7 +40,7 @@ MyLight.prototype.printInfo = function(){
    else{
      console.log("Light - Omni; Id - " + this.id + " ; enable - " + this.enable);
    }
-   this.location.printInfo();
+   console.log("Location - " + this.location);
    this.ambient.printInfo();
    this.diffuse.printInfo();
    this.specular.printInfo();
