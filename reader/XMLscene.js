@@ -17,10 +17,15 @@ XMLscene.prototype.init = function (application) {
 
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
-	this.gl.enable(this.gl.CULL_FACE);
-    this.gl.depthFunc(this.gl.LEQUAL);
+	this.gl.enable(this.gl.CULL_FACE); //cull face    = back, enable
+    this.gl.depthFunc(this.gl.LEQUAL); //depth func  = LEQUAL, enable
 
-	this.axis=new CGFaxis(this);
+    //front face   = CCW
+    //lighting     = enable
+    //shading      = Gouraud
+    //polygon mode = fill
+
+	//	this.axis=new CGFaxis();
 };
 
 XMLscene.prototype.initLights = function () {
@@ -45,7 +50,15 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
+	//axis
+	this.axis=new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
+
+	//camaras (perspectives)
+
+	//background
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
+	
+	//lights
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
 };

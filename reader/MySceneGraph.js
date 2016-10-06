@@ -897,3 +897,10 @@ MySceneGraph.prototype.verifyExistingId = function(id, list) {
 	}
 	return -1;
 }
+
+/*
+ *
+ */
+MySceneGraph.prototype.getGlobals = function() {
+	return this.globals;
+}

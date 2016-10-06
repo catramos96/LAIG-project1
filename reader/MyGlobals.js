@@ -10,6 +10,10 @@ function MyGlobals() {
  	this.colorBackground = new MyColor(0,0,0,0);
 }
 
+ MyGlobals.prototype.getAxisLength = function(){
+ 	return this.axis_length;
+ }
+ 
  MyGlobals.prototype.setRoot = function(newRoot){
  	this.root = newRoot;
  }
