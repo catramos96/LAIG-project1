@@ -56,8 +56,15 @@ XMLscene.prototype.onGraphLoaded = function ()
 	//camaras (perspectives)
 
 	//background
-	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
+	this.gl.clearColor(this.graph.getGlobals().getBackground().getR(),
+						this.graph.getGlobals().getBackground().getG(),
+						this.graph.getGlobals().getBackground().getB(),
+						this.graph.getGlobals().getBackground().getA());
 	
+	//ambient
+
+	//doubleside e local ???
+
 	//lights
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
