@@ -31,14 +31,14 @@
         <!-- Os identificadores "id" nao podem ser repetidos -->
 		
         <omni id="lightOmni1" enabled="1" >
-            <location x="3" y="3" z="3" w="0.2" />							<!-- w - ????????? -->
+            <location x="3" y="3" z="3" w="60" />							<!-- w - ????????? -->
             <ambient r="0.5" g="0.5" b="0.5" a="1" />
             <diffuse r="0.5" g="0.5" b="0.5" a="0.8" />
             <specular r="0.5" g="0.5" b="0.5" a="0.5" />
         </omni>
 
         <omni id="lightOmni2" enabled="1" >
-            <location x="0.2" y="3" z="6" w="0.7" />							<!-- w - ????????? -->
+            <location x="0.2" y="3" z="6" w="30" />							<!-- w - ????????? -->
             <ambient r="0.1" g="0.2" b="0.5" a="1" />
             <diffuse r="0.9" g="0.5" b="0.7" a="0.8" />
             <specular r="0.5" g="0.5" b="0.3" a="0.1" />

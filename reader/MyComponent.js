@@ -4,10 +4,7 @@
   function MyComponent(id) {
      this.id = id;
      //properties
-     this.matrix = [1,0,0,0,
-                    0,1,0,0,
-                    0,0,1,0,
-                    0,0,0,0];              
+     this.matrixId = "";             
      this.materialsId = [];
      this.textureId = "";
         
@@ -20,8 +17,12 @@ MyComponent.prototype.getId = function(){
  	return this.id;
  }
 
+ MyComponent.prototype.getComponentsChilds = function(){
+ 	return this.componentsId;
+ }
+
 MyComponent.prototype.setMatrix = function(m){
- 	this.matrix = m;
+ 	this.matrixId = m;
  }
 
  MyComponent.prototype.setMaterialsId = function(mt){
@@ -43,7 +44,7 @@ MyComponent.prototype.setMatrix = function(m){
  MyComponent.prototype.display = function(){
     console.log("START");
  	console.log("Component id: " + this.id);
- 	console.log("Matrix: " + this.matrix);
+ 	console.log("Matrix: " + this.matrixId);
  	console.log("Texture id: " + this.textureId);
  	console.log("Materials id: " + this.materialsId);
  	console.log("Components id: " + this.componentsId);

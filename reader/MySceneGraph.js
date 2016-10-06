@@ -659,79 +659,91 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	}
 
 	var n_components = components_elems[0].children.length;
-
+/*
 	var component, id;								// id
-	var matrixT = []								// matrixT 
+	var matrixT;									// matrixT ---> aqui
 	var materialsId = [];							// materialsId
-	var textureId = "";									// texture
+	var textureId = "";								// texture
 	var childrenPrimitivesId = [];					// children primitives id
-	var childrenCompId = [];						// children component id
+	var childrenCompId = [];						// children component id*/
 
-	var pos;		//position in the componentsList to be set with proper attributes
+	//var pos;		//position in the componentsList to be set with proper attributes
 
 	//Check all components
 	for(var i = 0 ; i < n_components ; i++){
-		
+		/*
 		//reset values
 		id = "";					
-		matrixT = [];						
+		//matrixT;			//aqui			
 		materialsId = [];						
 		textureId = "";							
 		childrenPrimitivesId = [];					
 		childrenCompId = [];					
 		pos = -1;	
-		
+
+		var component, id;								// id
+		var matrixId;									
+		var materialsId = [];							// materialsId
+		var textureId = "";								// texture
+		var childrenPrimitivesId = [];					// children primitives id
+		var childrenCompId = [];						// children component id
+
+		//?
 		if(n_components < this.componentsList.length){
 			return "More components in the list than those who are defined";
-		}
+		}*/
+
 
 		//<component>
 		component = components_elems[0].children[i];
-		id = component.attributes.getNamedItem("id").value;
+		var id = component.attributes.getNamedItem("id").value;
 
-		if(i == 0){
+		/*if(i == 0){
 			this.componentsList[0] = new MyComponent(id);
 		}
 
 		//It may be caused by wrong order of components (leitura é feita em profundidade)
 		if((pos = this.verifyExistingId(id,this.componentsList)) == -1){
 			return "Component with id '" + id + "' not found";
-		}
+		}*/
 		
 		//<transformation>
-		var transformation,n_transformations;
+		var transformation,n_transformations, matrixId;
 
 		transformation = component.children[0];
 		n_transformations= transformation.children.length;		//inside <transformation>
 
 		/*Error for : 
 			 - more than one <transformationref>
-			 - just one <transformationref> or <rotate>/<scale>/<translate> transformations
+			 - just one <transformationref> and <rotate>/<scale>/<translate> transformations
 			 - none transformations
-			 - more than one or 0 block <transformation>
 		*/
-		if(transformation.length == 0 ||
-			(transformation.getElementsByTagName("transformationref").length != n_transformations &&
-			 transformation.getElementsByTagName("transformationref").length == 1) ||
+		if(	(n_transformations > 1 && transformation.getElementsByTagName("transformationref").length == 1) ||
 			transformation.getElementsByTagName("transformationref").length > 1){
 			return "component with 0 transformation or 'transformationref' and rot/scale/trans tranformations at the same time";
 		}
 
-		if(n_transformations == 1){		//<transformationref>
+		if(transformation.length == 0 ){
+			// a matriz é a identidade 
+			var temp = new MyTransformation("default_"+id);
+			this.transformationsList[this.transformationsList.length]=temp;
+			matrixId = temp.getId(); 
+		}
+		else if(transformation.getElementsByTagName("transformationref").length == 1){	//<transformationref>
 			var pos, transformationId;
 			transformationId = transformation.getElementsByTagName("transformationref")[0].attributes.getNamedItem("id").value;
 			
 			if((pos = this.verifyExistingId(transformationId,this.transformationsList)) == -1){ //not found
 				return "transformationref id not found";
 			}
-			matrixT = this.transformationsList[pos].getMatrix();
+			matrixId = this.transformationsList[pos].getId();
 		}
 		else{							//<rotate>/<scale>/<translate>
 
 			for(var j = 0; j < n_transformations;j++){
 
 				var tag_name = transformation.children[j].tagName;
-				var temp = new MyTransformation("");
+				var temp = new MyTransformation("default_"+id);
 				//temp.display();
 				switch(tag_name){
 					case "translate":
@@ -754,11 +766,13 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 				}
 				//temp.display();
 			}
-			matrixT = temp.getMatrix();
+			this.transformationsList[this.transformationsList.length]=temp;
+			matrixId = temp.getId(); //ultima pos //OU+1?
 		}
 
 		//<materials>
 		var materials, n_materials;
+		var materialsId = [];
 
 		materials = component.children[1];
 		n_materials = materials.children.length;
@@ -768,13 +782,12 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			materialsId[j] = materials.children[j].attributes.getNamedItem("id").value;
 			
 			/*Error
-			 - id doesn't found on texturesList and id != "inherit" */
+			 - id doesn't found on materialsList and id != "inherit" */
 			if(this.verifyExistingId(materialsId[j],this.materialsList) == -1 && materialsId[j] != "inherit")
 			{
 				return "Components '" + id + "' materialsId '" + materialsId[j] + "' not found";
 			}
 			//console.log(materialsId[j]);
-
 		}
 
 		//<texture>
@@ -786,20 +799,20 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		var textureId = texture[0].attributes.getNamedItem("id").value;
 		
-		if(this.verifyExistingId(textureId,this.texturesList) == -1 && textureId != "inherit"){
+		if(this.verifyExistingId(textureId,this.texturesList) == -1 && textureId != "inherit" && textureId != "none"){
 				return "Components '" + id + "' textureId '" + textureId + "' not found";
 		}
 
 		//<children>
-		
         var children_elems = component.getElementsByTagName("children");
 		var children;
+		var childrenCompId = [];
 
         if(children_elems.length != 1){
         	return "Component '" + id + "' has more than one children block";
         }
 
-      			//<componentref>
+      	//<componentref>
          var compRef = children_elems[0].getElementsByTagName("componentref");
          for(var j = 0; j < compRef.length ;j++){
 
@@ -808,24 +821,27 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 			//Os children dos nós são logo adicionados a this.componentList
 			//o primeiro nó é o unico que é adicionado
-			
-         	if(this.verifyExistingId(childrenCompId,this.componentsList) == -1 && i != 0){		//not found
+			/*
+			var posTemp = this.verifyExistingId(childrenCompId,this.componentsList);
+         	if(posTemp == -1 && i != 0){		//not found
 				return "Component '" + id + "' componentref '" + childrenCompId[j] + "' not in the list of components";
+         	}
+         	if(pos != -1){	
+
          	}
          	else{		//adds to componentsList
          		this.componentsList[this.componentsList.length] = new MyComponent(childrenCompId[j]);
-         	}
+         	}*/
          //	console.log(childrenCompId);
          //	console.log(this.componentsList.length);
          }
 
-         		//<primitiveref>
+         //<primitiveref>
+         var childrenPrimitivesId = [];
          var primitRef = children_elems[0].getElementsByTagName("primitiveref");
-
          for(var j = 0; j < primitRef.length ;j++){
 
          	children = primitRef[j];
-
          	childrenPrimitivesId[j] = children.attributes.getNamedItem("id").value;
 
 			//Os children dos nós são logo adicionados a this.componentList
@@ -837,15 +853,37 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
          }
 
         //Set attributes
-        this.componentsList[pos].setMatrix(matrixT);
-        this.componentsList[pos].setMaterialsId(materialsId);
-        this.componentsList[pos].setTextureId(textureId);
-        this.componentsList[pos].setComponentsId(childrenCompId);
-       	this.componentsList[pos].setPrimitivesId(childrenPrimitivesId);
+        this.componentsList[i] = new MyComponent(id);
+        this.componentsList[i].setMatrix(matrixId);
+        this.componentsList[i].setMaterialsId(materialsId);
+        this.componentsList[i].setTextureId(textureId);
+        this.componentsList[i].setComponentsId(childrenCompId);
+       	this.componentsList[i].setPrimitivesId(childrenPrimitivesId);
        
-		this.componentsList[pos].display();
+		this.componentsList[i].display();
 	}
 
+	if(!this.isChildrensDefined()){
+		return "Not all components definied!!!";
+	}
+}
+
+/*
+ * Method that verifies componentsList.
+ */
+MySceneGraph.prototype.isChildrensDefined = function() {
+
+	for(var i = 0; i < this.componentsList.length; i++)
+	{
+		var childrens = this.componentsList[i].getComponentsChilds();
+		for(var j= 0; j < childrens.length; j++)
+		{
+			if(this.verifyExistingId(childrens[j],this.componentsList) == -1){
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 /**
