@@ -37,3 +37,11 @@ function MyPerspective() {
  MyPerspective.prototype.setFromPoint = function(point){
  	this.fromPoint = point;
  }
+
+ MyPerspective.prototype.init = function(){
+   console.log(this.angle+" "+this.near+" "+ this.far);
+   //return new CGFcamera(this.angle, this.near, this.far, vec3.fromValues(this.fromPoint.x, this.fromPoint.y, this.fromPoint.z),vec3.fromValues(this.toPoint.x, this.toPoint.y, this.toPoint.z));
+ 
+   return new CGFcamera(this.angle,0.1, 500, vec3.fromValues(this.fromPoint.x, this.fromPoint.y, this.fromPoint.z), vec3.fromValues(this.toPoint.x, this.toPoint.y, this.toPoint.z));
+	
+ }

@@ -90,4 +90,20 @@ MyLight.prototype.printInfo = function(){
  MyLight.prototype.isSpot = function(){         // SPOT ?
    return this.spot;
  }
+
+ MyLight.prototype.init = function(scene, i){
+   /*scene.lights[i].setPosition(2,3,2,1);
+   scene.lights[i].setDiffuse(1,1,1,1);*/
+   scene.lights[i].setPosition(this.location[0],this.location[1],this.location[2],1);
+   scene.lights[i].setDiffuse(this.diffuse.r,this.diffuse.g,this.diffuse.b,this.diffuse.a);
+   scene.lights[i].setAmbient(this.ambient.r,this.ambient.g,this.ambient.b,this.ambient.a);
+   scene.lights[i].setSpecular(this.specular.r,this.specular.g,this.specular.b,this.specular.a);
+   if(this.isSpot()){
+      scene.lights[i].setSpotDirection(vec3.distance(vec3.fromValues(this.location[0],this.location[1],this.location[2]),
+	 												  vec3.fromValues(this.target.x,this.target.y,this.target.z)));
+	  scene.lights[i].setSpotCutOff(this.angle);
+	  scene.lights[i].setSpotExponent(this.exponent);	
+	  scene.lights[i].update();				  
+	}
+ }
  
