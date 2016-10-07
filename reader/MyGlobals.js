@@ -17,6 +17,10 @@ function MyGlobals() {
  MyGlobals.prototype.getBackground = function(){
  	return this.colorBackground;
  }
+
+ MyGlobals.prototype.getAmbient = function(){
+ 	return this.colorAmbient;
+ }
  
  MyGlobals.prototype.setRoot = function(newRoot){
  	this.root = newRoot;

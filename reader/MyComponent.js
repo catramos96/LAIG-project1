@@ -1,54 +1,57 @@
 /*
  * Data Struct of MyComponent
  */
-  function MyComponent(id) {
+  function MyComponent(id,defined) {
      this.id = id;
-     //properties
-     this.matrixId = "";             
-     this.materialsId = [];
-     this.textureId = "";
-        
-     //children
-     this.componentsId = [];
-     this.primitivesId = [];
+     this.defined = defined;
  }
 
-MyComponent.prototype.getId = function(){
+ MyComponent.prototype.isDefined = function(){
+ 	return this.defined;
+ }
+
+ MyComponent.prototype.getId = function(){
  	return this.id;
  }
 
  MyComponent.prototype.getComponentsChilds = function(){
- 	return this.componentsId;
+ 	return this.components;
  }
 
-MyComponent.prototype.setMatrix = function(m){
- 	this.matrixId = m;
+MyComponent.prototype.setTransformation = function(m){
+ 	this.transformation = m;
  }
 
- MyComponent.prototype.setMaterialsId = function(mt){
- 	this.materialsId = mt;
+ MyComponent.prototype.setMaterials = function(mt){
+ 	this.materials = mt;
  }
 
- MyComponent.prototype.setTextureId = function(t){
- 	this.textureId = t;
+ MyComponent.prototype.setTexture = function(t){
+ 	this.texture = t;
  }
 
- MyComponent.prototype.setComponentsId = function(c){
- 	this.componentsId = c;
+ MyComponent.prototype.setComponents = function(c){
+ 	this.components = c;
  }
 
- MyComponent.prototype.setPrimitivesId = function(p){
- 	this.primitivesId = p;
+ MyComponent.prototype.setPrimitives = function(p){
+ 	this.primitives = p;
  }
 
  MyComponent.prototype.display = function(){
     console.log("START");
  	console.log("Component id: " + this.id);
- 	console.log("Matrix: " + this.matrixId);
- 	console.log("Texture id: " + this.textureId);
- 	console.log("Materials id: " + this.materialsId);
- 	console.log("Components id: " + this.componentsId);
- 	console.log("Primitives id: " + this.primitivesId);
+ 	console.log("Matrix: " + this.transformation.getId());
+ 	console.log("Texture id: " + this.texture.getId());
+ 	for(var [key, value] of this.materials){
+ 	  console.log("Materials id: " + key);
+ 	}
+ 	for(var [key, value] of this.components){
+ 	  console.log("Components id: " + key);
+ 	}
+ 	for(var [key, value] of this.primitives){
+ 	  console.log("Primitives id: " + key);
+ 	}
  	console.log("END");
  }
 

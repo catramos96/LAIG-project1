@@ -11,7 +11,7 @@ XMLscene.prototype.init = function (application) {
 
     this.initCameras();
 
-    this.initLights();
+    //this.initLights();
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -19,31 +19,51 @@ XMLscene.prototype.init = function (application) {
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE); //cull face    = back, enable
     this.gl.depthFunc(this.gl.LEQUAL); //depth func  = LEQUAL, enable
-
     //front face   = CCW
     //lighting     = enable
     //shading      = Gouraud
     //polygon mode = fill
 
-	//	this.axis=new CGFaxis();
+    this.axis=new CGFaxis(this);
 };
 
 XMLscene.prototype.initLights = function () {
-
-	this.lights[0].setPosition(2, 3, 3, 1);
+	/*this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-    this.lights[0].update();
+    this.lights[0].update();*/
 };
 
 XMLscene.prototype.initCameras = function () {
+	//camara inicial
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
+	//ambient
+	this.setAmbient(this.graph.getGlobals().getAmbient().getR(),
+					this.graph.getGlobals().getAmbient().getG(),
+					this.graph.getGlobals().getAmbient().getB(),
+					this.graph.getGlobals().getAmbient().getA());
+	//background
+	this.gl.clearColor(this.graph.getGlobals().getBackground().getR(),
+						this.graph.getGlobals().getBackground().getG(),
+						this.graph.getGlobals().getBackground().getB(),
+						this.graph.getGlobals().getBackground().getA());
+/*
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);	
+    this.setShininess(10.0);	*/
+};
+
+XMLscene.prototype.updateCameras = function () {
+	
+
+};
+
+XMLscene.prototype.updateLights = function () {
+	/*this.lights[0].setVisible(true);
+    this.lights[0].enable();*/
+
 };
 
 // Handler called when the graph is finally loaded. 
@@ -54,20 +74,13 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.axis=new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
 
 	//camaras (perspectives)
-
-	//background
-	this.gl.clearColor(this.graph.getGlobals().getBackground().getR(),
-						this.graph.getGlobals().getBackground().getG(),
-						this.graph.getGlobals().getBackground().getB(),
-						this.graph.getGlobals().getBackground().getA());
-	
-	//ambient
-
-	//doubleside e local ???
+	this.updateCameras();
 
 	//lights
-	this.lights[0].setVisible(true);
-    this.lights[0].enable();
+	this.initLights();
+	this.updateLights();
+
+    //doubleside e local ???
 };
 
 XMLscene.prototype.display = function () {
