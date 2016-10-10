@@ -1,8 +1,8 @@
 
 function XMLscene() {
     CGFscene.call(this);
-}
 
+}
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
@@ -17,6 +17,9 @@ XMLscene.prototype.init = function (application) {
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE); //cull face    = back, enable
     this.gl.depthFunc(this.gl.LEQUAL); //depth func  = LEQUAL, enable
+
+	//scene elements
+	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
    
     //front face   = CCW
     //lighting     = enable
@@ -133,7 +136,11 @@ XMLscene.prototype.display = function () {
 
 		//update lights
 		this.updateLights();
-
-	};	
+	}
+	
+	// triangle
+		this.pushMatrix();
+			this.triangle.display();
+		this.popMatrix();
 };
 

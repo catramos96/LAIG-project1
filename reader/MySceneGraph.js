@@ -13,13 +13,13 @@ function MySceneGraph(filename, scene) {
 
 	//parameters
 	this.globals = new MyGlobals();				//variaveis globais do grafo
-	this.perspectiveList = new Map();			//lista com as diversa perspetivas
-	this.lightsList = new Map();				//lista com as diversas luzes
-	this.texturesList = new Map();				//lista com as diversas texturas
-	this.materialsList = new Map();				//lista com os diversos materiais
-	this.transformationsList = new Map();		//lista com as diversas transformações
-	this.primitivesList = new Map();			//lista com as diversas primitivas
-	this.componentsList = new Map();					//lista com os diversos componentes
+	this.perspectiveList = new Map();			//map com as diversa perspetivas
+	this.lightsList = new Map();				//map com as diversas luzes
+	this.texturesList = new Map();				//map com as diversas texturas
+	this.materialsList = new Map();				//map com os diversos materiais
+	this.transformationsList = new Map();		//map com as diversas transformações
+	this.primitivesList = new Map();			//map com as diversas primitivas
+	this.componentsList = new Map();			//map com os diversos componentes
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
