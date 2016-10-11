@@ -1,25 +1,62 @@
 /*
- * Data Struct of MyCylinder inheritance from MyPrimitive
+ * MyCylinder
  */
- function MyCylinder(id,base,top,height,slices,stacks) {
+ function MyCylinder(scene,id,base,top,height,slices,stacks) {
+     CGFobject.call(this,scene);
+
      this.base = base;
      this.top = top;
      this.height = height;
      this.slices = slices;
      this.stacks = stacks;
      this.id = id;
+
+     this.initBuffers();
  }
 
- MyCylinder.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
- MyCylinder.prototype.constructor=MyCylinder; 
+ MyCylinder.prototype = Object.create(CGFobject.prototype);
+ MyCylinder.prototype.constructor = MyCylinder;
 
- /*
- * Print Info
- */
-   
- MyCylinder.prototype.printInfo = function(){
- 	console.log("Primitive id - " + this.id + " ; type - cylinder");
-    console.log("base - " + this.base + " ; top - " + this.top + " ; height - " + this.height);
-    console.log("slices - " + this.slices + " ; stacks - " + this.stacks);
+ MyCylinder.prototype.initBuffers = function() {
 
- }
+ 	var incAng = 2*Math.PI/this.slices;
+ 	var incHeight = this.height / this.stacks;
+ 	var incRadius = (this.top/2 - this.base/2) / this.stacks;
+
+ 	this.vertices = [];
+
+ 	this.indices = [];
+
+ 	this.normals = [];
+
+ 	this.texCoords = [];
+
+ 	for(var i = 0; i < this.stacks+1;i++){        
+ 	  for(var j = 0; j < this.slices+1;j++){ //mais um vetice no final para fazer o mapeamento da textura
+
+ 	    this.vertices.push((this.base/2 + incRadius*i)*Math.cos(incAng*j),
+ 	                      -this.height/2 + incHeight*i,
+ 	                      (this.base/2 + incRadius*i)*Math.sin(incAng*j));
+
+ 	    this.texCoords.push(1-1/this.stacks*i,1-1/this.slices*j);
+
+ 	    this.normals.push(Math.cos(incAng*j),
+ 	                      0,                        //alterar
+ 	                      Math.sin(incAng*j))
+
+ 	    if(j != this.slices && i != this.stacks){
+          
+          this.indices.push(i*(this.slices+1)+j,
+                            (i+1)*(this.slices+1)+j,
+                            i*(this.slices+1)+j+1); //0,4,1 (stacks = 1,slices 3)
+
+         this.indices.push((i+1)*(this.slices+1)+j,
+                            (i+1)*(this.slices+1)+j+1,
+                            i*(this.slices+1)+j+1); //4,5,1*/
+ 	    }
+ 	  }
+ 	}
+ 	
+ 	this.primitiveType = this.scene.gl.TRIANGLES;
+ 	this.initGLBuffers();
+ };
