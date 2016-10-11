@@ -596,7 +596,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 								 	 primitive.children[0].attributes.getNamedItem("y2").value,
 								 	 0);
 
-				//prim = new MyRectangle(id,p1,p2);
+				prim = new MyRectangle(this.scene,id,p1,p2);
 				break;
 			}
 			case "triangle":{
@@ -612,7 +612,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 								 primitive.children[0].attributes.getNamedItem("y3").value,
 								 primitive.children[0].attributes.getNamedItem("z3").value);
 
-				//prim = new MyTriangle(id,p1,p2,p3);
+				prim = new MyTriangle(this.scene,id,p1,p2,p3);
 				break;
 			}
 			case "cylinder": {
@@ -624,7 +624,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				sl = primitive.children[0].attributes.getNamedItem("slices").value;
 				st = primitive.children[0].attributes.getNamedItem("stacks").value;
 
-				//prim = new MyCylinder(id,b,t,h,sl,st);
+				prim = new MyCylinder(this.scene,id,b,t,h,sl,st);
 				break;
 			}
 			case "sphere": {
@@ -633,7 +633,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				sl = primitive.children[0].attributes.getNamedItem("slices").value;
 				st = primitive.children[0].attributes.getNamedItem("stacks").value;
 
-				//prim = new MySphere(id,r,sl,st);
+				prim = new MySphere(this.scene,id,r,sl,st);
 				break;
 			}
 			case "torus" : {
@@ -644,7 +644,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				sl = primitive.children[0].attributes.getNamedItem("slices").value;
 				l = primitive.children[0].attributes.getNamedItem("loops").value;
 
-				//prim = new MyTorus(id,inn,o,sl,l);
+				prim = new MyTorus(this.scene,id,inn,o,sl,l);
 				break;
 			}
 		}
