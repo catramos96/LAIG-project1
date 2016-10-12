@@ -461,13 +461,13 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 			b = child.attributes.getNamedItem("b").value;
 			a = child.attributes.getNamedItem("a").value;
 
-			if(j==0) material.setEmission(r,g,b,a);
-			if(j==1) material.setAmbient(r,g,b,a);
-			if(j==2) material.setDiffuse(r,g,b,a);
-			if(j==3) material.setSpecular(r,g,b,a);
+			if(j==0) material.setMyEmission(r,g,b,a);
+			if(j==1) material.setMyAmbient(r,g,b,a);
+			if(j==2) material.setMyDiffuse(r,g,b,a);
+			if(j==3) material.setMySpecular(r,g,b,a);
 		}
 
-		material.setShininess(temp.children[4].attributes.getNamedItem("value").value);
+		material.setMyShininess(temp.children[4].attributes.getNamedItem("value").value);
 
 		//juntar a lista de materias
 		this.materialsList.set(id,material);

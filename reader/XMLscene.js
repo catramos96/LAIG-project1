@@ -1,43 +1,16 @@
 
 function XMLscene() {
     CGFscene.call(this);
-
+    
 }
+
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
-    
-    this.initCameras();
-
-    this.enableTextures(true);
-
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-    this.gl.clearDepth(100.0);
-    this.gl.enable(this.gl.DEPTH_TEST);
-	this.gl.enable(this.gl.CULL_FACE); //cull face    = back, enable
-    this.gl.depthFunc(this.gl.LEQUAL); //depth func  = LEQUAL, enable
-
-	//scene elements
-	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
-   	this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
-    this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
-
-	//textures
-	//flor
-	this.flowerAppearance = new CGFappearance(this);
-	this.flowerAppearance.setAmbient(0.3,0.3,0.3,1);
-	this.flowerAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
-	this.flowerAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
-	this.flowerAppearance.setShininess(50);
-	this.flowerAppearance.loadTexture("../reader/scenes/flor.png");
-
-    //front face   = CCW
-    //lighting     = enable
-    //shading      = Gouraud
-    //polygon mode = fill
+	this.numCamera = 0;  
+	this.initCamera();
 };
 
 XMLscene.prototype.initLights = function () {
@@ -54,22 +27,42 @@ XMLscene.prototype.initLights = function () {
     
 };
 
-XMLscene.prototype.initCameras = function () {
-	//camara inicial
-	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+XMLscene.prototype.initMaterials = function () {
+	
+    for (var [id, value] of this.graph.materialsList) {
+    	value.init(this);
+    }
+    
 };
 
-XMLscene.prototype.updateCameras = function () {
+XMLscene.prototype.initCamera = function () {
 	//camara inicial
+	/*for (var [id, value] of this.graph.perspectiveList){
+		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+		break;
+	}*/
+	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+	//this.camera = new CGFcamera(value.angle, value.near, value.far, value.getToVec(), value.getFromVec());
+};
+
+/**
+ * Metodo usado pela interface para mudar de camara
+ */
+XMLscene.prototype.updateCamera = function () {
+	
+	this.numCamera++;
+	if(this.numCamera == this.graph.perspectiveList.length)
+		this.numCamera = 0;
+	
 	var i = 0;
-	this.cameras = [];
 	for (var [id, value] of this.graph.perspectiveList) {
-    	this.cameras[i] = value.init();
+		if(i == numCamera){
+			this.camera = value.init();
+			break;
+		}	
 		i++;
     }
-	this.camera = this.cameras[0];
-
-	//this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+	this.camera = this.cameras[numCamera].init();
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
@@ -109,24 +102,43 @@ XMLscene.prototype.updateLights = function () {
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
-{
-	//this.updateCameras();
-
+{  
+    this.enableTextures(true);
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    this.gl.clearDepth(100.0);
+    this.gl.enable(this.gl.DEPTH_TEST);
+	this.gl.enable(this.gl.CULL_FACE); 	//cull face    = back, enable
+    this.gl.depthFunc(this.gl.LEQUAL); 	//depth func  = LEQUAL, enable
+    this.gl.frontFace(this.gl.CCW); 	//front face   = CCW
     this.initLights();
+   	//lighting     = enable
+    //shading      = Gouraud
+    //polygon mode = fill
 
 	this.axis=new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
 
     //doubleside e local ???
     console.log("aaaa");
+
+	this.initMaterials();
+
+    //this.initPrimitives(); //coloca a cena em todos new CGFObject
+
+	//TEMPORARIO
+	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
+   	//this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
+    //this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
+	
 };
 
 XMLscene.prototype.display = function () {
+
 	// ---- BEGIN Background, camera and axis setup
-	
+
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-	
+
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
@@ -149,11 +161,14 @@ XMLscene.prototype.display = function () {
 
 		//update lights
 		this.updateLights();
-	}
-	
-	// triangle
+			
+	   // triangle
 		this.pushMatrix();
-			this.flowerAppearance.apply();
+			for (var [id, value] of this.graph.materialsList) {
+    			var a = value.getAppearance();
+    			a.apply();
+    			break;
+   			}
 			this.triangle.display();
 		this.popMatrix();
 
@@ -168,5 +183,7 @@ XMLscene.prototype.display = function () {
 			this.flowerAppearance.apply();
 			this.cylinder.display();
 		this.popMatrix();*/
+	
+	}
 };
 
