@@ -11,6 +11,7 @@
      this.initBuffers();
  }
 
+ MyRectangle.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MyRectangle.prototype = Object.create(CGFobject.prototype);
  MyRectangle.prototype.constructor=MyRectangle; 
 

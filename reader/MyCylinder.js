@@ -14,6 +14,7 @@
      this.initBuffers();
  }
 
+ MyCylinder.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MyCylinder.prototype = Object.create(CGFobject.prototype);
  MyCylinder.prototype.constructor = MyCylinder;
 
@@ -34,9 +35,9 @@
  	for(var i = 0; i < this.stacks+1;i++){        
  	  for(var j = 0; j < this.slices+1;j++){ //mais um vetice no final para fazer o mapeamento da textura
 
- 	    this.vertices.push((this.base/2 + incRadius*i)*Math.cos(incAng*j),
+ 	    this.vertices.push((this.base + incRadius*i)*Math.cos(incAng*j),
  	                      -this.height/2 + incHeight*i,
- 	                      (this.base/2 + incRadius*i)*Math.sin(incAng*j));
+ 	                      (this.base + incRadius*i)*Math.sin(incAng*j));
 
  	    this.texCoords.push(1-1/this.stacks*i,1-1/this.slices*j);
 
