@@ -11,6 +11,7 @@ function MyMaterial(id) {
 	this.appearance.setDiffuse(this.diffuse.r ,this.diffuse.g ,this.diffuse.b ,this.diffuse.a); //forte componente difusa
 	this.appearance.setSpecular(this.specular.r,this.specular.g,this.specular.b,this.specular.a); // pouca componente especular
 	this.appearance.setShininess(this.shininess);
+	this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 	
 	//this.appearance.loadTexture("../reader/scenes/flor.png"); // isto e para sair daqui
  }

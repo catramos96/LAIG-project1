@@ -9,8 +9,26 @@ XMLscene.prototype.constructor = XMLscene;
 
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
-	this.numCamera = 0;  
-	this.initCamera();
+	
+	this.numCamera = 0;  //se calhar não vai ser aqui -> interface?
+	
+	this.initCamera(); 
+
+    this.enableTextures(true);
+
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    this.gl.clearDepth(100.0);
+
+    this.gl.enable(this.gl.DEPTH_TEST);
+	this.gl.enable(this.gl.CULL_FACE); 	//cull face    = back, enable
+    this.gl.depthFunc(this.gl.LEQUAL); 	//depth func  = LEQUAL, enable
+    this.gl.frontFace(this.gl.CCW); 	//front face   = CCW
+
+   	//lighting     = enable
+    //shading      = Gouraud
+    //polygon mode = fill
+
+
 };
 
 XMLscene.prototype.initLights = function () {
@@ -28,11 +46,20 @@ XMLscene.prototype.initLights = function () {
 };
 
 XMLscene.prototype.initMaterials = function () {
-	
+
     for (var [id, value] of this.graph.materialsList) {
-    	value.init(this);
+    	if(id != "inherit")
+    		value.init(this);
     }
     
+};
+
+XMLscene.prototype.initTextures = function () {
+	
+    for (var [id, value] of this.graph.texturesList) {
+    	if(id != "inherit" || id != "none")
+    		value.init(this);
+    }
 };
 
 XMLscene.prototype.initCamera = function () {
@@ -43,6 +70,7 @@ XMLscene.prototype.initCamera = function () {
 	}*/
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 	//this.camera = new CGFcamera(value.angle, value.near, value.far, value.getToVec(), value.getFromVec());
+	//this.interface.setActiveCamera(this.camera);
 };
 
 /**
@@ -66,6 +94,11 @@ XMLscene.prototype.updateCamera = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
+	this.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.setShininess(10.0);
+
 	//ambient
 	this.setGlobalAmbientLight(this.graph.getGlobals().getAmbient().getR(),
 					this.graph.getGlobals().getAmbient().getG(),
@@ -76,10 +109,6 @@ XMLscene.prototype.setDefaultAppearance = function () {
 						this.graph.getGlobals().getBackground().getG(),
 						this.graph.getGlobals().getBackground().getB(),
 						this.graph.getGlobals().getBackground().getA());
-/*
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);	*/
 };
 
 XMLscene.prototype.updateLights = function () {
@@ -103,33 +132,37 @@ XMLscene.prototype.updateLights = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {  
-    this.enableTextures(true);
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.clearDepth(100.0);
-    this.gl.enable(this.gl.DEPTH_TEST);
-	this.gl.enable(this.gl.CULL_FACE); 	//cull face    = back, enable
-    this.gl.depthFunc(this.gl.LEQUAL); 	//depth func  = LEQUAL, enable
-    this.gl.frontFace(this.gl.CCW); 	//front face   = CCW
-    this.initLights();
-   	//lighting     = enable
-    //shading      = Gouraud
-    //polygon mode = fill
 
 	this.axis=new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
 
-    //doubleside e local ???
-    console.log("aaaa");
+	this.initLights();
+
+	//this.initCamera();
 
 	this.initMaterials();
 
-    //this.initPrimitives(); //coloca a cena em todos new CGFObject
+	this.initTextures();
 
+	
 	//TEMPORARIO
 	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
    	//this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
     //this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
 	
 };
+
+XMLscene.prototype.displayComponents = function (component, material, texture) {
+
+	//recebe a transformacao
+
+	//recebe os materiais
+
+	//recebe as texturas
+
+	//desenha as primitivas
+
+	//chama o proximo componente recursivamente
+}
 
 XMLscene.prototype.display = function () {
 
@@ -161,6 +194,8 @@ XMLscene.prototype.display = function () {
 
 		//update lights
 		this.updateLights();
+
+		this.displayComponents(this.graph.root, null,null);
 			
 	   // triangle
 		this.pushMatrix();

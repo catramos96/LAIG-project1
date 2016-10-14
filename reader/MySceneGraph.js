@@ -675,7 +675,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		//<component>
 		component = components_elems[0].children[i];
-		var id = component.attributes.getNamedItem("id").value;
+		var id = component.attributes.getNamedItem("id").value;	
 
 		//se o component já existe e já está definido => erro
 		if(this.componentsList.has(id))
@@ -764,11 +764,13 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			
 			/*Error
 			 - id doesn't found on materialsList and id != "inherit" */
-			if(!this.materialsList.has(materialId) && materialId != "inherit")
+			if(!this.materialsList.has(materialId))
 			{
-				return "Components '" + id + "' materialsId '" +materialId + "' not found";
+				if(materialId != "inherit")
+					return "Components '" + id + "' materialsId '" +materialId + "' not found";
+				else
+					materialsComponent.set(materialId, " ");
 			}
-
 			materialsComponent.set(materialId, this.materialsList.get(materialId));
 		}
 
@@ -838,6 +840,9 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
        	comp.setPrimitives(primitiveComponent);
        		
         this.componentsList.set(id,comp);
+		if(id == this.globals.root)
+			this.root = comp;
+
 		comp.display();
 	}
 

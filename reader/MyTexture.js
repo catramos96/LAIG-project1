@@ -19,3 +19,7 @@ function MyTexture(id,file,length_t, length_s) {
  MyTexture.prototype.getLengthS = function(){
  	return this.s;
  }
+
+ MyTexture.prototype.init = function(scene){
+   this.appearance = new CGFtexture(scene,this.file);
+ }
