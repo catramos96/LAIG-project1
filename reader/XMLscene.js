@@ -146,9 +146,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 	
 	//TEMPORARIO
 	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
-   	//this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
-    //this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
-	
+   	this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
+    this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
+    this.sphere = new MySphere(this,1,3,100,100);
+	//FlowerAppearance
+	this.flowerAppearance = new CGFappearance(this);
+	this.flowerAppearance.setAmbient(0.3,0.3,0.3,1);
+	this.flowerAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
+	this.flowerAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
+	this.flowerAppearance.setShininess(50);
+	this.flowerAppearance.loadTexture("../reader/scenes/flor.png");
 };
 
 XMLscene.prototype.displayComponents = function (component, material, texture) {
@@ -197,15 +204,15 @@ XMLscene.prototype.display = function () {
 
 		this.displayComponents(this.graph.root, null,null);
 			
-	   // triangle
-		this.pushMatrix();
+	// triangle
+		/*this.pushMatrix();
 			for (var [id, value] of this.graph.materialsList) {
     			var a = value.getAppearance();
     			a.apply();
     			break;
    			}
 			this.triangle.display();
-		this.popMatrix();
+		this.popMatrix();*/
 
 	// rectangle
 		/*this.pushMatrix();
@@ -218,6 +225,12 @@ XMLscene.prototype.display = function () {
 			this.flowerAppearance.apply();
 			this.cylinder.display();
 		this.popMatrix();*/
+
+	// sphere
+		this.pushMatrix();
+			this.flowerAppearance.apply();
+			this.sphere.display();
+		this.popMatrix();
 	
 	}
 };
