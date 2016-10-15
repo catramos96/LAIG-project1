@@ -151,7 +151,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initTextures();
 
 	//TEMPORARIO
-	this.torus = new MyTorus(this,1,1,2,3,3);
+	this.torus = new MyTorus(this,1,1,2,50,50);
 };
 
 //DISPLAY COMPONENTS
@@ -222,10 +222,10 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 			var prim = new MySphere(this, value);
 			//prim.display();
 		}
-		if(value instanceof MyTorusData){
+		/*if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
 			//prim.display();
-		}
+		}*/
 	}
 
 	//chama o proximo componente recursivamente
