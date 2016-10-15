@@ -20,6 +20,10 @@ function MyTexture(id,file,length_t, length_s) {
  	return this.s;
  }
 
+ MyTexture.prototype.getAppearance = function(){
+ 	return this.appearance;
+ }
+
  MyTexture.prototype.init = function(scene){
    this.appearance = new CGFtexture(scene,this.file);
  }

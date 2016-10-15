@@ -768,8 +768,10 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			{
 				if(materialId != "inherit")
 					return "Components '" + id + "' materialsId '" +materialId + "' not found";
-				else{
-					this.materialsList.set(materialId," ")
+				else
+				{
+					var newMaterial = MyMaterial(materialId);
+					this.materialsList.set(materialId,newMaterial);
 				}
 			}
 				

@@ -43,19 +43,25 @@ XMLscene.prototype.initLights = function () {
 };
 
 XMLscene.prototype.initMaterials = function () {
+	
+	this.initializedMaterials = [];
 
     for (var [id, value] of this.graph.materialsList) {
     	if(id != "inherit")
-    		value.init(this);
+    		value.init(this); 
+    	this.initializedMaterials.push(value);
     }
     
 };
 
 XMLscene.prototype.initTextures = function () {
 	
+	this.initializedTextures = [];
+
     for (var [id, value] of this.graph.texturesList) {
     	if(id != "inherit" || id != "none")
     		value.init(this);
+    	this.initializedTextures.push(value);
     }
 };
 
@@ -171,12 +177,38 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		newMaterials = materials;
 	}
 
+	//id do primeiro elemento (isto é para ser mudado quando existir a interface)
+    var temp = null;
+	for(var [id,value] of newMaterials){
+		temp = id;
+		break;
+	}
+	//procura nos materiais esse id e aplica o material a cena
+	var mat = null;
+	for (var [id, value] of this.graph.materialsList) {
+		if(id == temp){
+    		mat = value.getAppearance();
+    		mat.apply();
+    		break;
+		}
+   	}
+
 	//recebe as texturas
 	var newTexture = component.getTexture();
-	if(newTexture == "inherit"){
+	if(newTexture.getId() == "inherit"){
 		newTexture = texture;
-	}else if(newTexture == "none"){
-		newTexture = null;
+	}
+	
+	//procura a textura na lsita de texturas
+	for (var [id, value] of this.graph.texturesList) 
+	{
+		if(id == newTexture.getId()) //encontra a textura
+		{ 
+			if(newTexture.getId() != "none")	//se a textura não for nula
+			{
+				//mat.setTexture(value.getAppearance());
+			}
+		}
 	}
 
 	//desenha as primitivas
