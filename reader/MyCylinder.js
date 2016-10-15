@@ -1,22 +1,22 @@
 /*
  * MyCylinder
  */
- function MyCylinder(scene,id,base,top,height,slices,stacks) {
+ function MyCylinder(scene,data) {
      CGFobject.call(this,scene);
 
-     this.base = base;
-     this.top = top;
-     this.height = height;
-     this.slices = slices;
-     this.stacks = stacks;
-     this.id = id;
+     this.base = data.getBase();
+     this.top = data.getTop();
+     this.height = data.getHeight();
+     this.slices = data.getSlices();
+     this.stacks = data.getStacks();
+     this.id = data.getId();
+
+     console.log("ID : "+this.id+"\nB : "+this.base+"\nT : "+this.top+"\nH: "+this.height+"\nSl : "+this.slices+"\nSt : "+this.stacks);
 
      this.initBuffers();
  }
 
- MyCylinder.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MyCylinder.prototype = Object.create(CGFobject.prototype);
- MyCylinder.prototype.constructor = MyCylinder;
 
  MyCylinder.prototype.initBuffers = function() {
 

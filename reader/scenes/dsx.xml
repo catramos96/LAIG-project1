@@ -129,7 +129,7 @@
         </primitive>
 
         <primitive id="primitive3">
-            <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
+            <cylinder base="1" top="1" height="1" slices="15" stacks="15" />
         </primitive>
 
         <primitive id="primitive4">
@@ -327,7 +327,7 @@
                 <!-- componentes ou primitivas -->
 				
                 
-                <primitiveref id="primitive2" />
+                <primitiveref id="primitive3" />
                 
             </children>
             

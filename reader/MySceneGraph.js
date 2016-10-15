@@ -618,13 +618,13 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			case "cylinder": {
 				var b,t,h,sl,st;
 
-				b = primitive.children[0].attributes.getNamedItem("base").value;
-				t = primitive.children[0].attributes.getNamedItem("top").value;
-				h = primitive.children[0].attributes.getNamedItem("height").value;
-				sl = primitive.children[0].attributes.getNamedItem("slices").value;
-				st = primitive.children[0].attributes.getNamedItem("stacks").value;
+				var b = this.reader.getFloat(primitive.children[0], 'base');
+				var t = this.reader.getFloat(primitive.children[0], 'top');
+				var h = this.reader.getFloat(primitive.children[0], 'height');
+				var sl = this.reader.getFloat(primitive.children[0], 'slices');
+				var st = this.reader.getFloat(primitive.children[0], 'stacks');
 
-				prim = new MyCylinder(this.scene,id,b,t,h,sl,st);
+				prim = new MyCylinderData(id,b,t,h,sl,st);
 				break;
 			}
 			case "sphere": {
