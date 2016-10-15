@@ -166,18 +166,16 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		var perspective = new MyPerspective();
 
 		// process each element and store its information
-		var id = tempP.attributes.getNamedItem("id").value;
+		var id = this.reader.getString(tempP, 'id');
 		if(!this.perspectiveList.has(id)){	//se ainda não existir, ok. Se não, o id é repetido
 			perspective.setId(id);
 		}else
 			return "id repetead!";
 
 
-		perspective.setNear(tempP.attributes.getNamedItem("near").value);
-
-		perspective.setFar(tempP.attributes.getNamedItem("far").value);
-
-		var angle=tempP.attributes.getNamedItem("angle").value*Math.PI*2/360;
+		perspective.setNear(this.reader.getFloat(tempP, 'near'));
+		perspective.setFar(this.reader.getFloat(tempP, 'far'));
+		var angle=this.reader.getFloat(tempP, 'angle').value*Math.PI*2/360;
 		if(angle < -Math.PI/2 || angle >Math.PI/2)
 			console.log("WARNING : angle not adjusted...");
 		perspective.setAngle(angle);
@@ -186,18 +184,18 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		var a,b,c;
 		var elem = tempP.children[0];
 
-		a = elem.attributes.getNamedItem("x").value;
-		b = elem.attributes.getNamedItem("y").value;
-		c = elem.attributes.getNamedItem("z").value;
+		a = this.reader.getFloat(elem, 'x');
+		b = this.reader.getFloat(elem, 'y');
+		c = this.reader.getFloat(elem, 'z');
 
 		//coloca o ponto na perspetiva
 		perspective.setFromPoint(new MyPoint(a,b,c));
 
 		elem = tempP.children[1];
 
-		a = elem.attributes.getNamedItem("x").value;
-		b = elem.attributes.getNamedItem("y").value;
-		c = elem.attributes.getNamedItem("z").value;
+		a = this.reader.getFloat(elem, 'x');
+		b = this.reader.getFloat(elem, 'y');
+		c = this.reader.getFloat(elem, 'z');
 
 		//coloca o ponto na perspetiva
 		perspective.setToPoint(new MyPoint(a,b,c));
@@ -252,19 +250,19 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	//ambient
 	var temp = illumination_elems[0].children[0];
 
-	var ambient = new MyColor(temp.attributes.getNamedItem("r").value,
-								temp.attributes.getNamedItem("g").value,
-								temp.attributes.getNamedItem("b").value,
-								temp.attributes.getNamedItem("a").value);
+	var ambient = new MyColor(this.reader.getFloat(temp, 'r'),
+								this.reader.getFloat(temp, 'g'),
+								this.reader.getFloat(temp, 'b'),
+								this.reader.getFloat(temp, 'a'));
 	this.globals.setAmbient(ambient);
 
 	//background
 	temp = illumination_elems[0].children[1];
 
-	var background = new MyColor(temp.attributes.getNamedItem("r").value,
-									temp.attributes.getNamedItem("g").value,
-									temp.attributes.getNamedItem("b").value,
-									temp.attributes.getNamedItem("a").value);
+	var background = new MyColor(this.reader.getFloat(temp, 'r'),
+								this.reader.getFloat(temp, 'g'),
+								this.reader.getFloat(temp, 'b'),
+								this.reader.getFloat(temp, 'a'));
 	this.globals.setBackground(background);
 	
 	/*console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
@@ -327,40 +325,40 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			exponent = this.reader.getFloat(lights, 'exponent');
 
 			lights = lights_elems[0].children[i].children[0];
-			target = new MyPoint(lights.attributes.getNamedItem("x").value,
-								lights.attributes.getNamedItem("y").value,
-								lights.attributes.getNamedItem("z").value);
+			target = new MyPoint(this.reader.getFloat(lights, 'x'),
+								this.reader.getFloat(lights, 'y'),
+								this.reader.getFloat(lights, 'z'));
 
 			lights = lights_elems[0].children[i].children[1];
-			location = [lights.attributes.getNamedItem("x").value,
-								lights.attributes.getNamedItem("y").value,
-								lights.attributes.getNamedItem("z").value];
+			location = [this.reader.getFloat(lights, 'x'),
+						this.reader.getFloat(lights, 'y'),
+						this.reader.getFloat(lights, 'z')];
 		}
 		else{
 			lights = lights_elems[0].children[i].children[0];
-			location = [lights.attributes.getNamedItem("x").value,
-								lights.attributes.getNamedItem("y").value,
-								lights.attributes.getNamedItem("z").value,
-								lights.attributes.getNamedItem("w").value];
+			location = [this.reader.getFloat(lights, 'x'),
+						this.reader.getFloat(lights, 'y'),
+						this.reader.getFloat(lights, 'z'),
+						this.reader.getFloat(lights, 'w')];
 		}
 		
 		lights = lights_elems[0].children[i].children[1 + spot];
-		ambient = new MyColor(lights.attributes.getNamedItem("r").value,
-								lights.attributes.getNamedItem("g").value,
-								lights.attributes.getNamedItem("b").value,
-								lights.attributes.getNamedItem("a").value);
+		ambient = new MyColor(this.reader.getFloat(lights, 'r'),
+								this.reader.getFloat(lights, 'g'),
+								this.reader.getFloat(lights, 'b'),
+								this.reader.getFloat(lights, 'a'));
 
 		lights = lights_elems[0].children[i].children[2 + spot];
-		diffuse = new MyColor(lights.attributes.getNamedItem("r").value,
-								lights.attributes.getNamedItem("g").value,
-								lights.attributes.getNamedItem("b").value,
-								lights.attributes.getNamedItem("a").value);
+		diffuse = new MyColor(this.reader.getFloat(lights, 'r'),
+								this.reader.getFloat(lights, 'g'),
+								this.reader.getFloat(lights, 'b'),
+								this.reader.getFloat(lights, 'a'));
 
 		lights = lights_elems[0].children[i].children[3 + spot];
-		specular = new MyColor(lights.attributes.getNamedItem("r").value,
-								lights.attributes.getNamedItem("g").value,
-								lights.attributes.getNamedItem("b").value,
-								lights.attributes.getNamedItem("a").value);
+		specular = new MyColor(this.reader.getFloat(lights, 'r'),
+								this.reader.getFloat(lights, 'g'),
+								this.reader.getFloat(lights, 'b'),
+								this.reader.getFloat(lights, 'a'));
 
 		//save at the list
 		if(spot == 1){ //SPOT
@@ -397,14 +395,14 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	{
 		var temp = texture_elems[0].children[i];
 
-		var id = temp.attributes.getNamedItem("id").value;
+		var id = this.reader.getString(temp, 'id');
 		if(this.texturesList.has(id)){		//ja existe
 			return "id "+id+" from block 'textures' already exists!";
 		}
 
-		var file = temp.attributes.getNamedItem("file").value;
-		var length_t = temp.attributes.getNamedItem("length_t").value;
-		var length_s = temp.attributes.getNamedItem("length_s").value;
+		var file = this.reader.getString(temp, 'file');
+		var length_t = this.reader.getFloat(temp, 'length_t');
+		var length_s = this.reader.getFloat(temp, 'length_s');
 
 		//cria o material
 		var texture = new MyTexture(id,file,length_t,length_s);
@@ -443,7 +441,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		var temp = material_elems[0].children[i];
 
 		//verifies repetead id
-		var id = temp.attributes.getNamedItem("id").value;
+		var id = this.reader.getString(temp, 'id');
 		if(this.materialsList.has(id)) //existe este id
 		{ 
 			return "id "+id+" from block 'materials' already exists!";
@@ -456,10 +454,10 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 			var r,g,b,a;
 			var child = temp.children[j];
 
-			r = child.attributes.getNamedItem("r").value;
-			g = child.attributes.getNamedItem("g").value;
-			b = child.attributes.getNamedItem("b").value;
-			a = child.attributes.getNamedItem("a").value;
+			r = this.reader.getFloat(child, 'r');
+			g = this.reader.getFloat(child, 'g');
+			b = this.reader.getFloat(child, 'b');
+			a = this.reader.getFloat(child, 'a');
 
 			if(j==0) material.setMyEmission(r,g,b,a);
 			if(j==1) material.setMyAmbient(r,g,b,a);
@@ -467,7 +465,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 			if(j==3) material.setMySpecular(r,g,b,a);
 		}
 
-		material.setMyShininess(temp.children[4].attributes.getNamedItem("value").value);
+		material.setMyShininess(this.reader.getFloat(temp.children[4], 'value'));
 
 		//juntar a lista de materias
 		this.materialsList.set(id,material);
@@ -506,7 +504,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 	{
 		transformation = transformations_elems[0].children[i];
 
-		var id = transformation.attributes.getNamedItem("id").value;
+		var id = this.reader.getString(transformation, 'id')
 		if(this.transformationsList.has(id)) //found
 		{ 	
 			return "id "+id+" from block 'transformations' already exists!";
@@ -526,18 +524,18 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 			switch(tag_name){
 				case "translate":
-					final_t.translate(transformation.children[j].attributes.getNamedItem("x").value,
-									  transformation.children[j].attributes.getNamedItem("y").value,
-									  transformation.children[j].attributes.getNamedItem("z").value);
+					final_t.translate(this.reader.getFloat(transformation.children[j], 'x'),
+									  this.reader.getFloat(transformation.children[j], 'y'),
+									  this.reader.getFloat(transformation.children[j], 'z'));
 					break;
 				case "rotate":
-					final_t.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
-								   transformation.children[j].attributes.getNamedItem("angle").value)*Math.PI*2/360;
+					final_t.rotate(this.reader.getString(transformation.children[j], 'axis'),
+								this.reader.getFloat(transformation.children[j], 'angle')*Math.PI*2/360);
 					break;
 				case "scale":
-					final_t.scale(transformation.children[j].attributes.getNamedItem("x").value,
-								  transformation.children[j].attributes.getNamedItem("y").value,
-								  transformation.children[j].attributes.getNamedItem("z").value);
+					final_t.scale(this.reader.getFloat(transformation.children[j], 'x'),
+									  this.reader.getFloat(transformation.children[j], 'y'),
+									  this.reader.getFloat(transformation.children[j], 'z'));
 					break;
 				default:
 					return "inexisting tag name";
@@ -581,7 +579,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		}
 		
 		tagName = primitive.children[0].tagName;
-		var id = primitive.attributes.getNamedItem("id").value;
+		var id = this.reader.getString(primitive, 'id');
 		if(this.primitivesList.has(id)){ //found
 			return "id "+id+" from block 'primitives' already exists!";
 		}
@@ -589,28 +587,28 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		//different primitives for different tag names
 		switch(tagName){
 			case "rectangle":{
-				var p1 = new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
-								 	 primitive.children[0].attributes.getNamedItem("y1").value,
+				var p1 = new MyPoint(this.reader.getFloat(primitive.children[0], 'x1'),
+								 	 this.reader.getFloat(primitive.children[0], 'y1'),
 								 	 0);
-				var p2 = new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
-								 	 primitive.children[0].attributes.getNamedItem("y2").value,
+				var p2 = new MyPoint(this.reader.getFloat(primitive.children[0], 'x2'),
+								 	 this.reader.getFloat(primitive.children[0], 'y2'),
 								 	 0);
 
 				prim = new MyRectangleData(id,p1,p2);
 				break;
 			}
 			case "triangle":{
-				var p1 = new MyPoint(primitive.children[0].attributes.getNamedItem("x1").value,
-							     primitive.children[0].attributes.getNamedItem("y1").value,
-								 primitive.children[0].attributes.getNamedItem("z1").value);
+				var p1 = new MyPoint(this.reader.getFloat(primitive.children[0], 'x1'),
+								 	 this.reader.getFloat(primitive.children[0], 'y1'),
+								 	 this.reader.getFloat(primitive.children[0], 'z1'));
 
-				var p2 = new MyPoint(primitive.children[0].attributes.getNamedItem("x2").value,
-								 primitive.children[0].attributes.getNamedItem("y2").value,
-								 primitive.children[0].attributes.getNamedItem("z2").value);
+				var p2 = new MyPoint(this.reader.getFloat(primitive.children[0], 'x2'),
+								 	 this.reader.getFloat(primitive.children[0], 'y2'),
+								 	 this.reader.getFloat(primitive.children[0], 'z2'));
 
-				var p3 = new MyPoint(primitive.children[0].attributes.getNamedItem("x3").value,
-								 primitive.children[0].attributes.getNamedItem("y3").value,
-								 primitive.children[0].attributes.getNamedItem("z3").value);
+				var p3 = new MyPoint(this.reader.getFloat(primitive.children[0], 'x3'),
+								 	 this.reader.getFloat(primitive.children[0], 'y3'),
+								 	 this.reader.getFloat(primitive.children[0], 'z3'));
 
 				prim = new MyTriangleData(id,p1,p2,p3);
 				break;
@@ -639,10 +637,11 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			case "torus" : {
 				var inn, o, l,sl;
 
-				inn = primitive.children[0].attributes.getNamedItem("inner").value;
-				o = primitive.children[0].attributes.getNamedItem("outer").value,
-				sl = primitive.children[0].attributes.getNamedItem("slices").value;
-				l = primitive.children[0].attributes.getNamedItem("loops").value;
+				inn = this.reader.getFloat(primitive.children[0], 'inner');
+				o = this.reader.getFloat(primitive.children[0], 'outer');
+				sl = this.reader.getFloat(primitive.children[0], 'slices');
+				l = this.reader.getFloat(primitive.children[0], 'loops');
+				
 				prim = new MyTorusData(id,inn,o,sl,l);
 				break;
 			}
@@ -674,7 +673,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		//<component>
 		component = components_elems[0].children[i];
-		var id = component.attributes.getNamedItem("id").value;	
+		var id = this.reader.getString(component, 'id');	
 
 		//se o component já existe e já está definido => erro
 		if(this.componentsList.has(id))
@@ -710,7 +709,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		else if(transformation.getElementsByTagName("transformationref").length == 1) //<transformationref>
 		{
 			var pos;
-			matrixId = transformation.getElementsByTagName("transformationref")[0].attributes.getNamedItem("id").value;
+			matrixId = this.reader.getString(transformation.getElementsByTagName("transformationref")[0], 'id');
 			
 			if(!this.transformationsList.has(matrixId)) //not found
 			{ 
@@ -728,18 +727,18 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 				switch(tag_name){
 					case "translate":
-						transfComponent.translate(transformation.children[j].attributes.getNamedItem("x").value,
-										  transformation.children[j].attributes.getNamedItem("y").value,
-										  transformation.children[j].attributes.getNamedItem("z").value);
+						transfComponent.translate(this.reader.getFloat(transformation.children[j],'x'),
+										  			this.reader.getFloat(transformation.children[j],'y'),
+										  			this.reader.getFloat(transformation.children[j],'z'));
 						break;
 					case "rotate":
-						transfComponent.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
-									   transformation.children[j].attributes.getNamedItem("angle").value*Math.PI*2/360);
+						transfComponent.rotate(this.reader.getFloat(transformation.children[j],'axis'),
+										  			this.reader.getFloat(transformation.children[j],'angle')*value*Math.PI*2/360);
 						break;
 					case "scale":
-						transfComponent.scale(transformation.children[j].attributes.getNamedItem("x").value,
-									  transformation.children[j].attributes.getNamedItem("y").value,
-									  transformation.children[j].attributes.getNamedItem("z").value);
+						transfComponent.scale(this.reader.getFloat(transformation.children[j],'x'),
+										  			this.reader.getFloat(transformation.children[j],'y'),
+										  			this.reader.getFloat(transformation.children[j],'z'));
 						break;
 					default:
 						return "inexisting tag name";
@@ -759,7 +758,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		for(var j = 0; j < n_materials ; j++){
 			
-			materialId = materials.children[j].attributes.getNamedItem("id").value;
+			materialId = this.reader.getString(materials.children[j], 'id');
 			
 			/*Error
 			 - id doesn't found on materialsList and id != "inherit" */
@@ -784,7 +783,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			return "Components '" + id + "' has more than one component's texture";
 		}
 
-		var textureId = texture[0].attributes.getNamedItem("id").value;
+		var textureId = this.reader.getString(texture[0],'id');
 		
 		if(!this.texturesList.has(textureId))
 		{
@@ -811,7 +810,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
          var compRef = children_elems[0].getElementsByTagName("componentref");
          for(var j = 0; j < compRef.length ;j++)
          {
-         	childrenId = compRef[j].attributes.getNamedItem("id").value;	//id do filho tipo component
+         	childrenId = this.reader.getString(compRef[j],'id');	//id do filho tipo component
 
          	//se existir este id, adiciona o que está na lista
          	if(this.componentsList.has(childrenId))
@@ -827,7 +826,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
          var primitRef = children_elems[0].getElementsByTagName("primitiveref");
          for(var j = 0; j < primitRef.length ;j++)
          {
-         	childrenId = primitRef[j].attributes.getNamedItem("id").value; //id do filho do tipo primitiva
+         	childrenId = this.reader.getString(primitRef[j],'id'); //id do filho do tipo primitiva
 
          	if(!this.primitivesList.has(childrenId)){		//not found
 				return "Component '" + id + "' primitiveref '" + childrenPrimitivesId[j] + "' not in the list of primitives";

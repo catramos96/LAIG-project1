@@ -4,15 +4,10 @@
  function MyTorus(scene, data) {
      CGFobject.call(this,scene);
 
-    /* this.inner = data.getInner();
+     this.inner = data.getInner();
      this.outer = data.getOuter();
      this.slices = data.getSlices();
-     this.loops = data.getLoops();*/
-   
-     this.inner = 0.1;
-     this.outer = 1;
-     this.slices = 100;
-     this.loops = 100;
+     this.loops = data.getLoops();
      
      this.initBuffers();
  }

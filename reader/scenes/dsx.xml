@@ -137,7 +137,7 @@
         </primitive>
 
         <primitive id="primitive5">
-            <torus inner="1" outer="2" slices="4" loops="8" />
+            <torus inner="0.1" outer="1" slices="100" loops="100" />
         </primitive>
         
     </primitives>
