@@ -11,9 +11,7 @@
      this.stacks = data.getStacks();
      this.id = data.getId();
 
-     console.log("ID : "+this.id+"\nB : "+this.base+"\nT : "+this.top+"\nH: "+this.height+"\nSl : "+this.slices+"\nSt : "+this.stacks);
-
-     this.initBuffers();
+    this.initBuffers();
  }
 
  MyCylinder.prototype = Object.create(CGFobject.prototype);

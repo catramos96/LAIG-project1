@@ -226,6 +226,10 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}	
 		if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
+			//prim.display();
+		}
+		if(value instanceof MySphereData){
+			var prim = new MySphere(this, value);
 			prim.display();
 		}
 	}

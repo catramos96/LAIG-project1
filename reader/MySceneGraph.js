@@ -629,11 +629,11 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			}
 			case "sphere": {
 				var r,sl,st;
-				r = primitive.children[0].attributes.getNamedItem("radius").value;
-				sl = primitive.children[0].attributes.getNamedItem("slices").value;
-				st = primitive.children[0].attributes.getNamedItem("stacks").value;
+				r = this.reader.getFloat(primitive.children[0], 'radius');
+				sl = this.reader.getFloat(primitive.children[0], 'slices');
+				st = this.reader.getFloat(primitive.children[0], 'stacks');
 
-				prim = new MySphere(this.scene,id,r,sl,st);
+				prim = new MySphereData(id,r,sl,st);
 				break;
 			}
 			case "torus" : {

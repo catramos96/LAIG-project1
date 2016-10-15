@@ -1,32 +1,18 @@
 /*
  * MySphere
  */
- function MySphere(scene,id,radius,slices,stacks) {
+ function MySphere(scene,data) {
    CGFobject.call(this,scene);
 
-     this.radius = radius;
-     this.slices = slices;
-     this.stacks = stacks;
-     this.id = id;
+     this.radius = data.getRadius();
+     this.slices = data.getSlices();
+     this.stacks = data.getStacks();
+     this.id = data.getId();
 
      this.initBuffers();
  }
 
- MySphere.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MySphere.prototype = Object.create(CGFobject.prototype);
- MySphere.prototype.constructor = MySphere;
-
-
- /*
- * Print Info
- */
-   
- MySphere.prototype.printInfo = function(){
- 	console.log("Primitive id - " + this.id + " ; type - sphere ");
-    console.log("radius - " + this.radius);
-    console.log("slices - " + this.slices + " ; stacks - " + this.stacks);
- 
- }
 
  MySphere.prototype.initBuffers = function() {
     this.vertices = [];
