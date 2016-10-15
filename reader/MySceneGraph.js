@@ -596,7 +596,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 								 	 primitive.children[0].attributes.getNamedItem("y2").value,
 								 	 0);
 
-				prim = new MyRectangle(this.scene,id,p1,p2);
+				prim = new MyRectangleData(id,p1,p2);
 				break;
 			}
 			case "triangle":{

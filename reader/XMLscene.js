@@ -142,10 +142,13 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	
 	//TEMPORARIO
+
+/*	var data = new MyRectangleData(2,new MyPoint(0,0,0), new MyPoint(1,1,0));
+	this.rect =  new MyRectangle(this, data);
 	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
    	this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
     this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
-    this.sphere = new MySphere(this,1,3,100,100);
+    this.sphere = new MySphere(this,1,3,100,100);*/
 	//FlowerAppearance
 	this.flowerAppearance = new CGFappearance(this);
 	this.flowerAppearance.setAmbient(0.3,0.3,0.3,1);
@@ -160,7 +163,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	this.pushMatrix();
 
 	//recebe a transformacao e multiplica na cena
-	this.multMatrix(component.getTransformation());
+	//this.multMatrix(component.getTransformation()); //descobrir o que está mal aqui
 
 	//recebe os materiais
 	var newMaterials = component.getMaterials();
@@ -169,27 +172,27 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	}
 
 	//recebe as texturas
-	var newTextures = component.getTexture();
-	if(newTextures == "inherit"){
-		newTextures = textures;
-	}else if(newTextures == "none"){
-		newTextures = null;
+	var newTexture = component.getTexture();
+	if(newTexture == "inherit"){
+		newTexture = texture;
+	}else if(newTexture == "none"){
+		newTexture = null;
 	}
 
 	//desenha as primitivas
 	var primitives = component.getPrimitives();
 	for (var [id, value] of primitives){
-		
-		/*if(value instanceof MyRectangle){
 
-		}	*/	
-
+		if(value instanceof MyRectangleData){
+			var prim = new MyRectangle(this, value);
+			prim.display();
+		}	
 	}
 
 	//chama o proximo componente recursivamente
 	var components = component.getComponentsChilds();
 	for (var [id, value] of components){
-		this.displayComponent(value,newMaterials,newTextures);
+		this.displayComponents(value,newMaterials,newTexture);
 	}
 
 	this.popMatrix();
@@ -241,7 +244,7 @@ XMLscene.prototype.display = function () {
 
 	// rectangle
 		/*this.pushMatrix();
-			this.flowerAppearance.apply();
+			//this.flowerAppearance.apply();
 			this.rect.display();
 		this.popMatrix();*/
 
@@ -252,10 +255,10 @@ XMLscene.prototype.display = function () {
 		this.popMatrix();*/
 
 	// sphere
-		this.pushMatrix();
+		/*this.pushMatrix();
 			this.flowerAppearance.apply();
 			this.sphere.display();
-		this.popMatrix();
+		this.popMatrix();*/
 	
 	}
 };

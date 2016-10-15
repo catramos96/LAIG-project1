@@ -121,7 +121,7 @@
             <!-- os parametros devem ser interpretados, genericamente como-->
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
 			
-            <rectangle x1="0.3" y1="-0.9" x2="1" y2="1" />					<!-- ????????? -->
+            <rectangle x1="0" y1="0" x2="1" y2="1" />					<!-- ????????? -->
         </primitive>
 
         <primitive id="primitive2">
@@ -176,7 +176,7 @@
             
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
                 <!-- "primitiveref", identificando outros -->
-                <!-- componentes ou primitivas 
+                <!-- componentes ou primitivas -->
 			
                 <componentref id="node1" />
                 
@@ -279,7 +279,6 @@
 				
                 
                 <primitiveref id="primitive1" />
-                <primitiveref id="primitive2" />«
                 
             </children>
             
@@ -328,8 +327,8 @@
                 <!-- componentes ou primitivas -->
 				
                 
-                <primitiveref id="primitive1" />
-                <primitiveref id="primitive2" />
+                <primitiveref id="primitive3" />
+                <primitiveref id="primitive4" />
                 
             </children>
             

@@ -1,31 +1,20 @@
 /*
  * Data Struct of MyRectangle inheritance from MyPrimitive
  */
- function MyRectangle(scene,id,p1, p2) {
+ function MyRectangle(scene,data) {
      CGFobject.call(this,scene);
      
-     this.p1 = p1;
-     this.p2 = p2;
-     this.id = id;
+     this.p1 = data.getP1();
+     this.p2 = data.getP2();
+     this.id = data.getID();
 
      this.initBuffers();
  }
 
- MyRectangle.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MyRectangle.prototype = Object.create(CGFobject.prototype);
- MyRectangle.prototype.constructor=MyRectangle; 
 
- /*
- * Print Info
- */
-   
- MyRectangle.prototype.printInfo = function(){
- 	console.log("Primitive id - " + this.id + " ; type - rectangle" );
-    this.p1.printInfo();
-    this.p2.printInfo();
- }
 
-MyRectangle.prototype.initBuffers = function() {
+ MyRectangle.prototype.initBuffers = function() {
 
     var xmin, xmax, ymin,ymax;
     
