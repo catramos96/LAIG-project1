@@ -154,14 +154,14 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
    	this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
     this.cylinder = new MyCylinder(this,1,1,1,1,15,15);
-    this.sphere = new MySphere(this,1,3,100,100);*/
+    this.sphere = new MySphere(this,1,3,100,100);
 	//FlowerAppearance
 	this.flowerAppearance = new CGFappearance(this);
 	this.flowerAppearance.setAmbient(0.3,0.3,0.3,1);
 	this.flowerAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
 	this.flowerAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
 	this.flowerAppearance.setShininess(50);
-	this.flowerAppearance.loadTexture("../reader/scenes/flor.png");
+	this.flowerAppearance.loadTexture("../reader/scenes/flor.jpg");*/
 };
 
 XMLscene.prototype.displayComponents = function (component, materials, texture) {
@@ -206,7 +206,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		{ 
 			if(newTexture.getId() != "none")	//se a textura não for nula
 			{
-				//mat.setTexture(value.getAppearance());
+				mat.setTexture(value.getAppearance());
 			}
 		}
 	}
@@ -217,6 +217,10 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value);
+			prim.display();
+		}	
+		if(value instanceof MyTriangleData){
+			var prim = new MyTriangle(this, value);
 			prim.display();
 		}	
 	}

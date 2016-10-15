@@ -62,8 +62,8 @@
         <!-- Deve existir um ou mais blocos "texture" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
         <!-- length_s e length_t sao fatores de escala de textura.-->
-        <texture id="texture1" file="scenes/flor.png" length_s="1" length_t="1" />  
-        <texture id="texture2" file="scenes/flor.png" length_s="1" length_t="1" /> 
+        <texture id="texture1" file="scenes/flor.jpg" length_s="1" length_t="1" />  
+        <texture id="texture2" file="scenes/flor.jpg" length_s="1" length_t="1" /> 
         
     </textures>
 
@@ -125,7 +125,7 @@
         </primitive>
 
         <primitive id="primitive2">
-            <triangle x1="0" y1="0" z1="0" x2="0" y2="1" z2="0" x3="0" y3="1" z3="1" />
+            <triangle x1="0" y1="0" z1="0" x2="1" y2="0" z2="0" x3="0" y3="1" z3="0" />
         </primitive>
 
         <primitive id="primitive3">
@@ -316,7 +316,7 @@
             <!-- a textura declarada sobrepoe a textura recebida do -->
             <!-- objecto "pai" -->
             
-			<texture id="texture2" />
+			<texture id="none" />
             
             <!-- bloco "children" obrigatorio num "component" -->
             
@@ -327,8 +327,7 @@
                 <!-- componentes ou primitivas -->
 				
                 
-                <primitiveref id="primitive3" />
-                <primitiveref id="primitive4" />
+                <primitiveref id="primitive2" />
                 
             </children>
             

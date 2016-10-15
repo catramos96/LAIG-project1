@@ -612,7 +612,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 								 primitive.children[0].attributes.getNamedItem("y3").value,
 								 primitive.children[0].attributes.getNamedItem("z3").value);
 
-				prim = new MyTriangle(this.scene,id,p1,p2,p3);
+				prim = new MyTriangleData(id,p1,p2,p3);
 				break;
 			}
 			case "cylinder": {

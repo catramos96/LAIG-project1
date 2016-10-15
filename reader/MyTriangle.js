@@ -2,29 +2,16 @@
  * MyTriangle
  * @constructor
  */
- function MyTriangle(scene,id,p1,p2,p3) {
+ function MyTriangle(scene,data) {
      CGFobject.call(this,scene);
-     this.p1 = p1;
-     this.p2 = p2;
-     this.p3 = p3;
-     this.id = id;
+     this.p1 = data.getP1();
+     this.p2 = data.getP2();
+     this.p3 = data.getP3();
+     this.id = data.getId();
      this.initBuffers();
  }
 
- MyTriangle.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
  MyTriangle.prototype = Object.create(CGFobject.prototype);
- MyTriangle.prototype.constructor = MyTriangle;
-
- /*
- * Print Info
- */
-   
- MyTriangle.prototype.printInfo = function(){
- 	console.log("Primitive id - " + this.id + " ; type - triangle");
-    this.point1.printInfo();
- 	this.point2.printInfo();
- 	this.point3.printInfo();
- }
 
  MyTriangle.prototype.initBuffers = function() {
    //vetores que define o plano onde estão os 3 pontos
