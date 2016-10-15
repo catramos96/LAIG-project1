@@ -1,15 +1,19 @@
 /*
- * Data Struct of MyTorus inheritance from MyPrimitive
+ * MyTorus
  */
- function MyTorus(scene,id,inner,outer,slices,loops) {
+ function MyTorus(scene, data) {
      CGFobject.call(this,scene);
 
-     this.inner = inner;
-     this.outer = outer;
-     this.slices = slices;
-     this.loops = loops;
-     this.id = id;
-
+    /* this.inner = data.getInner();
+     this.outer = data.getOuter();
+     this.slices = data.getSlices();
+     this.loops = data.getLoops();*/
+   
+     this.inner = 0.1;
+     this.outer = 1;
+     this.slices = 100;
+     this.loops = 100;
+     
      this.initBuffers();
  }
 

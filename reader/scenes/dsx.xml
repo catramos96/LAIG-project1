@@ -137,7 +137,7 @@
         </primitive>
 
         <primitive id="primitive5">
-            <torus inner="3" outer="2" slices="12" loops="8" />
+            <torus inner="1" outer="2" slices="4" loops="8" />
         </primitive>
         
     </primitives>
@@ -213,7 +213,7 @@
         
             <transformation>
 
-                <translate x="2" y="0" z="0" />
+                <translate x="1" y="0" z="0" />
 
             </transformation>
 
@@ -226,7 +226,7 @@
             
 			<children>
             
-                <primitiveref id="primitive1" />
+                <primitiveref id="primitive5" />
                 
             </children>
             
@@ -249,7 +249,7 @@
 
 			<children>
             
-                <primitiveref id="primitive5" />
+                <primitiveref id="primitive2" />
                 
             </children>
             

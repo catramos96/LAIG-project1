@@ -643,7 +643,6 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				o = primitive.children[0].attributes.getNamedItem("outer").value,
 				sl = primitive.children[0].attributes.getNamedItem("slices").value;
 				l = primitive.children[0].attributes.getNamedItem("loops").value;
-
 				prim = new MyTorusData(id,inn,o,sl,l);
 				break;
 			}

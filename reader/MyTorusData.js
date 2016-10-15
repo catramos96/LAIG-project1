@@ -9,15 +9,15 @@
      this.loops = loops;
  }
 
- MyTorusData.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
+ MyTorusData.prototype = new MyPrimitive(this.id); 
  MyTorusData.prototype.constructor = MyTorusData;
 
- MySphereData.prototype.getInner = function(){
+ MyTorusData.prototype.getInner = function(){
      return this.inner;
  }
 
- MyTorusData.prototype.getOutter = function(){
-     return this.outter;
+ MyTorusData.prototype.getOuter = function(){
+     return this.outer;
  }
 
  MyTorusData.prototype.getSlices = function(){
@@ -30,14 +30,4 @@
 
  MyTorusData.prototype.getId = function(){
      return this.id;
- }
-
- /*
- * Print Info
- */
-   
- MyTorus.prototype.printInfo = function(){
- 	console.log("Primitive id - " + this.id + " ; type - torus ");
- 	console.log("inner - " + this.inner + " ; outer - " + this.outer);
-    console.log("slices - " + this.slices + " ; loops - " + this.loops);
  }

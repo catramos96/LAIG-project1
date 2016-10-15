@@ -149,9 +149,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initMaterials();
 
 	this.initTextures();
-
-	//TEMPORARIO
-	this.torus = new MyTorus(this,1,1,4,50,50);
 };
 
 //DISPLAY COMPONENTS
@@ -222,10 +219,10 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 			var prim = new MySphere(this, value);
 			//prim.display();
 		}
-		/*if(value instanceof MyTorusData){
+		if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
-			//prim.display();
-		}*/
+			prim.display();
+		}
 	}
 
 	//chama o proximo componente recursivamente
@@ -300,11 +297,10 @@ XMLscene.prototype.display = function () {
 		this.popMatrix();*/
 
 	// torus
-		this.pushMatrix();
+		/*this.pushMatrix();
 			//this.flowerAppearance.apply();
 			this.torus.display();
-			
-		this.popMatrix();
+		this.popMatrix();*/
 	
 	}
 };
