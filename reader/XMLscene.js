@@ -151,7 +151,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initTextures();
 
 	//TEMPORARIO
-	this.torus = new MyTorus(this,1,1,2,50,50);
+	this.torus = new MyTorus(this,1,3,2,50,50);
 };
 
 //DISPLAY COMPONENTS
