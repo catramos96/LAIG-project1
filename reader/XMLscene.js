@@ -32,9 +32,6 @@ XMLscene.prototype.init = function (application) {
 };
 
 XMLscene.prototype.initLights = function () {
-	/*this.lights[0].setPosition(2, 3, 3, 1);
-    this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-    this.lights[0].update();*/
 
     var i = 0;
     for (var [id, value] of this.graph.lightsList) {
@@ -158,17 +155,45 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.flowerAppearance.loadTexture("../reader/scenes/flor.png");
 };
 
-XMLscene.prototype.displayComponents = function (component, material, texture) {
+XMLscene.prototype.displayComponents = function (component, materials, texture) {
 
-	//recebe a transformacao
+	this.pushMatrix();
+
+	//recebe a transformacao e multiplica na cena
+	this.multMatrix(component.getTransformation());
 
 	//recebe os materiais
+	var newMaterials = component.getMaterials();
+	if(newMaterials.has("inherit")){
+		newMaterials = materials;
+	}
 
 	//recebe as texturas
+	var newTextures = component.getTexture();
+	if(newTextures == "inherit"){
+		newTextures = textures;
+	}else if(newTextures == "none"){
+		newTextures = null;
+	}
 
 	//desenha as primitivas
+	var primitives = component.getPrimitives();
+	for (var [id, value] of primitives){
+		
+		/*if(value instanceof MyRectangle){
+
+		}	*/	
+
+	}
 
 	//chama o proximo componente recursivamente
+	var components = component.getComponentsChilds();
+	for (var [id, value] of components){
+		this.displayComponent(value,newMaterials,newTextures);
+	}
+
+	this.popMatrix();
+	return null;
 }
 
 XMLscene.prototype.display = function () {
@@ -202,7 +227,7 @@ XMLscene.prototype.display = function () {
 		//update lights
 		this.updateLights();
 
-		this.displayComponents(this.graph.root, null,null);
+		this.displayComponents(this.graph.getRoot(), null,null);
 			
 	// triangle
 		/*this.pushMatrix();

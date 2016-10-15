@@ -768,9 +768,11 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			{
 				if(materialId != "inherit")
 					return "Components '" + id + "' materialsId '" +materialId + "' not found";
-				else
-					materialsComponent.set(materialId, " ");
+				else{
+					this.materialsList.set(materialId," ")
+				}
 			}
+				
 			materialsComponent.set(materialId, this.materialsList.get(materialId));
 		}
 
@@ -783,8 +785,13 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		var textureId = texture[0].attributes.getNamedItem("id").value;
 		
-		if(!this.texturesList.has(textureId) && textureId != "inherit" && textureId != "none"){
-			return "Components '" + id + "' textureId '" + textureId + "' not found";
+		if(!this.texturesList.has(textureId))
+		{
+			 if(textureId == "inherit" || textureId == "none"){
+			 	var newTexture = new MyTexture(textureId,"",0,0);
+			 	this.texturesList.set(textureId, newTexture);
+			 }else 
+				return "Components '" + id + "' textureId '" + textureId + "' not found";
 		}
 
 		var textureComponent = this.texturesList.get(textureId);
@@ -888,4 +895,8 @@ MySceneGraph.prototype.verifyExistingId = function(id, list) {
  */
 MySceneGraph.prototype.getGlobals = function() {
 	return this.globals;
+}
+
+MySceneGraph.prototype.getRoot = function() {
+	return this.root;
 }

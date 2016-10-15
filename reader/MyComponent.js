@@ -14,6 +14,22 @@
  	return this.id;
  }
 
+ MyComponent.prototype.getTransformation = function(){
+ 	return this.transformation;
+ }
+
+ MyComponent.prototype.getMaterials = function(){
+ 	return this.materials;
+ }
+ 
+ MyComponent.prototype.getTexture = function(){
+ 	return this.texture;
+ }
+
+ MyComponent.prototype.getPrimitives = function(){
+ 	return this.primitives;
+ }
+
  MyComponent.prototype.getComponentsChilds = function(){
  	return this.components;
  }
