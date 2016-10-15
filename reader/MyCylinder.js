@@ -9,7 +9,6 @@
      this.height = data.getHeight();
      this.slices = data.getSlices();
      this.stacks = data.getStacks();
-     this.id = data.getId();
 
     this.initBuffers();
  }

@@ -31,6 +31,7 @@ XMLscene.prototype.init = function (application) {
 
 };
 
+//INIT LIGHTS
 XMLscene.prototype.initLights = function () {
 
     var i = 0;
@@ -42,6 +43,7 @@ XMLscene.prototype.initLights = function () {
     
 };
 
+//INIT MATERIALS
 XMLscene.prototype.initMaterials = function () {
 	
 	this.initializedMaterials = [];
@@ -54,6 +56,7 @@ XMLscene.prototype.initMaterials = function () {
     
 };
 
+//INIT TEXTURES
 XMLscene.prototype.initTextures = function () {
 	
 	this.initializedTextures = [];
@@ -65,6 +68,7 @@ XMLscene.prototype.initTextures = function () {
     }
 };
 
+//INIT CAMERA
 XMLscene.prototype.initCamera = function () {
 	//camara inicial
 	/*for (var [id, value] of this.graph.perspectiveList){
@@ -146,25 +150,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initTextures();
 
-	
 	//TEMPORARIO
-
-/*	var data = new MyRectangleData(2,new MyPoint(0,0,0), new MyPoint(1,1,0));
-	this.rect =  new MyRectangle(this, data);
-	this.triangle = new MyTriangle(this,1,new MyPoint(0,0,0),new MyPoint(1,0,0),new MyPoint(0,1,0));
-   	this.rect = new MyRectangle(this,2,new MyPoint(-1,-1,-1), new MyPoint(1,1,1));
-   	var data = new MyCylinderData(1,1,1,1,15,15);
-    this.cylinder = new MyCylinder(this,data);*/
-   // this.sphere = new MySphere(this,1,3,100,100);
-	//FlowerAppearance
-	/*this.flowerAppearance = new CGFappearance(this);
-	this.flowerAppearance.setAmbient(0.3,0.3,0.3,1);
-	this.flowerAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
-	this.flowerAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
-	this.flowerAppearance.setShininess(50);
-	this.flowerAppearance.loadTexture("../reader/scenes/flor.jpg");*/
+	this.torus = new MyTorus(this,1,1,2,3,3);
 };
 
+//DISPLAY COMPONENTS
 XMLscene.prototype.displayComponents = function (component, materials, texture) {
 
 	this.pushMatrix();
@@ -230,7 +220,11 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}
 		if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
-			prim.display();
+			//prim.display();
+		}
+		if(value instanceof MyTorusData){
+			var prim = new MyTorus(this, value);
+			//prim.display();
 		}
 	}
 
@@ -304,6 +298,12 @@ XMLscene.prototype.display = function () {
 			this.flowerAppearance.apply();
 			this.sphere.display();
 		this.popMatrix();*/
+
+	// torus
+		this.pushMatrix();
+			//this.flowerAppearance.apply();
+			this.torus.display();
+		this.popMatrix();
 	
 	}
 };

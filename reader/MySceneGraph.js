@@ -644,7 +644,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				sl = primitive.children[0].attributes.getNamedItem("slices").value;
 				l = primitive.children[0].attributes.getNamedItem("loops").value;
 
-				prim = new MyTorus(this.scene,id,inn,o,sl,l);
+				prim = new MyTorusData(id,inn,o,sl,l);
 				break;
 			}
 		}

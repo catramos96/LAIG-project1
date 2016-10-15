@@ -6,13 +6,11 @@
      
      this.p1 = data.getP1();
      this.p2 = data.getP2();
-     this.id = data.getID();
 
      this.initBuffers();
  }
 
  MyRectangle.prototype = Object.create(CGFobject.prototype);
-
 
  MyRectangle.prototype.initBuffers = function() {
 

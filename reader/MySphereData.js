@@ -1,5 +1,5 @@
 /*
- * MySphere
+ * MySphereData
  */
  function MySphereData(id,radius,slices,stacks) {
      this.radius = radius;

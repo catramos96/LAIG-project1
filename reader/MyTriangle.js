@@ -7,7 +7,6 @@
      this.p1 = data.getP1();
      this.p2 = data.getP2();
      this.p3 = data.getP3();
-     this.id = data.getId();
      this.initBuffers();
  }
 
