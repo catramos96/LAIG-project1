@@ -177,10 +177,10 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		perspective.setFar(tempP.attributes.getNamedItem("far").value);
 
-		var angle=tempP.attributes.getNamedItem("angle").value;
-		if(angle < -180 || angle >180)
+		var angle=tempP.attributes.getNamedItem("angle").value*Math.PI*2/360;
+		if(angle < -Math.PI/2 || angle >Math.PI/2)
 			console.log("WARNING : angle not adjusted...");
-		perspective.setAngle(tempP.attributes.getNamedItem("angle").value);
+		perspective.setAngle(angle);
 
 		//vai buscar os valores dos filhos <to> e <from>
 		var a,b,c;
@@ -323,7 +323,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 		//extra elements for spot Light
 		if(spot == 1){
-			angle = this.reader.getFloat(lights, 'angle');
+			angle = this.reader.getFloat(lights, 'angle')*Math.PI*2/360;
 			exponent = this.reader.getFloat(lights, 'exponent');
 
 			lights = lights_elems[0].children[i].children[0];
@@ -532,7 +532,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 					break;
 				case "rotate":
 					final_t.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
-								   transformation.children[j].attributes.getNamedItem("angle").value);
+								   transformation.children[j].attributes.getNamedItem("angle").value)*Math.PI*2/360;
 					break;
 				case "scale":
 					final_t.scale(transformation.children[j].attributes.getNamedItem("x").value,
@@ -735,7 +735,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 						break;
 					case "rotate":
 						transfComponent.rotate(transformation.children[j].attributes.getNamedItem("axis").value,
-									   transformation.children[j].attributes.getNamedItem("angle").value);
+									   transformation.children[j].attributes.getNamedItem("angle").value*Math.PI*2/360);
 						break;
 					case "scale":
 						transfComponent.scale(transformation.children[j].attributes.getNamedItem("x").value,

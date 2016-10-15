@@ -151,7 +151,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initTextures();
 
 	//TEMPORARIO
-	this.torus = new MyTorus(this,1,3,2,50,50);
+	this.torus = new MyTorus(this,1,1,4,50,50);
 };
 
 //DISPLAY COMPONENTS
@@ -303,6 +303,7 @@ XMLscene.prototype.display = function () {
 		this.pushMatrix();
 			//this.flowerAppearance.apply();
 			this.torus.display();
+			
 		this.popMatrix();
 	
 	}
