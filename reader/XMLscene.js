@@ -157,7 +157,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	this.pushMatrix();
 
 	//recebe a transformacao e multiplica na cena
-	//this.multMatrix(component.getTransformation()); //descobrir o que está mal aqui
+	this.multMatrix(component.getTransformation().getMatrix()); //descobrir o que está mal aqui
 
 	//recebe os materiais
 	var newMaterials = component.getMaterials();
@@ -205,19 +205,19 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value);
-			//prim.display();
+			prim.display();
 		}	
 		if(value instanceof MyTriangleData){
 			var prim = new MyTriangle(this, value);
-			//prim.display();
+			prim.display();
 		}	
 		if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
-			//prim.display();
+			prim.display();
 		}
 		if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
-			//prim.display();
+			prim.display();
 		}
 		if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);

@@ -568,9 +568,12 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			return "Transformation without information";
 		}
 
+		console.log("INICIO DA MULTIPLICACAO");
 		//multiply all transformations to final_t
-		for(var j = 0; j < transformation.children.length; j++){
+		for(var j = transformation.children.length-1; j >= 0; j--){
 			var tag_name = transformation.children[j].tagName;
+
+			console.log("its a "+tag_name);
 
 			switch(tag_name){
 				case "translate":
@@ -589,11 +592,11 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 					break;
 				default:
 					return "inexisting tag name";
-
 			}
 		}
 		//saves final matrix at transformationsList
 		this.transformationsList.set(id,final_t);
+		console.log("RESULTADO = "+mat4.str(final_t.getMatrix()));
 
 		//this.transformationsList.get(id).display();
 	}
@@ -748,13 +751,14 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		}
 
 		// a matriz é a identidade 
-		if(transformation.length == 0 )
+		if(n_transformations == 0 )
 		{
 			matrixId = "default_"+id;
 			var temp = new MyTransformation(matrixId);
 			this.transformationsList.set(matrixId,temp);
 
 			var transfComponent = this.transformationsList.get(matrixId); // transformation from component
+		
 		}
 		else if(transformation.getElementsByTagName("transformationref").length == 1) //<transformationref>
 		{
@@ -769,8 +773,8 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		}
 		else		//<rotate>/<scale>/<translate>
 		{
-			for(var j = 0; j < n_transformations;j++){
-
+			for(var j = n_transformations-1; j >= 0;j--){
+		
 				var tag_name = transformation.children[j].tagName;
 				matrixId = "default_"+id;
 				var transfComponent = new MyTransformation(matrixId);

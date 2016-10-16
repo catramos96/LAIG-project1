@@ -94,17 +94,17 @@
         <transformation id="teste1">
            <!-- instrucoes a usar sem limite nem ordem -->
            <!-- deve existir pelo menos uma transformacao -->
-           <translate x="0.1" y="2" z="3" />
            <rotate axis="x" angle="0.5" />
-           <scale x="4" y="9" z="-1" />
+           <scale x="0.5" y="0.7" z="1" />
+           <translate x="0.1" y="2" z="3" />
         </transformation>
 
          <transformation id="teste2">
            <!-- instrucoes a usar sem limite nem ordem -->
            <!-- deve existir pelo menos uma transformacao -->
+           <scale x="-2" y="1" z="7" />
            <translate x="0" y="1" z="4" />
            <rotate axis="y" angle="2" />
-           <scale x="-2" y="1" z="7" />
         </transformation>
         
     </transformations>
@@ -148,7 +148,7 @@
         
             <!-- bloco "transformation" obrigatorio -->
             <transformation>			
-                <translate x="0" y="0" z="0" />
+          
             </transformation>
        
             <!-- declaracao obrigatoria de pelo menos um material; -->
@@ -188,7 +188,7 @@
         
             <transformation>
             
-                <transformationref id="teste1" />
+            	<translate x="1" y="0" z="0" />
 
             </transformation>
                
@@ -213,7 +213,7 @@
         
             <transformation>
 
-                <translate x="1" y="0" z="0" />
+                <translate x="0" y="1" z="0" />
 
             </transformation>
 
@@ -226,7 +226,7 @@
             
 			<children>
             
-                <primitiveref id="primitive5" />
+                <primitiveref id="primitive1" />
                 
             </children>
             
@@ -236,7 +236,7 @@
         
             <transformation>
 				
-                <translate x="0" y="0" z="1" />
+                 <transformationref id="teste1" />
 
             </transformation>
        
@@ -249,7 +249,7 @@
 
 			<children>
             
-                <primitiveref id="primitive2" />
+                <primitiveref id="primitive4" />
                 
             </children>
             
