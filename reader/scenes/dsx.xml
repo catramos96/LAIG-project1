@@ -63,7 +63,8 @@
         <!-- Os identificadores "id" nao podem ser repetidos -->
         <!-- length_s e length_t sao fatores de escala de textura.-->
         <texture id="texture1" file="scenes/flor.jpg" length_s="1" length_t="1" />  
-        <texture id="texture2" file="scenes/flor.jpg" length_s="1" length_t="1" /> 
+        <texture id="texture2" file="scenes/flor.jpg" length_s="1" length_t="1" />
+        <texture id="skyTexture" file="scenes/sky.jpg" length_s="1" length_t="1" />
         
     </textures>
 
@@ -106,7 +107,7 @@
            <translate x="0" y="1" z="4" />
            <rotate axis="y" angle="2" />
         </transformation>
-        
+
     </transformations>
 
     <primitives>
@@ -178,43 +179,39 @@
                 <!-- "primitiveref", identificando outros -->
                 <!-- componentes ou primitivas -->
 			
-                <componentref id="node1" />
+                <componentref id="Surrounding" />
                 
             </children>
             
         </component>
         
-        <component id="node1">																
+        <component id="Surrounding">																
         
             <transformation>
-            
-            	<translate x="1" y="0" z="0" />
-
             </transformation>
                
 			<materials>
-                <material id="shiny" />
                 <material id="matt" />
-                <material id="shiny" />
             </materials>
             
-			<texture id="texture1" />
+			<texture id="none" />
             
 			<children>
 		
-                <componentref id="node2" />
-                <componentref id="node3" />
+                <componentref id="LeftWall" />
+                <componentref id="RightWall" />
+                <componentref id="Floor" /> 
                 
             </children>
             
         </component>
         
-        <component id="node2">																
+        <component id="LeftWall">																
         
             <transformation>
-
-                <translate x="0" y="1" z="0" />
-
+            	<scale x="1" y = "5" z = "5" /> 
+				<translate x="0" y="0" z="1" />
+        		<rotate axis="y" angle="90" />     
             </transformation>
 
 			<materials>
@@ -228,16 +225,14 @@
             
                 <primitiveref id="primitive1" />
                 
-            </children>
+            </children> 
             
         </component>
 
-         <component id="node3">																
+        <component id="RightWall">																
         
             <transformation>
-				
-                 <transformationref id="teste1" />
-
+           		<scale x="5" y = "5" z = "1" /> 
             </transformation>
        
 			<materials>
@@ -249,7 +244,30 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="primitive1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="Floor">																
+        
+            <transformation>
+           		<scale x="5" y = "1" z = "5" /> 
+				<translate x="0" y="0" z="1" />
+        		<rotate axis="x" angle="-90" /> 
+            </transformation>
+       
+			<materials>
+				<material id="inherit" />
+                <material id="shiny" />
+            </materials>
+                         
+			<texture id="none" />
+
+			<children>
+            
+                <primitiveref id="primitive1" />
                 
             </children>
             

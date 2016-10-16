@@ -225,7 +225,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
-		var angle=this.reader.getFloat(tempP, 'angle').value*Math.PI*2/360;
+		var angle=this.reader.getFloat(tempP, 'angle')*Math.PI*2/360;
 		if(angle < -Math.PI/2 || angle >Math.PI/2)
 			console.log("WARNING : angle not adjusted...");
 		perspective.setAngle(angle);
@@ -568,12 +568,12 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			return "Transformation without information";
 		}
 
-		console.log("INICIO DA MULTIPLICACAO");
+		//console.log("INICIO DA MULTIPLICACAO");
 		//multiply all transformations to final_t
-		for(var j = transformation.children.length-1; j >= 0; j--){
+		for(var j = 0; j < transformation.children.length; j++){
 			var tag_name = transformation.children[j].tagName;
 
-			console.log("its a "+tag_name);
+			//console.log("its a "+tag_name);
 
 			switch(tag_name){
 				case "translate":
@@ -596,7 +596,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		}
 		//saves final matrix at transformationsList
 		this.transformationsList.set(id,final_t);
-		console.log("RESULTADO = "+mat4.str(final_t.getMatrix()));
+		//console.log("RESULTADO = "+mat4.str(final_t.getMatrix()));
 
 		//this.transformationsList.get(id).display();
 	}
@@ -773,33 +773,38 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		}
 		else		//<rotate>/<scale>/<translate>
 		{
-			for(var j = n_transformations-1; j >= 0;j--){
+			matrixId = "default_"+id;
+			var transfComponent = new MyTransformation(matrixId);
+			for(var j = 0; j < n_transformations;j++){
 		
 				var tag_name = transformation.children[j].tagName;
-				matrixId = "default_"+id;
-				var transfComponent = new MyTransformation(matrixId);
-
+				
 				switch(tag_name){
-					case "translate":
+					case "translate":{
 						transfComponent.translate(this.reader.getFloat(transformation.children[j],'x'),
 										  			this.reader.getFloat(transformation.children[j],'y'),
 										  			this.reader.getFloat(transformation.children[j],'z'));
+						console.log("translate - " + transfComponent.getMatrix());
 						break;
-					case "rotate":
-						transfComponent.rotate(this.reader.getFloat(transformation.children[j],'axis'),
-										  			this.reader.getFloat(transformation.children[j],'angle')*value*Math.PI*2/360);
+					}
+					case "rotate":{
+						transfComponent.rotate(this.reader.getString(transformation.children[j],'axis'),
+						this.reader.getFloat(transformation.children[j],'angle')*Math.PI*2/360);
+						console.log("rotate - " + transfComponent.getMatrix());
 						break;
-					case "scale":
+					}
+					case "scale":{
 						transfComponent.scale(this.reader.getFloat(transformation.children[j],'x'),
 										  			this.reader.getFloat(transformation.children[j],'y'),
 										  			this.reader.getFloat(transformation.children[j],'z'));
+						console.log(transfComponent.getMatrix());
 						break;
-					default:
-						return "inexisting tag name";
+					}
 				
 				}
-				//temp.display();
+			
 			}
+			
 			this.transformationsList.set(matrixId,transfComponent);	//adicionar a nova matriz
 		}
 
@@ -904,7 +909,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		if(id == this.globals.root)
 			this.root = comp;
 
-		comp.display();
+		//comp.display();
 	}
 
 	if(!this.isChildrensDefined()){
