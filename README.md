@@ -9,17 +9,12 @@
 
 * fazer triangulo e retangulo com tilling
 
-* tranformações: procurar o que está mal (ver a ordem das multiplicações)
-
 * verificar se não há ciclos
 
 * valores inicializados na app (faltam 3)
 
 * nao esquecer aquelas coisas default e teclas para mudar (interface)
 
-* vários componentes para experimentar os filhos!
-
-* devem ser definidos valores de "default" para o nó raiz (propriedades de aspeto) no dsx
 
 # atenção: #
 
