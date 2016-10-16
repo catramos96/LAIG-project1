@@ -11,7 +11,7 @@
     		
         <perspective id="perspective1" near="0.1" far="500" angle="0.4">
 
-            <from x="15" y="5" z="15" />
+            <from x="25" y="25" z="25S" />
             <to x="0" y="0" z="0" />
             
         </perspective>
@@ -180,6 +180,7 @@
                 <!-- componentes ou primitivas -->
 			
                 <componentref id="Surrounding" />
+                <componentref id="Planets" />
                 
             </children>
             
@@ -205,11 +206,31 @@
             </children>
             
         </component>
+
+        <component id="Planets">																
+        
+            <transformation>
+				<translate x="6" y="6" z="6" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="none" />
+
+			<children>
+            
+                <componentref id = "Planet1" />
+                
+            </children>
+            
+        </component>
         
         <component id="LeftWall">																
         
             <transformation>
-            	<scale x="1" y = "6" z = "6" /> 
+            	<scale x="1" y = "12" z = "12" /> 
 				<translate x="0" y="0" z="1" />
         		<rotate axis="y" angle="90" />     
             </transformation>
@@ -231,14 +252,14 @@
         <component id="RightWall">																
         
             <transformation>
-           		<scale x="6" y = "6" z = "1" /> 
+           		<scale x="12" y = "12" z = "1" /> 
             </transformation>
        
 			<materials>
 				<material id="shiny" />
             </materials>
                          
-			<texture id="none" />
+			<texture id="skyTexture" />
 
 			<children>
             
@@ -251,7 +272,7 @@
         <component id="Floor">																
         
             <transformation>
-           		<scale x="6" y = "1" z = "6" /> 
+           		<scale x="12" y = "1" z = "12" /> 
 				<translate x="0" y="0" z="1" />
         		<rotate axis="x" angle="-90" /> 
             </transformation>
@@ -260,11 +281,31 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="none" />
+			<texture id="skyTexture" />
 
 			<children>
             
                 <primitiveref id="primitive1" />
+                
+            </children>
+            
+        </component>
+
+         <component id="Planet1">																
+        
+            <transformation>
+				<translate x="0" y="0" z="0" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="texture1" />
+
+			<children>
+            
+                <primitiveref id="primitive4" />
                 
             </children>
             
