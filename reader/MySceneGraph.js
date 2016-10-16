@@ -570,7 +570,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 		//console.log("INICIO DA MULTIPLICACAO");
 		//multiply all transformations to final_t
-		for(var j = 0; j < transformation.children.length; j++){
+		for(var j = 0; j < transformation.children.length ; j++){
 			var tag_name = transformation.children[j].tagName;
 
 			//console.log("its a "+tag_name);
@@ -775,7 +775,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		{
 			matrixId = "default_"+id;
 			var transfComponent = new MyTransformation(matrixId);
-			for(var j = 0; j < n_transformations;j++){
+			for(var j = 0; j < n_transformations ;j++){
 		
 				var tag_name = transformation.children[j].tagName;
 				

@@ -176,7 +176,6 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	for (var [id, value] of this.graph.materialsList) {
 		if(id == temp){
     		mat = value.getAppearance();
-    		mat.apply();
     		break;
 		}
    	}
@@ -197,6 +196,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 				mat.setTexture(value.getAppearance());
 			}
 		}
+		mat.apply();
 	}
 
 	//desenha as primitivas
