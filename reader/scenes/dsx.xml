@@ -30,22 +30,22 @@
         <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
 		
-        <omni id="lightOmni1" enabled="1" >
-            <location x="15" y="15" z="15" w="60" />							<!-- w - ????????? -->
+        <omni id="lightOmni1" enabled="1" > 
+            <location x="3" y="3" z="3" w="30" />						
             <ambient r="0" g="0" b="0" a="0" />
-            <diffuse r="0.4" g="0.3" b="0.3" a="1" />
-            <specular r="0.2" g="0.2" b="0.2" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
         </omni>
 
-        <omni id="lightOmni2" enabled="1" >
-            <location x="-12" y="15" z="20" w="30" />							<!-- w - ????????? -->
+        <omni id="lightOmni2" enabled="0" >
+            <location x="-12" y="15" z="20" w="30" />						
             <ambient r="0" g="0" b="0" a="0" />
             <diffuse r="0.3" g="0.4" b="0.3" a="1" />
             <specular r="0.2" g="0.2" b="0.2" a="1" />
         </omni>
         
         
-        <spot id="lightSpot1" enabled="1" angle="10" exponent="256">  		<!-- ang = 0.785 = pi/4 -->
+        <spot id="lightSpot1" enabled="0" angle="10" exponent="256">  		<!-- ang = 0.785 = pi/4 -->
 		
             <!-- atencao, "target" e' diferente de "direction" -->
 			
@@ -64,7 +64,7 @@
         <!-- length_s e length_t sao fatores de escala de textura.-->
         <texture id="texture1" file="scenes/flor.jpg" length_s="1" length_t="1" />  
         <texture id="texture2" file="scenes/flor.jpg" length_s="1" length_t="1" />
-        <texture id="skyTexture" file="scenes/sky.jpg" length_s="1" length_t="1" />
+        <texture id="skyTexture" file="scenes/sky.png" length_s="1" length_t="1" />
         
     </textures>
 
@@ -72,9 +72,9 @@
     
         <!-- Os identificadores "id" nao podem ser repetidos, e deve existir pelo menos 1 material -->
         <material id="shiny" >
-            <emission r="0.01" g="0.01" b="0.01" a="1" />
-            <ambient r="0.3" g="0.3" b="0.3" a="1" />
-            <diffuse r="1" g="0.6" b="0" a="1" />
+            <emission r="1" g="1" b="1" a="1" />
+            <ambient r="1" g="1" b="1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
             <shininess value="1000" />
         </material>
@@ -191,7 +191,7 @@
             </transformation>
                
 			<materials>
-                <material id="matt" />
+                <material id="shiny" />
             </materials>
             
 			<texture id="none" />
@@ -209,17 +209,16 @@
         <component id="LeftWall">																
         
             <transformation>
-            	<scale x="1" y = "5" z = "5" /> 
+            	<scale x="1" y = "6" z = "6" /> 
 				<translate x="0" y="0" z="1" />
         		<rotate axis="y" angle="90" />     
             </transformation>
 
 			<materials>
-				<material id="inherit" />
-                <material id="shiny" />
+				<material id="shiny" />
             </materials>
                                   
-			<texture id="texture2" />
+			<texture id="skyTexture" />
             
 			<children>
             
@@ -232,12 +231,11 @@
         <component id="RightWall">																
         
             <transformation>
-           		<scale x="5" y = "5" z = "1" /> 
+           		<scale x="6" y = "6" z = "1" /> 
             </transformation>
        
 			<materials>
-				<material id="inherit" />
-                <material id="shiny" />
+				<material id="shiny" />
             </materials>
                          
 			<texture id="none" />
@@ -253,14 +251,13 @@
         <component id="Floor">																
         
             <transformation>
-           		<scale x="5" y = "1" z = "5" /> 
+           		<scale x="6" y = "1" z = "6" /> 
 				<translate x="0" y="0" z="1" />
         		<rotate axis="x" angle="-90" /> 
             </transformation>
        
 			<materials>
-				<material id="inherit" />
-                <material id="shiny" />
+				<material id="shiny" />
             </materials>
                          
 			<texture id="none" />
