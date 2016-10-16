@@ -1,11 +1,6 @@
 <dsx>
 
-    <!-- objeto para raiz do grafo e comprimento dos tres eixos (cilindros) -->
-
 	<scene root="sceneRoot" axis_length="3" /> 
-
-    <!-- varias vistas, com uma perspetiva default. -->
-    <!-- v/V para mudar para a proxima da lista (da ultima volta para a primeira) -->
 
     <views default="perspective1" >
     		
@@ -26,9 +21,6 @@
     </illumination>
 
     <lights>
-    
-        <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
-        <!-- Os identificadores "id" nao podem ser repetidos -->
 		
         <omni id="lightOmni1" enabled="1" > 
             <location x="12" y="12" z="12" w="30" />						
@@ -38,16 +30,14 @@
         </omni>
 
         <omni id="lightOmni2" enabled="1" >
-            <location x="0" y="0" z="0" w="30" />						
+            <location x="0" y="1" z="0" w="30" />						
             <ambient r="0" g="0" b="0" a="0" />
-            <diffuse r="0.3" g="0.4" b="0.3" a="1" />
-            <specular r="0.2" g="0.2" b="0.2" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
         </omni>
         
         
-        <spot id="lightSpot1" enabled="0" angle="10" exponent="256">  		<!-- ang = 0.785 = pi/4 -->
-		
-            <!-- atencao, "target" e' diferente de "direction" -->
+        <spot id="lightSpot1" enabled="0" angle="10" exponent="256">
 			
             <target x="0" y="0" z="0" />
             <location x="4" y="4" z="8" />
@@ -58,12 +48,7 @@
     </lights>
 
     <textures>
-    
-        <!-- Deve existir um ou mais blocos "texture" -->
-        <!-- Os identificadores "id" nao podem ser repetidos -->
-        <!-- length_s e length_t sao fatores de escala de textura.-->
-        <texture id="texture1" file="scenes/flor.jpg" length_s="1" length_t="1" />  
-        <texture id="texture2" file="scenes/flor.jpg" length_s="1" length_t="1" />
+   
         <texture id="skyTexture" file="scenes/sky.png" length_s="1" length_t="1" />
         <texture id="neptuneTexture" file="scenes/neptune.jpg" length_s="1" length_t="1" />
         <texture id="earthTexture" file="scenes/earth.jpg" length_s="1" length_t="1" />
@@ -80,7 +65,6 @@
 
     <materials>
     
-        <!-- Os identificadores "id" nao podem ser repetidos, e deve existir pelo menos 1 material -->
         <material id="shiny" >
             <emission r="1" g="1" b="1" a="1" />
             <ambient r="1" g="1" b="1" a="1" />
@@ -213,7 +197,7 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="none" />
+			<texture id="skyTexture" />
 
 			<children>
             	<componentref id = "LeftWall" />
@@ -236,7 +220,7 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="skyTexture" />
+			<texture id="inherit" />
 
 			<children>
             	<primitiveref id="primitive1"/>
@@ -255,7 +239,7 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="skyTexture" />
+			<texture id="inherit" />
 
 			<children>
             	<primitiveref id="primitive1"/>
@@ -276,7 +260,7 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="skyTexture" />
+			<texture id="inherit" />
 
 			<children>
             	<primitiveref id="primitive1"/>
