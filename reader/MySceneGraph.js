@@ -21,6 +21,9 @@ function MySceneGraph(filename, scene) {
 	this.primitivesList = new Map();			//map com as diversas primitivas
 	this.componentsList = new Map();			//map com os diversos componentes
 
+	//verificacao da ordem
+	this.naturalOrder = ['scene','views','illumination','lights','textures','materials','transformations','primitives','components'];
+	this.sequenceNumber = 0;
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -51,48 +54,95 @@ MySceneGraph.prototype.onXMLReady=function()
  * Calls all parsers and verifies errors
  */
 MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
+	//nao e um ficheiro dsx
+	if(rootElement.nodeName != "dsx"){
+		this.onXMLError("File does not have 'dsx' tag.");
+		return;
+	}
+
+	if(rootElement.children.length != 9)
+	{
+		this.onXMLError("File does not have 9 children tags.");
+		return;
+	}
+
 	var error;
 	//Parse Globals
+	if(rootElement.children[0].nodeName != "scene"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseGlobals(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Views
+	if(rootElement.children[1].nodeName != "views"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseViews(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Illumination
+	if(rootElement.children[2].nodeName != "illumination"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseIllumination(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Lights
+	if(rootElement.children[3].nodeName != "lights"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}		
 	if ((error = this.parseLights(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Textures
+	if(rootElement.children[4].nodeName != "textures"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseTextures(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Materials
+	if(rootElement.children[5].nodeName != "materials"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseMaterials(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Transformations
+	if(rootElement.children[6].nodeName != "transformations"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseTransformations(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Primitives
+	if(rootElement.children[7].nodeName != "primitives"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parsePrimitives(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
 	}
+
 	//Parse Components
+	if(rootElement.children[8].nodeName != "components"){
+		console.log("WARNING : dsx does not respect the formal order!");
+	}
 	if ((error = this.parseComponents(rootElement)) != null) {
 		this.onXMLError(error);
 		return;
@@ -877,18 +927,6 @@ MySceneGraph.prototype.isChildrensDefined = function() {
 	}
 	return true;
 }
-
-/**
- * This method returns true if 'list' has any element with id 'id'.
- * Returns the position or -1 if id it's not found in the list
- *
-MySceneGraph.prototype.verifyExistingId = function(id, list) {
-	for(var i = 0; i < list.length; i++)
-	{
-		if(id == list[i].getId())	return i;
-	}
-	return -1;
-}*/
 
 /*
  *

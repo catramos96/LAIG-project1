@@ -2,7 +2,7 @@
 
     <!-- objeto para raiz do grafo e comprimento dos tres eixos (cilindros) -->
 
-    <scene root="sceneRoot" axis_length="3" />
+	<scene root="sceneRoot" axis_length="3" /> 
 
     <!-- varias vistas, com uma perspetiva default. -->
     <!-- v/V para mudar para a proxima da lista (da ultima volta para a primeira) -->
@@ -16,7 +16,7 @@
             
         </perspective>
         
-    </views>
+    </views>  
 
     <illumination doublesided="1" local="1" >
     
