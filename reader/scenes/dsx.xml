@@ -93,38 +93,18 @@
 
     <transformations>																		<!-- FALTA AS TRANSFORMAÇÕES -->
     
-        <!-- Deve existir um ou mais blocos "transformation" -->
-        <!-- Os identificadores "id" nao podem ser repetidos -->
-        <transformation id="teste1">
-           <!-- instrucoes a usar sem limite nem ordem -->
-           <!-- deve existir pelo menos uma transformacao -->
-           <scale x="0.5" y = "0.5" z="0.5" />
-           <translate x="-6" y="-6" z="-6" />
-        </transformation>
-
-         <transformation id="teste2">
-           <!-- instrucoes a usar sem limite nem ordem -->
-           <!-- deve existir pelo menos uma transformacao -->
-           <scale x="-2" y="1" z="7" />
-           <translate x="0" y="1" z="4" />
-           <rotate axis="y" angle="2" />
+        <transformation id="planetsPosition">
+            <translate x="5" y="5" z="5" />
+			<translate x="1" y="0" z="1" />
+			<scale x="0.6" y = "0.6" z="0.6" />
         </transformation>
 
     </transformations>
 
     <primitives>
-    
-        <!-- Deve existir um ou mais blocos "primitive" -->
-        <!-- Os identificadores "id" nao podem ser repetidos -->
 		
         <primitive id="primitive1">
-           
-            <!-- apenas pode existir UMA das seguintes tags: -->
-            <!--     rectangle, triangle, cylinder, sphere, torus -->
-            <!-- os parametros devem ser interpretados, genericamente como-->
-            <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
-			
-            <rectangle x1="0" y1="0" x2="1" y2="1" />					<!-- ????????? -->
+            <rectangle x1="0" y1="0" x2="1" y2="1" />				
         </primitive>
 
         <primitive id="primitive2">
@@ -149,41 +129,19 @@
 
     	<component id="sceneRoot">																
         
-            <!-- bloco "transformation" obrigatorio -->
             <transformation>			
-
             </transformation>
-       
-            <!-- declaracao obrigatoria de pelo menos um material; -->
-            <!-- o material id="inherit", mantem (herda) material do "pai" -->
-            <!-- se varios materiais declarados, o default e' o -->
-            <!-- primeiro material; de cada vez que se pressione a tecla m/M, -->
-            <!-- o material muda para o proximo material da lista; do --> 
-            <!-- ultimo material da lista volta ao primeiro -->
             
 			<materials>
                 <material id="shiny" />
             </materials>
-                         
-            <!-- declaracao obrigatoria de texture -->
-            <!-- id="inherit" mantem (herda) a textura do objecto "pai" -->
-            <!-- id="none" remove a textura recebida do pai -->
-            <!-- a textura declarada sobrepoe a textura recebida do -->
-            <!-- objecto "pai" -->
             
 			<texture id="none" />
-            
-            <!-- bloco "children" obrigatorio num "component" -->
-            
+                     
 			<children>
-            
-                <!-- deve existir uma ou mais tags "componentref" e/ou -->
-                <!-- "primitiveref", identificando outros -->
-                <!-- componentes ou primitivas -->
 				<componentref id="Space" />
 				<componentref id="Planets" />
 				<componentref id="Stars" />
-                
             </children>
             
         </component>
@@ -272,9 +230,7 @@
           <component id="Planets">																
         
             <transformation>
-            	<translate x="5" y="5" z="5" />
-				<translate x="1" y="0" z="1" />
-				<scale x="0.6" y = "0.6" z="0.6" />
+            	<transformationref id="planetsPosition"/>
             </transformation>
        
 			<materials>
@@ -509,25 +465,8 @@
 
         <component id="Stars">																
         
-            <transformation>
-            	<translate x="5" y="5" z="5"/>
-            </transformation>
-       
-			<materials>
-				<material id="shiny" />
-            </materials>
-                         
-			<texture id="none" />
-
-			<children>
-            	<componentref id = "Sun" />
-            </children>
-            
-        </component>
-
-         <component id="Sun">																
-        
-            <transformation>
+           <transformation>
+           		<translate x="5" y="5" z="5"/>
             	<scale x="1.6" y="1.6" z="1.6"/>
             </transformation>
        
