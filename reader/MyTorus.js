@@ -42,8 +42,8 @@
        		this.texCoords.push((R+r*Math.cos(j*alfa))*Math.cos(i*beta),(R+r*Math.cos(j*alfa))*Math.sin(i*beta) ); //(z,x)
       
             if(i != this.loops && j < this.slices){
-              this.indices.push(i*(this.slices+1) + j,i*(this.slices+1) + j +1,(i+1)*(this.slices+1) + j);
-              this.indices.push((i+1)*(this.slices+1) + j,i*(this.slices+1) + j +1,(i+1)*(this.slices+1) + j +1);
+              this.indices.push(i*(this.slices+1) + j,(i+1)*(this.slices+1) + j,i*(this.slices+1) + j +1);
+              this.indices.push((i+1)*(this.slices+1) + j,(i+1)*(this.slices+1) + j +1,i*(this.slices+1) + j +1);
             }
 
  	  }
