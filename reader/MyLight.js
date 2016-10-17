@@ -106,5 +106,10 @@ MyLight.prototype.printInfo = function(){
 	  scene.lights[i].setSpotExponent(this.exponent);					  
 	}
 	scene.lights[i].setVisible(true);
+	if(this.enable){
+		scene.lights[i].enable();
+	}else{
+		scene.lights[i].disable();
+	}
  }
  
