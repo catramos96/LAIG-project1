@@ -49,18 +49,18 @@
 
     <textures>
    
-        <texture id="skyTexture" file="scenes/sky.png" length_s="1" length_t="1" />
-        <texture id="neptuneTexture" file="scenes/neptune.jpg" length_s="1" length_t="1" />
-        <texture id="earthTexture" file="scenes/earth.jpg" length_s="1" length_t="1" />
-        <texture id="saturnTexture" file="scenes/saturn.png" length_s="1" length_t="1" />
-        <texture id="saturnRingsTexture" file="scenes/saturn_rings.png" length_s="1" length_t="1" />
-        <texture id="sunTexture" file="scenes/sun.jpg" length_s="1" length_t="1" />
-        <texture id="uranusTexture" file="scenes/uranus.jpg" length_s="1" length_t="1" />
-        <texture id="jupiterTexture" file="scenes/jupiter.jpg" length_s="1" length_t="1" />
-        <texture id="marsTexture" file="scenes/mars.png" length_s="1" length_t="1" />
-        <texture id="venusTexture" file="scenes/venus.jpg" length_s="1" length_t="1" />
-        <texture id="mercuryTexture" file="scenes/mercury.png" length_s="1" length_t="1" />
-        <texture id="spaceshipTexture" file="scenes/spaceship.png" length_s="1" length_t="1" />
+        <texture id="skyTexture" file="../resources/sky.png" length_s="1" length_t="1" />
+        <texture id="neptuneTexture" file="../resources/neptune.jpg" length_s="1" length_t="1" />
+        <texture id="earthTexture" file="../resources/earth.jpg" length_s="1" length_t="1" />
+        <texture id="saturnTexture" file="../resources/saturn.png" length_s="1" length_t="1" />
+        <texture id="saturnRingsTexture" file="../resources/saturn_rings.png" length_s="1" length_t="1" />
+        <texture id="sunTexture" file="../resources/sun.jpg" length_s="1" length_t="1" />
+        <texture id="uranusTexture" file="../resources/uranus.jpg" length_s="1" length_t="1" />
+        <texture id="jupiterTexture" file="../resources/jupiter.jpg" length_s="1" length_t="1" />
+        <texture id="marsTexture" file="../resources/mars.png" length_s="1" length_t="1" />
+        <texture id="venusTexture" file="../resources/venus.jpg" length_s="1" length_t="1" />
+        <texture id="mercuryTexture" file="../resources/mercury.png" length_s="1" length_t="1" />
+        <texture id="spaceshipTexture" file="../resources/spaceship.png" length_s="1" length_t="1" />
         
     </textures>
 

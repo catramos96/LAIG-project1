@@ -37,7 +37,8 @@
  	                      (this.base + incRadius*i)*Math.sin(incAng*j),
  	                      -this.height/2 + incHeight*i);
 
- 	    this.texCoords.push(1-1/this.stacks*i,1-1/this.slices*j);
+ 	   // this.texCoords.push(1-1/this.stacks*i,1-1/this.slices*j);
+ 	    this.texCoords.push(j/(this.slices), 1 -i/this.stacks);
 
  	    this.normals.push(Math.cos(incAng*j),
  	                      0,                        //alterar
