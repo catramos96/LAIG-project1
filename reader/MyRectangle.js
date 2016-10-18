@@ -1,11 +1,15 @@
 /*
  * Data Struct of MyRectangle inheritance from MyPrimitive
  */
- function MyRectangle(scene,data) {
+ function MyRectangle(scene,data,lS,lT) {
      CGFobject.call(this,scene);
      
      this.p1 = data.getP1();
      this.p2 = data.getP2();
+
+    //mudar isto
+     this.lS = lS;
+     this.lT = lT;
 
      this.initBuffers();
  }
@@ -53,6 +57,16 @@
       0,0,1,
       0,0,1
  	];
+
+ 	var S = (this.p2.getX() - this.p1.getX()) / this.lS;
+ 	var T = (this.p2.getY() - this.p1.getY()) / this.lT;
+
+ 	/*this.texCoords = [
+ 	  0,0,
+ 	  S,0,
+ 	  S,T,
+ 	  0,T
+ 	];*/
 
  	this.texCoords = [
       1,0,

@@ -181,6 +181,8 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
    	}
 
 	//recebe as texturas
+	var lS = 1;
+	var lT = 1;
 	var newTexture = component.getTexture();
 	if(newTexture.getId() == "inherit"){
 		newTexture = texture;
@@ -193,36 +195,40 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		{ 
 			if(newTexture.getId() != "none")	//se a textura não for nula
 			{
+				lS = value.getLengthS();
+				lT = value.getLengthT();
 				mat.setTexture(value.getAppearance());
 			}
+			break;
 		}
-		mat.apply();
 	}
+	mat.apply();
 
 	//desenha as primitivas
 	var primitives = component.getPrimitives();
 	for (var [id, value] of primitives){
 
 		if(value instanceof MyRectangleData){
-			var prim = new MyRectangle(this, value);
+			var prim = new MyRectangle(this, value,lS,lT);
 			prim.display();
 		}	
-		if(value instanceof MyTriangleData){
-			var prim = new MyTriangle(this, value);
+		else if(value instanceof MyTriangleData){
+			var prim = new MyTriangle(this, value,lS,lT);
 			prim.display();
 		}	
-		if(value instanceof MyCylinderData){
+		else if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
 			prim.display();
 		}
-		if(value instanceof MySphereData){
+		else if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
 			prim.display();
 		}
-		if(value instanceof MyTorusData){
+		else if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
 			prim.display();
 		}
+		
 	}
 
 	//chama o proximo componente recursivamente
