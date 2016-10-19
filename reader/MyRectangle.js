@@ -7,7 +7,6 @@
      this.p1 = data.getP1();
      this.p2 = data.getP2();
 
-    //mudar isto
      this.lS = lS;
      this.lT = lT;
 

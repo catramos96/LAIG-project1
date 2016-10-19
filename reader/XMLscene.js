@@ -210,11 +210,11 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value,lS,lT);
-			prim.display();
+			//prim.display();
 		}	
 		else if(value instanceof MyTriangleData){
 			var prim = new MyTriangle(this, value,lS,lT);
-			prim.display();
+			//prim.display();
 		}	
 		else if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
@@ -222,11 +222,11 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}
 		else if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
-			prim.display();
+			//prim.display();
 		}
 		else if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
-			prim.display();
+			//prim.display();
 		}
 		
 	}

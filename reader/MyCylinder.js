@@ -46,25 +46,65 @@
 
  	    if(j != this.slices && i != this.stacks)
  	    {       
- 	        this.indices.push(i*(this.slices+1)+j,
+ 	        /*this.indices.push( i*(this.slices+1)+j+1,
  	                          (i+1)*(this.slices+1)+j,
-                              i*(this.slices+1)+j+1); //0,4,1 (stacks = 1,slices 3)
+                              i*(this.slices+1)+j); //0,4,1 (stacks = 1,slices 3)
 
-            this.indices.push((i+1)*(this.slices+1)+j,
+            this.indices.push(i*(this.slices+1)+j+1,
                               (i+1)*(this.slices+1)+j+1,
-                               i*(this.slices+1)+j+1); //4,5,1*/
+                              (i+1)*(this.slices+1)+j); //4,5,1*/
  	    }
  	  }
  	}
 
- 	this.newCircle(this.height,1,(this.slices+1)*(this.stacks));
- 	this.newCircle(-this.height,-1,(this.slices+1)*(this.stacks)+2);
- 	
+    var index = (this.slices+1)*(this.stacks);
+    
+    //desenho da topo
+    this.vertices.push(0, 0, this.height/2);
+    this.texCoords.push(0.5,0.5);
+    this.normals.push(0, 0, 1);
+
+    for (var i = 0; i < this.slices+1; i++) 
+    {
+        this.texCoords.push(0.5+Math.cos(incAng*i)/2,0.5-Math.sin(incAng*i)/2);
+        this.vertices.push(Math.cos(incAng * i)*this.top, Math.sin(incAng * i)*this.top, this.height/2);
+       
+
+         this.normals.push(0, 0, 1);
+        
+        if (i > 0) {
+          this.indices.push(index+1, index+i+1, index);     
+        }
+    } 
+    
+    index += this.slices+3;
+
+    //desenho da base
+   /* this.vertices.push(0, 0, -this.height/2);
+    this.texCoords.push(0.5,0.5);
+    this.normals.push(0, 0, -1);
+
+    for (var i = 0; i < this.slices+1; i++) 
+    {
+        this.texCoords.push(0.5+Math.cos(incAng*i)/2,0.5-Math.sin(incAng*i)/2);
+        this.vertices.push(Math.cos(incAng * i)*this.base, Math.sin(incAng * i)*this.base, -this.height/2);
+        this.normals.push(0, 0, -1);
+        
+        if (i > 0) {
+          this.indices.push(index, index+i+1, index+1);     
+        }
+    }*/ 
+
+
+
+ 	/*this.newCircle(this.height/2,1,(this.slices+1)*(this.stacks),this.top);
+ 	this.newCircle(-this.height/2,-1,(this.slices+1)*(this.stacks)+(this.slices+2),this.base);
+ 	*/
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
  };
 
-MyCylinder.prototype.newCircle = function(z, z_normal,index) {
+MyCylinder.prototype.newCircle = function(z, z_normal,index,r) {
 
     var ang = Math.PI * 2 / this.slices;
     
@@ -76,11 +116,11 @@ MyCylinder.prototype.newCircle = function(z, z_normal,index) {
     for (var i = 0; i < this.slices; i++) 
     {
         this.texCoords.push(0.5+Math.cos(ang*i)/2,0.5-Math.sin(ang*i)/2);
-        this.vertices.push(Math.cos(ang * i), Math.sin(ang * i), z);
+        this.vertices.push(Math.cos(ang * i)*r, Math.sin(ang * i)*r, z);
         this.normals.push(0, 0, z_normal);
         
         if (i > 0) {
-          this.indices.push(index, index+ i+1, index+1);
+          this.indices.push(index+1, index+i+1, index);
             
         }
     }    
