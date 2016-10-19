@@ -11,9 +11,6 @@ XMLscene.prototype.init = function (application) {
 	
 	this.numCamera = 0;  //se calhar não vai ser aqui -> interface?
 	
-	//this.interface = application.interface;
-	//this.initCamera(); 
-
     this.enableTextures(true);
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -72,11 +69,9 @@ XMLscene.prototype.initTextures = function () {
 XMLscene.prototype.initCamera = function () {
 	//camara inicial
 	for (var [id, value] of this.graph.perspectiveList){
-		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+		this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
 		break;
 	}
-	//this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-	//this.camera = new CGFcamera(value.angle, value.near, value.far, value.getToVec(), value.getFromVec());
 	this.interface.setActiveCamera(this.camera);
 };
 
