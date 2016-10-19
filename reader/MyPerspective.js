@@ -8,7 +8,16 @@ function MyPerspective() {
  	this.angle = 0;
  	this.toPoint = new MyPoint(0,0,0);
  	this.fromPoint = new MyPoint(0,0,0);
+ 	this.default = false;
 }
+
+ MyPerspective.prototype.setDefault = function(b){
+ 	this.default = b;
+ }
+
+ MyPerspective.prototype.isDefault = function(){
+ 	return this.default;
+ }
 
  MyPerspective.prototype.getId = function(){
  	return this.id;

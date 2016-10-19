@@ -77,10 +77,14 @@ XMLscene.prototype.initTextures = function () {
 
 //INIT CAMERA
 XMLscene.prototype.initCamera = function () {
+	this.numCamera = 0;
 	//camara inicial
 	for (var [id, value] of this.graph.perspectiveList){
-		this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
-		break;
+		if(value.isDefault()){
+			this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
+			break;
+		}
+		this.numCamera++;
 	}
 	this.interface.setActiveCamera(this.camera);
 };

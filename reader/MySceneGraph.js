@@ -197,7 +197,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		return "views is missing.";
 	}
 
-	//this.default = this.reader.getString(views_elems, 'default');
+	var defaultId = this.reader.getString(views_elems[0], 'default');
 
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
 
@@ -219,6 +219,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		}else
 			return "id repetead!";
 
+		if(defaultId == id)	perspective.setDefault(true);
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
 		var angle=this.reader.getFloat(tempP, 'angle')*Math.PI*2/360;
