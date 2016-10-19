@@ -46,7 +46,7 @@
 
  	    if(j != this.slices && i != this.stacks)
  	    {       
- 	        /*this.indices.push( i*(this.slices+1)+j+1,
+ 	        this.indices.push( i*(this.slices+1)+j+1,
  	                          (i+1)*(this.slices+1)+j,
                               i*(this.slices+1)+j); //0,4,1 (stacks = 1,slices 3)
 
@@ -57,7 +57,7 @@
  	  }
  	}
 
-    var index = (this.slices+1)*(this.stacks);
+    var index = (this.slices+1)*(this.stacks+1);
     
     //desenho da topo
     this.vertices.push(0, 0, this.height/2);
@@ -73,14 +73,13 @@
          this.normals.push(0, 0, 1);
         
         if (i > 0) {
-          this.indices.push(index+1, index+i+1, index);     
+          this.indices.push(index+i, index+i+1, index);     
         }
     } 
-    
-    index += this.slices+3;
+    index += this.slices+2;
 
     //desenho da base
-   /* this.vertices.push(0, 0, -this.height/2);
+    this.vertices.push(0, 0, -this.height/2);
     this.texCoords.push(0.5,0.5);
     this.normals.push(0, 0, -1);
 
@@ -88,18 +87,15 @@
     {
         this.texCoords.push(0.5+Math.cos(incAng*i)/2,0.5-Math.sin(incAng*i)/2);
         this.vertices.push(Math.cos(incAng * i)*this.base, Math.sin(incAng * i)*this.base, -this.height/2);
-        this.normals.push(0, 0, -1);
+       
+
+         this.normals.push(0, 0, -1);
         
         if (i > 0) {
-          this.indices.push(index, index+i+1, index+1);     
+          this.indices.push(index, index+i+1, index+i);     
         }
-    }*/ 
+    } 
 
-
-
- 	/*this.newCircle(this.height/2,1,(this.slices+1)*(this.stacks),this.top);
- 	this.newCircle(-this.height/2,-1,(this.slices+1)*(this.stacks)+(this.slices+2),this.base);
- 	*/
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
  };

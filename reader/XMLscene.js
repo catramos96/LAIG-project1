@@ -210,11 +210,11 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value,lS,lT);
-			//prim.display();
+			prim.display();
 		}	
 		else if(value instanceof MyTriangleData){
 			var prim = new MyTriangle(this, value,lS,lT);
-			//prim.display();
+			prim.display();
 		}	
 		else if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
@@ -222,11 +222,11 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}
 		else if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
-			//prim.display();
+			prim.display();
 		}
 		else if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
-			//prim.display();
+			prim.display();
 		}
 		
 	}
@@ -274,40 +274,6 @@ XMLscene.prototype.display = function () {
 
 		this.displayComponents(this.graph.getRoot(), null,null);
 			
-	// triangle
-		/*this.pushMatrix();
-			for (var [id, value] of this.graph.materialsList) {
-    			var a = value.getAppearance();
-    			a.apply();
-    			break;
-   			}
-			this.triangle.display();
-		this.popMatrix();*/
-
-	// rectangle
-		/*this.pushMatrix();
-			//this.flowerAppearance.apply();
-			this.rect.display();
-		this.popMatrix();*/
-
-	// cylinder
-		/*this.pushMatrix();
-			//this.flowerAppearance.apply();
-			this.cylinder.display();
-		this.popMatrix();*/
-
-	// sphere
-		/*this.pushMatrix();
-			this.flowerAppearance.apply();
-			this.sphere.display();
-		this.popMatrix();*/
-
-	// torus
-		/*this.pushMatrix();
-			//this.flowerAppearance.apply();
-			this.torus.display();
-		this.popMatrix();*/
-	
 	}
 };
 
