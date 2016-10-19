@@ -9,7 +9,7 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 	
-	this.numCamera = 0;  //se calhar não vai ser aqui -> interface?
+	this.numCamera = 0; 
 	
     this.enableTextures(true);
 
@@ -24,20 +24,29 @@ XMLscene.prototype.init = function (application) {
    	//lighting     = enable
     //shading      = Gouraud
     //polygon mode = fill
-
-
 };
 
 //INIT LIGHTS
 XMLscene.prototype.initLights = function () {
 
+	this.light0 = true;
+	this.light1 = true;
+	this.light2 = true;
+	this.light3 = true;
+	this.light4 = true;
+	this.light5 = true;
+	this.light6 = true;
+	this.light7 = true;
+
     var i = 0;
     for (var [id, value] of this.graph.lightsList) {
-    	value.init(this,i);
-		this.lights[i].update();
+    	value.init(this,i);					//inicializacao das luzes
+
+		this.lights[i].update();			//update
+
+		this.interface.addLights('light'+i);//adiciona as luzes a interface
 		i++;
     }
-    
 };
 
 //INIT MATERIALS
@@ -102,6 +111,37 @@ XMLscene.prototype.updateMaterials = function () {
 	
 };
 
+/**
+ * Metodo usado pela interface para atualizar as luzes
+ */
+XMLscene.prototype.updateLights = function() {
+	
+	for (i = 0; i < this.graph.lightsList.size; i++){
+
+		if(i == 0)
+			b = this.light0;
+		else if(i == 1)
+			b = this.light1;
+		else if(i == 2)
+			b = this.light2;
+		else if(i == 3)
+			b = this.light3;
+		else if( i == 4)
+			b = this.light4;
+		else if( i == 5)
+			b = this.light5;
+		else if( i == 6)
+			b = this.light6;
+		else if( i == 7)
+			b = this.light7;
+
+		if(b) this.lights[i].enable();
+		else this.lights[i].disable();
+
+		this.lights[i].update();
+	}
+}
+
 XMLscene.prototype.setDefaultAppearance = function () {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -118,23 +158,6 @@ XMLscene.prototype.setDefaultAppearance = function () {
 						this.graph.getGlobals().getBackground().getG(),
 						this.graph.getGlobals().getBackground().getB(),
 						this.graph.getGlobals().getBackground().getA());
-};
-
-XMLscene.prototype.updateLights = function () {
-
-/*	this.lights[0].setVisible(true);
-    this.lights[0].enable();
-    this.lights[0].update();*/
-    
-	var i = 0;
-	for (var [id, value] of this.graph.lightsList) {
-		this.lights[i].setVisible(true);
-		if(value.getEnable())
-			this.lights[i].enable();
-		this.lights[i].update();
-		i++;
-	}
-   
 };
 
 // Handler called when the graph is finally loaded. 
@@ -289,3 +312,6 @@ XMLscene.prototype.display = function () {
 	}
 };
 
+XMLscene.prototype.setInterface = function(i) {
+	this.interface = i;
+}

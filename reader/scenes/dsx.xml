@@ -17,7 +17,15 @@
             <to x="0" y="0" z="0" />
             
         </perspective>
-        
+
+        <perspective id="perspective3" near="0.1" far="500" angle="25">
+
+            <from x="5" y="5" z="15" />
+            <to x="0" y="0" z="0" />
+            
+        </perspective>
+
+
     </views>  
 
     <illumination doublesided="1" local="1" >

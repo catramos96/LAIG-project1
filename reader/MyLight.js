@@ -111,5 +111,6 @@ MyLight.prototype.printInfo = function(){
 	}else{
 		scene.lights[i].disable();
 	}
+
  }
  

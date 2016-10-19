@@ -1,13 +1,12 @@
 /*
  * Scene Graph
  */
-function MySceneGraph(filename, scene,interface) {
+function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
 	scene.graph=this;
-	scene.interface = interface
 		
 	// File reading 
 	this.reader = new CGFXMLreader();
@@ -21,7 +20,6 @@ function MySceneGraph(filename, scene,interface) {
 	this.transformationsList = new Map();		//map com as diversas transformações
 	this.primitivesList = new Map();			//map com as diversas primitivas
 	this.componentsList = new Map();			//map com os diversos componentes
-
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -338,7 +336,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	if (n_lights == 0) {
 		return "There are zero lights";
 	}
-
+	
 	var id, enable, location, ambient,diffuse, specular, angle, target, exponent;
 	var temp;
 	var spot;

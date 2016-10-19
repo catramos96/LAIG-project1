@@ -4,8 +4,9 @@
  */
  
  //call CGFinterface constructor 
-function MyInterface() {
+function MyInterface(scene) {
 	CGFinterface.call(this);
+	this.scene = scene;
 };
 
 MyInterface.prototype = Object.create(CGFinterface.prototype);
@@ -23,25 +24,21 @@ MyInterface.prototype.init = function(application) {
 	//  http://workshop.chromeexperiments.com/examples/gui
 	
 	this.gui = new dat.GUI();
-	
-/*	var group = this.gui.addFolder("Lights");
-	group.open();
-	for(i = 0; i < 5; i++)
-		group.add(this.scene, 'light'+i);
-		
-	this.gui.add(this.scene, 'clockAnimation');
 
+	this.lightsGroup = this.gui.addFolder("Lights");
+	this.lightsGroup.open();
 
-	droneAppearanceList =  {Red: 0, Hal: 1, Chuck: 2, Blue: 3, 
-Bomb: 4, Stella: 5, Bubbles: 6, Matilda: 7, Terrence: 8, MightyEagle: 9}; 
-
-	this.gui.add(this.scene, 'droneAppearance',droneAppearanceList);
-*/
 	this.gui.add(this.scene, 'updateCamera');
 	this.gui.add(this.scene, 'updateMaterials');
 
 	return true;
 };
+
+MyInterface.prototype.addLights = function(id) {
+	
+	this.lightsGroup.add(this.scene, id);
+	
+}
 
 /**
  * processKeyboard
