@@ -66,12 +66,14 @@
  	  S,T,
  	  0,T
  	];*/
-
+    var ds = ymax-ymin;
+    var dt = xmax-xmin;
+    
  	this.texCoords = [
-      1/this.lS/2,-1/this.lT/2,
-      1/this.lS/2,1/this.lT/2,
-      -1/this.lS/2,1/this.lT/2,
-      -1/this.lS/2,-1/this.lT/2
+     ds/this.lS,0,
+      ds/this.lS,dt/this.lT,
+      0,dt/this.lT,
+      0,0
  	];
  	
  	this.primitiveType = this.scene.gl.TRIANGLES;

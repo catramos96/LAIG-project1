@@ -56,7 +56,7 @@
 
     <textures>
    
-        <texture id="skyTexture" file="../resources/sky.png" length_s="1" length_t="1" />
+        <texture id="skyTexture" file="../resources/sky.png" length_s="0.4" length_t="0.4" />
         <texture id="neptuneTexture" file="../resources/neptune.jpg" length_s="1" length_t="1" />
         <texture id="earthTexture" file="../resources/earth.jpg" length_s="1" length_t="1" />
         <texture id="saturnTexture" file="../resources/saturn.png" length_s="1" length_t="1" />
