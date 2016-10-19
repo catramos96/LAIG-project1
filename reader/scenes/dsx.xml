@@ -517,9 +517,11 @@
        
 			<materials>
 				<material id="light" />
+				<material id="matt" />
+				<material id="shiny" />
             </materials>
                          
-			<texture id="sunTexture" />
+			<texture id="none" />
 
 			<children>
             	<primitiveref id = "primitive4" />

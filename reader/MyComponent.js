@@ -4,6 +4,22 @@
   function MyComponent(id,defined) {
      this.id = id;
      this.defined = defined;
+     this.materialIndex = 0;
+     this.materials = null;
+ }
+
+ MyComponent.prototype.incMaterialIndex = function(){
+ 	this.materialIndex++;
+ 	if(this.materials.size == this.materialIndex)
+ 	  this.materialIndex = 0;
+ }
+
+ MyComponent.prototype.getCurrMaterialID = function(){
+   var i = 0;
+   for(var key of this.materials.keys()){
+     if (i == this.materialIndex) return key;
+     i++;
+   }
  }
 
  MyComponent.prototype.isDefined = function(){
@@ -39,7 +55,7 @@ MyComponent.prototype.setTransformation = function(m){
  }
 
  MyComponent.prototype.setMaterials = function(mt){
- 	this.materials = mt;
+ 	this.materials =  mt;
  }
 
  MyComponent.prototype.setTexture = function(t){

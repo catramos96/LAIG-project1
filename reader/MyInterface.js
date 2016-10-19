@@ -62,7 +62,5 @@ MyInterface.prototype.processKeyboard = function(event) {
 			break;
 		default:
 			break;
-	
-
 	};
 };

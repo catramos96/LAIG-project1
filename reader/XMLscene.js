@@ -6,6 +6,7 @@ function XMLscene() {
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
+//INIT XMLscene
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 	
@@ -84,9 +85,7 @@ XMLscene.prototype.initCamera = function () {
 	this.interface.setActiveCamera(this.camera);
 };
 
-/**
- * Metodo usado pela interface para mudar de camara
- */
+//UPDATE CAMERA
 XMLscene.prototype.updateCamera = function () {
 	
 	this.numCamera++;
@@ -104,16 +103,16 @@ XMLscene.prototype.updateCamera = function () {
     this.interface.setActiveCamera(this.camera);
 };
 
-/**
- * Metodo usado pela interface para mudar de material
- */
+//UPDATE MATERIALS
 XMLscene.prototype.updateMaterials = function () {
-	
+
+	//para cada component aumenta o indice do material
+	for(var [id,value] of this.graph.componentsList){
+		value.incMaterialIndex();
+	}
 };
 
-/**
- * Metodo usado pela interface para atualizar as luzes
- */
+//UPDATE LIGHTS
 XMLscene.prototype.updateLights = function() {
 	
 	for (i = 0; i < this.graph.lightsList.size; i++){
@@ -142,6 +141,7 @@ XMLscene.prototype.updateLights = function() {
 	}
 }
 
+//DEFAULT APPEARANCE
 XMLscene.prototype.setDefaultAppearance = function () {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -160,6 +160,7 @@ XMLscene.prototype.setDefaultAppearance = function () {
 						this.graph.getGlobals().getBackground().getA());
 };
 
+// GRAPH LOADED
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
@@ -174,16 +175,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initMaterials();
 
 	this.initTextures();
-
-	this.sphere = new MySphere(this,new MySphereData(1,1,3,3));
-
-	//tableAppearance
-	this.EarthAppearance = new CGFappearance(this);
-	this.EarthAppearance.setAmbient(0.3,0.3,0.3,1);
-	this.EarthAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
-	this.EarthAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
-	this.EarthAppearance.setShininess(50);
-	this.EarthAppearance.loadTexture("../resources/earth.jpg");
 };
 
 //DISPLAY COMPONENTS
@@ -200,44 +191,33 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		newMaterials = materials;
 	}
 
-	//id do primeiro elemento (isto é para ser mudado quando existir a interface)
-    var temp = null;
-	for(var [id,value] of newMaterials){
-		temp = id;
-		break;
-	}
-	//procura nos materiais esse id e aplica o material a cena
-	var mat = null;
-	for (var [id, value] of this.graph.materialsList) {
-		if(id == temp){
-    		mat = value.getAppearance();
-    		break;
-		}
-   	}
+	//id do material para ir buscar aos materiais inicializados
+	var matId = component.getCurrMaterialID();
+
+	var appearance = this.graph.materialsList.get(matId).getAppearance();
 
 	//recebe as texturas
 	var lS = 1;
 	var lT = 1;
 	var newTexture = component.getTexture();
-	if(newTexture.getId() == "inherit"){
-		newTexture = texture;
-	}
+	var newTextureId = newTexture.getId();
 	
-	//procura a textura na lsita de texturas
-	for (var [id, value] of this.graph.texturesList) 
-	{
-		if(id == newTexture.getId()) //encontra a textura
-		{ 
-			if(newTexture.getId() != "none")	//se a textura não for nula
-			{
-				lS = value.getLengthS();
-				lT = value.getLengthT();
-				mat.setTexture(value.getAppearance());
-			}
-			break;
-		}
-	}
-	mat.apply();
+	if(newTextureId != "none"){
+		
+		if(newTextureId == "inherit"){
+			newTexture = texture;
+			newTextureId = texture.getId();
+		} 
+		
+		var value = this.graph.texturesList.get(newTextureId);
+
+		lS = value.getLengthS();
+		lT = value.getLengthT();
+		appearance.setTexture(value.getAppearance());
+	}else
+		newTexture = null
+	
+	appearance.apply();
 
 	//desenha as primitivas
 	var primitives = component.getPrimitives();
@@ -276,6 +256,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	return null;
 }
 
+//DISPLAY
 XMLscene.prototype.display = function () {
 
 	// ---- BEGIN Background, camera and axis setup
@@ -307,6 +288,7 @@ XMLscene.prototype.display = function () {
 		//update lights
 		this.updateLights();
 
+		//leitura de componentes
 		this.displayComponents(this.graph.getRoot(), null,null);
 	
 	}
