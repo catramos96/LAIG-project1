@@ -11,14 +11,36 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'MyGlobals.js', 'MyPerspective.js','MyPoint.js','MyColor.js','MyLight.js','MyTexture.js','MyMaterial.js', ' MyTransformation.js', 'MyPrimitive.js','MyRectangle.js', 'MyTriangle.js','MyCylinder.js', 'MySphere.js','MyTorus.js', 'MyComponent.js', 'MyRectangleData.js','MyTriangleData.js','MyCylinderData.js','MySphereData.js','MyTorusData.js',
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 
+								'MySceneGraph.js', 
+								'MyGlobals.js', 
+								'MyPerspective.js',
+								'MyPoint.js',
+								'MyColor.js',
+								'MyLight.js',
+								'MyTexture.js',
+								'MyMaterial.js',
+								' MyTransformation.js',
+								'MyPrimitive.js',
+								'MyRectangle.js',
+								'MyTriangle.js',
+								'MyCylinder.js', 
+								'MySphere.js',
+								'MyTorus.js',
+								'MyComponent.js',
+								'MyRectangleData.js',
+								'MyTriangleData.js',
+								'MyCylinderData.js',
+								'MySphereData.js',
+								'MyTorusData.js',
+								'MyInterface.js',
 
 main=function()
 {
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
+    var myInterface = new MyInterface();
     var myScene = new XMLscene();
-    var myInterface = new CGFinterface();
  
     app.init();
 
@@ -34,7 +56,7 @@ main=function()
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
-	var myGraph = new MySceneGraph(filename, myScene);
+	var myGraph = new MySceneGraph(filename, myScene,myInterface);
 	
 	// start
     app.run();

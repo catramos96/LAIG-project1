@@ -1,7 +1,6 @@
 
 function XMLscene() {
     CGFscene.call(this);
-    
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -12,7 +11,8 @@ XMLscene.prototype.init = function (application) {
 	
 	this.numCamera = 0;  //se calhar não vai ser aqui -> interface?
 	
-	this.initCamera(); 
+	//this.interface = application.interface;
+	//this.initCamera(); 
 
     this.enableTextures(true);
 
@@ -71,13 +71,13 @@ XMLscene.prototype.initTextures = function () {
 //INIT CAMERA
 XMLscene.prototype.initCamera = function () {
 	//camara inicial
-	/*for (var [id, value] of this.graph.perspectiveList){
+	for (var [id, value] of this.graph.perspectiveList){
 		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 		break;
-	}*/
-	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+	}
+	//this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 	//this.camera = new CGFcamera(value.angle, value.near, value.far, value.getToVec(), value.getFromVec());
-	//this.interface.setActiveCamera(this.camera);
+	this.interface.setActiveCamera(this.camera);
 };
 
 /**
@@ -144,7 +144,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initLights();
 
-	//this.initCamera();
+	this.initCamera();
 
 	this.initMaterials();
 

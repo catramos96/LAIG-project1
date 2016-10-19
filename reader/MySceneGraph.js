@@ -1,12 +1,13 @@
 /*
  * Scene Graph
  */
-function MySceneGraph(filename, scene) {
+function MySceneGraph(filename, scene,interface) {
 	this.loadedOk = null;
 	
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
 	scene.graph=this;
+	scene.interface = interface
 		
 	// File reading 
 	this.reader = new CGFXMLreader();
