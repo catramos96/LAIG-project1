@@ -81,18 +81,18 @@ XMLscene.prototype.initCamera = function () {
 XMLscene.prototype.updateCamera = function () {
 	
 	this.numCamera++;
-	if(this.numCamera == this.graph.perspectiveList.length)
+	if(this.numCamera == this.graph.perspectiveList.size)
 		this.numCamera = 0;
-	
+
 	var i = 0;
 	for (var [id, value] of this.graph.perspectiveList) {
-		if(i == numCamera){
-			this.camera = value.init();
+		if(i == this.numCamera){
+			this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
 			break;
 		}	
 		i++;
     }
-	this.camera = this.cameras[numCamera].init();
+    this.interface.setActiveCamera(this.camera);
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {

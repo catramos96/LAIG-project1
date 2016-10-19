@@ -36,9 +36,9 @@ MyInterface.prototype.init = function(application) {
 Bomb: 4, Stella: 5, Bubbles: 6, Matilda: 7, Terrence: 8, MightyEagle: 9}; 
 
 	this.gui.add(this.scene, 'droneAppearance',droneAppearanceList);
-
-	this.gui.add(this.scene, 'droneSpeed', 0.1, 2);
 */
+	this.gui.add(this.scene, 'updateCamera');
+
 	return true;
 };
 
@@ -56,13 +56,10 @@ MyInterface.prototype.processKeyboard = function(event) {
 	// for better cross-browser support, you may also check suggestions on using event.which in http://www.w3schools.com/jsref/event_key_keycode.asp
 	switch (event.keyCode)
 	{
-		//Rotation
-
-		//Left - A/a
-		case 65: case 97:
+		//Muda de camara - V/v 
+		case 86: case 118:
 		{
-			/*this.scene.drone.setState("RotLeft");
-			this.scene.rotDrone(Math.PI/24);*/
+			this.scene.updateCamera();
 			break;
 		}
 		//Right - D/d
