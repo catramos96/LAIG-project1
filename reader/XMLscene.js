@@ -149,6 +149,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initMaterials();
 
 	this.initTextures();
+
+	this.sphere = new MySphere(this,new MySphereData(1,1,3,3));
+
+	//tableAppearance
+	this.EarthAppearance = new CGFappearance(this);
+	this.EarthAppearance.setAmbient(0.3,0.3,0.3,1);
+	this.EarthAppearance.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
+	this.EarthAppearance.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
+	this.EarthAppearance.setShininess(50);
+	this.EarthAppearance.loadTexture("../resources/earth.jpg");
 };
 
 //DISPLAY COMPONENTS
@@ -210,15 +220,15 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value,lS,lT);
-			prim.display();
+			//prim.display();
 		}	
 		else if(value instanceof MyTriangleData){
 			var prim = new MyTriangle(this, value,lS,lT);
-			prim.display();
+			//prim.display();
 		}	
 		else if(value instanceof MyCylinderData){
 			var prim = new MyCylinder(this, value);
-			prim.display();
+			//prim.display();
 		}
 		else if(value instanceof MySphereData){
 			var prim = new MySphere(this, value);
@@ -226,7 +236,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}
 		else if(value instanceof MyTorusData){
 			var prim = new MyTorus(this, value);
-			prim.display();
+			//prim.display();
 		}
 		
 	}
@@ -273,7 +283,7 @@ XMLscene.prototype.display = function () {
 		this.updateLights();
 
 		this.displayComponents(this.graph.getRoot(), null,null);
-			
+	
 	}
 };
 
