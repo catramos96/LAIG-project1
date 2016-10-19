@@ -1,7 +1,6 @@
 
 function XMLscene() {
     CGFscene.call(this);
-    
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -12,8 +11,6 @@ XMLscene.prototype.init = function (application) {
 	
 	this.numCamera = 0;  //se calhar não vai ser aqui -> interface?
 	
-	this.initCamera(); 
-
     this.enableTextures(true);
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -71,13 +68,11 @@ XMLscene.prototype.initTextures = function () {
 //INIT CAMERA
 XMLscene.prototype.initCamera = function () {
 	//camara inicial
-	/*for (var [id, value] of this.graph.perspectiveList){
-		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+	for (var [id, value] of this.graph.perspectiveList){
+		this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
 		break;
-	}*/
-	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-	//this.camera = new CGFcamera(value.angle, value.near, value.far, value.getToVec(), value.getFromVec());
-	//this.interface.setActiveCamera(this.camera);
+	}
+	this.interface.setActiveCamera(this.camera);
 };
 
 /**
@@ -86,18 +81,25 @@ XMLscene.prototype.initCamera = function () {
 XMLscene.prototype.updateCamera = function () {
 	
 	this.numCamera++;
-	if(this.numCamera == this.graph.perspectiveList.length)
+	if(this.numCamera == this.graph.perspectiveList.size)
 		this.numCamera = 0;
-	
+
 	var i = 0;
 	for (var [id, value] of this.graph.perspectiveList) {
-		if(i == numCamera){
-			this.camera = value.init();
+		if(i == this.numCamera){
+			this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
 			break;
 		}	
 		i++;
     }
-	this.camera = this.cameras[numCamera].init();
+    this.interface.setActiveCamera(this.camera);
+};
+
+/**
+ * Metodo usado pela interface para mudar de material
+ */
+XMLscene.prototype.updateMaterials = function () {
+	
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
@@ -144,7 +146,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initLights();
 
-	//this.initCamera();
+	this.initCamera();
 
 	this.initMaterials();
 

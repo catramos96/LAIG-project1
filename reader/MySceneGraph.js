@@ -1,12 +1,13 @@
 /*
  * Scene Graph
  */
-function MySceneGraph(filename, scene) {
+function MySceneGraph(filename, scene,interface) {
 	this.loadedOk = null;
 	
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
 	scene.graph=this;
+	scene.interface = interface
 		
 	// File reading 
 	this.reader = new CGFXMLreader();
@@ -21,9 +22,7 @@ function MySceneGraph(filename, scene) {
 	this.primitivesList = new Map();			//map com as diversas primitivas
 	this.componentsList = new Map();			//map com os diversos componentes
 
-	//verificacao da ordem
-	this.naturalOrder = ['scene','views','illumination','lights','textures','materials','transformations','primitives','components'];
-	this.sequenceNumber = 0;
+
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -200,7 +199,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		return "views is missing.";
 	}
 
-	//this.default = this.reader.getString(scene, 'default'); FALTA ISTO
+	//this.default = this.reader.getString(views_elems, 'default');
 
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
 
@@ -222,12 +221,9 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		}else
 			return "id repetead!";
 
-
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
 		var angle=this.reader.getFloat(tempP, 'angle')*Math.PI*2/360;
-		if(angle < -Math.PI/2 || angle >Math.PI/2)
-			console.log("WARNING : angle not adjusted...");
 		perspective.setAngle(angle);
 
 		//vai buscar os valores dos filhos <to> e <from>
