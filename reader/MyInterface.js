@@ -38,6 +38,7 @@ Bomb: 4, Stella: 5, Bubbles: 6, Matilda: 7, Terrence: 8, MightyEagle: 9};
 	this.gui.add(this.scene, 'droneAppearance',droneAppearanceList);
 */
 	this.gui.add(this.scene, 'updateCamera');
+	this.gui.add(this.scene, 'updateMaterials');
 
 	return true;
 };
@@ -56,19 +57,15 @@ MyInterface.prototype.processKeyboard = function(event) {
 	// for better cross-browser support, you may also check suggestions on using event.which in http://www.w3schools.com/jsref/event_key_keycode.asp
 	switch (event.keyCode)
 	{
-		//Muda de camara - V/v 
-		case 86: case 118:
-		{
+		case 86: case 118: //Muda de camara - V/v 
 			this.scene.updateCamera();
 			break;
-		}
-		//Right - D/d
-		case 68: case 100:
-		{
-			/*this.scene.drone.setState("RotRight");
-			this.scene.rotDrone(-Math.PI/24);*/
+		case 77: case 109: //Muda materiais - M/m
+			this.scene.updateMaterials();
 			break;
-		}
+		default:
+			break;
+	
 
 	};
 };

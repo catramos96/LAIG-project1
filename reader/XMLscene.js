@@ -95,6 +95,13 @@ XMLscene.prototype.updateCamera = function () {
     this.interface.setActiveCamera(this.camera);
 };
 
+/**
+ * Metodo usado pela interface para mudar de material
+ */
+XMLscene.prototype.updateMaterials = function () {
+	
+};
+
 XMLscene.prototype.setDefaultAppearance = function () {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);

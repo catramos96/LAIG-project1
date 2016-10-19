@@ -199,7 +199,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		return "views is missing.";
 	}
 
-	this.default = this.reader.getString(scene, 'default');
+	//this.default = this.reader.getString(views_elems, 'default');
 
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
 
