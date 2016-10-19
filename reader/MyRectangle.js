@@ -68,10 +68,10 @@
  	];*/
 
  	this.texCoords = [
-      this.lS/2,-this.lT/2,
-      this.lS/2,this.lT/2,
-      -this.lS/2,this.lT/2,
-      -this.lS/2,-this.lT/2
+      1/this.lS/2,-1/this.lT/2,
+      1/this.lS/2,1/this.lT/2,
+      -1/this.lS/2,1/this.lT/2,
+      -1/this.lS/2,-1/this.lT/2
  	];
  	
  	this.primitiveType = this.scene.gl.TRIANGLES;
