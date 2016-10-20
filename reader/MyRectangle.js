@@ -57,23 +57,14 @@
       0,0,1
  	];
 
- 	var S = (this.p2.getX() - this.p1.getX()) / this.lS;
- 	var T = (this.p2.getY() - this.p1.getY()) / this.lT;
+ 	var S = (xmax - xmin) / this.lS;
+ 	var T = (ymax - ymin) / this.lT;
 
- 	/*this.texCoords = [
- 	  0,0,
- 	  S,0,
- 	  S,T,
- 	  0,T
- 	];*/
-    var ds = ymax-ymin;
-    var dt = xmax-xmin;
-    
  	this.texCoords = [
-     ds/this.lS,0,
-      ds/this.lS,dt/this.lT,
-      0,dt/this.lT,
-      0,0
+		0, T,	   
+		S, T,	   
+		S, 0,
+		0, 0
  	];
  	
  	this.primitiveType = this.scene.gl.TRIANGLES;

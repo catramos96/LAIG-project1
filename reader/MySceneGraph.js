@@ -910,6 +910,11 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	if(!this.isChildrensDefined()){
 		return "Not all components definied!!!";
 	}
+	
+	var visitedNodes = [];
+	if(this.hasCycles(visitedNodes)){
+		return "This graph has cycles!!!";
+	}
 }
 
 /*
@@ -928,6 +933,24 @@ MySceneGraph.prototype.isChildrensDefined = function() {
 			if(!this.componentsList.get(childrens[j]).isDefined())
 				return false;
 		}
+	}
+	return true;
+}
+
+/*
+ * Method that verifies if the graph has cycles.
+ * Percorre toda a lista em profundidade e vais guardando os antecedentes. Se por acaso for verificado um nó
+ * com id na lista de antecessores é porque existe um ciclo.
+ */
+MySceneGraph.prototype.hasCycles = function(visitedNodes) {
+
+	for (var [id, value] of this.componentsList) {
+		//coloca na lista de visitados caso ainda não esteja
+		for(var i = 0; i < visitedNodes.length; i++)
+			if(id == visitedNodes[i])
+				return false;
+			
+		visitedNodes.push(id);
 	}
 	return true;
 }

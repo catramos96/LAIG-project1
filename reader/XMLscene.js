@@ -25,6 +25,9 @@ XMLscene.prototype.init = function (application) {
    	//lighting     = enable
     //shading      = Gouraud
     //polygon mode = fill
+	
+	
+	//this.tri = new MyTriangle(this, new MyTriangleData(0, new MyPoint(0,0,0), new MyPoint(10,0,0),new MyPoint(5,6,0)),5,3); 
 };
 
 //INIT LIGHTS
@@ -169,7 +172,6 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {  
-
 	this.axis=new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
 
 	this.initLights();
@@ -294,7 +296,14 @@ XMLscene.prototype.display = function () {
 
 		//leitura de componentes
 		this.displayComponents(this.graph.getRoot(), null,null);
-	
+		/*
+		var mat = this.initializedMaterials[1].getAppearance();
+		mat.setTexture(this.initializedTextures[2].getAppearance());
+		
+		this.pushMatrix();
+			mat.apply();
+			this.tri.display();
+		this.popMatrix();*/
 	}
 };
 
