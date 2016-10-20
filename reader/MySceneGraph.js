@@ -1,4 +1,4 @@
-/*
+/**
  * Scene Graph
  */
 function MySceneGraph(filename, scene) {
@@ -912,9 +912,9 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	}
 	
 	var visitedNodes = [];
-	if(this.hasCycles(visitedNodes)){
+	/*if(this.hasCycles(visitedNodes)){
 		return "This graph has cycles!!!";
-	}
+	}*/
 }
 
 /*

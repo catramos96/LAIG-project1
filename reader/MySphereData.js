@@ -1,5 +1,7 @@
-/*
- * MySphereData
+/**
+ * Data Struct of MySphereData
+ * Guarda todos os valores lidos no parser sobre a primitiva Sphere
+ * Objeto derivado de MyPrimitive
  */
  function MySphereData(id,radius,slices,stacks) {
      this.radius = radius;
@@ -8,14 +10,13 @@
      this.id = id;
  }
 
- MySphereData.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
+ MySphereData.prototype = new MyPrimitive(this.id); 
  MySphereData.prototype.constructor = MySphereData;
 
 
- /*
- * Print Info
- */
-   
+ /**
+  * Print Info
+  */
  MySphereData.prototype.printInfo = function(){
  	console.log("Primitive id - " + this.id + " ; type - sphere ");
     console.log("radius - " + this.radius);
@@ -23,6 +24,9 @@
  
  }
 
+ /**
+  * GETS
+  */
  MySphereData.prototype.getRadius = function(){
      return this.radius;
  }

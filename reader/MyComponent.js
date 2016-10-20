@@ -1,4 +1,4 @@
-/*
+/**
  * Data Struct of MyComponent
  */
   function MyComponent(id,defined) {
@@ -8,12 +8,21 @@
      this.materials = null;
  }
 
+ /**
+  * Cada componente é caracterizada por um ou mais materiais. 
+  * O 'materialIndex' indica a posição do material na lista dos materiais.
+  * incMaterialIndex serve para mudar o material aumentando o materialIndex. 
+  * Quando chega ao maximo retorna a zero.
+  */
  MyComponent.prototype.incMaterialIndex = function(){
  	this.materialIndex++;
  	if(this.materials.size == this.materialIndex)
  	  this.materialIndex = 0;
  }
 
+ /**
+  * GETS
+  */
  MyComponent.prototype.getCurrMaterialID = function(){
    var i = 0;
    for(var key of this.materials.keys()){
@@ -50,6 +59,9 @@
  	return this.components;
  }
 
+ /**
+  * SETS
+  */
 MyComponent.prototype.setTransformation = function(m){
  	this.transformation = m;
  }
@@ -70,6 +82,9 @@ MyComponent.prototype.setTransformation = function(m){
  	this.primitives = p;
  }
 
+ /*
+  * DISPLAY
+  */
  MyComponent.prototype.display = function(){
     console.log("START");
  	console.log("Component id: " + this.id);

@@ -41,7 +41,8 @@ main=function()
     var app = new CGFapplication(document.body);
     var myScene = new XMLscene();
     var myInterface = new MyInterface(myScene);
- 
+	
+	//inicializacao da aplicacao
     app.init();
 
     app.setScene(myScene);
@@ -53,7 +54,6 @@ main=function()
 
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
-	
 	var filename=getUrlVars()['file'] || "dsx.xml";
 
 	// create and load graph, and associate it to scene. 

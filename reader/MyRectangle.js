@@ -1,5 +1,6 @@
-/*
- * Data Struct of MyRectangle inheritance from MyPrimitive
+/**
+ * Data Struct of MyRectangle
+ * Cria o objeto na cena com as informacaoes do MyRectangleData e as length S e T para as texturas
  */
  function MyRectangle(scene,data,lS,lT) {
      CGFobject.call(this,scene);
@@ -15,8 +16,12 @@
 
  MyRectangle.prototype = Object.create(CGFobject.prototype);
 
+ /**
+  * Inicializacao do objeto
+  */
  MyRectangle.prototype.initBuffers = function() {
 
+	//escolhe x e y para os pontos dependendo de qual e o menor
     var xmin, xmax, ymin,ymax;
     
     //x
@@ -38,8 +43,9 @@
       ymin = this.p1.getY();
     }
     
+	// so e aplicado no plano xOy pelo que z = 0
  	this.vertices = [
-      xmin,ymin,0,   //topo (4)
+      xmin,ymin,0,   
       xmax,ymin,0,
       xmax,ymax,0,
       xmin,ymax,0 	
@@ -57,6 +63,7 @@
       0,0,1
  	];
 
+	//coordenadas de textura para aplicar lS e lT
  	var S = (xmax - xmin) / this.lS;
  	var T = (ymax - ymin) / this.lT;
 

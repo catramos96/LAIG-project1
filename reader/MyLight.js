@@ -1,35 +1,34 @@
-/*
+/**
  * Data Struct of Light
  */
-
  function MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target){
    this.id = id;
    this.enable = enable;
 
-   if(angle != null){           //SPOT
-     this.spot = 1;
-     this.angle = angle;
-     this.exponent = exponent;
-     this.target = target;
-   }
-   
-    else{                       //OMNI
-     this.spot = 0;
-     this.angle = 0;
-     this.exponent = 0;
-     this.target = new MyPoint(0,0,0);
+   //spot
+   if(angle != null){
+		this.spot = 1;
+		this.angle = angle;
+		this.exponent = exponent;
+		this.target = target;
     }
-
-   this.location = location;
-   this.ambient = ambient;
-   this.diffuse = diffuse;
-   this.specular = specular;
+	//omni
+    else{
+		this.spot = 0;
+		this.angle = 0;
+		this.exponent = 0;
+		this.target = new MyPoint(0,0,0);
+    }
+	//valores comuns
+	this.location = location;
+	this.ambient = ambient;
+	this.diffuse = diffuse;
+	this.specular = specular;
  }
 
-  /*
-   * PRINT
-   */
-
+/**
+ * PRINT
+ */
 MyLight.prototype.printInfo = function(){   
  
    if(this.spot == 1){
@@ -46,10 +45,9 @@ MyLight.prototype.printInfo = function(){
    this.specular.printInfo();
  }
 
-  /*
-   * GETS
-   */
-
+/**
+ * GETS
+ */
  MyLight.prototype.getId = function(){          // ID
    return this.id;
  }
@@ -91,26 +89,32 @@ MyLight.prototype.printInfo = function(){
    return this.spot;
  }
 
+ /**
+  * Inicializacao das luzes.
+  * Recebe a cena onde vao ser inicializadas bem como o id da light[i].
+  * Inicializa com todas as informacoes recebidas do parser
+  */
  MyLight.prototype.init = function(scene, i){
-   /*scene.lights[i].setPosition(2,3,2,1);
-   scene.lights[i].setDiffuse(1,1,1,1);*/
-
-   scene.lights[i].setPosition(this.location[0],this.location[1],this.location[2],1);
-   scene.lights[i].setDiffuse(this.diffuse.r,this.diffuse.g,this.diffuse.b,this.diffuse.a);
-   scene.lights[i].setAmbient(this.ambient.r,this.ambient.g,this.ambient.b,this.ambient.a);
-   scene.lights[i].setSpecular(this.specular.r,this.specular.g,this.specular.b,this.specular.a);
-   if(this.isSpot()){
-      scene.lights[i].setSpotDirection(vec3.distance(vec3.fromValues(this.location[0],this.location[1],this.location[2]),
-	 												  vec3.fromValues(this.target.x,this.target.y,this.target.z)));
-	  scene.lights[i].setSpotCutOff(this.angle);
-	  scene.lights[i].setSpotExponent(this.exponent);					  
+	
+	scene.lights[i].setPosition(this.location[0],this.location[1],this.location[2],1);
+	scene.lights[i].setDiffuse(this.diffuse.getR(),this.diffuse.getG(),this.diffuse.getB(),this.diffuse.getA());
+	scene.lights[i].setAmbient(this.ambient.getR(),this.ambient.getG(),this.ambient.getB(),this.ambient.getA());
+	scene.lights[i].setSpecular(this.specular.getR(),this.specular.getG(),this.specular.getB(),this.specular.getA());
+	
+	if(this.isSpot())
+	{
+		scene.lights[i].setSpotDirection(vec3.distance(vec3.fromValues(this.location[0],this.location[1],this.location[2]),
+														vec3.fromValues(this.target.getX(),this.target.getY(),this.target.getZ())));
+		scene.lights[i].setSpotCutOff(this.angle);
+		scene.lights[i].setSpotExponent(this.exponent);					  
 	}
+	
 	scene.lights[i].setVisible(true);
+	
 	if(this.enable){
 		scene.lights[i].enable();
 	}else{
 		scene.lights[i].disable();
 	}
-
  }
  

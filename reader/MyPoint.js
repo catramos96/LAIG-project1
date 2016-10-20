@@ -1,4 +1,4 @@
-/*
+/**
  * Data Struct with a coordinate (x,y,z)
  *  x coordinate
  *  y coordinate
@@ -10,17 +10,15 @@ function MyPoint(x,y,z) {
  	this.z = z;
 }
 
-/*
+/**
  * Print Info
  */
-   
  MyPoint.prototype.printInfo = function(){
  	console.log("x - " + this.x + " y - " + this.y + " z - " + this.z);
  }
 
-
-/*
- * Function that equals our point to another
+/**
+ * Metodo que iguala um ponto a outro
  */
  MyPoint.prototype.equals = function(point){
  	this.x = point.getX();
@@ -28,10 +26,9 @@ function MyPoint(x,y,z) {
  	this.z = point.getZ();
  }
 
-/*
+/**
  * Gets
  */
-
  MyPoint.prototype.getX = function(){
  	return this.x;
  }

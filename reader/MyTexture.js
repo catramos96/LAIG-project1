@@ -1,5 +1,6 @@
-/*
+/**
  * Data Struct for a texture
+ * Le os dados sobre uma textura do parser
  */
 function MyTexture(id,file,length_t, length_s) {
  	this.id = id;
@@ -8,6 +9,16 @@ function MyTexture(id,file,length_t, length_s) {
  	this.file = file
 }
 
+/**
+ * Inicializacao da aparencia da textura a partir da localizacao do file
+ */
+ MyTexture.prototype.init = function(scene){
+   this.appearance = new CGFtexture(scene,this.file);
+ }
+
+/**
+ * GETS
+ */
  MyTexture.prototype.getId = function(){
  	return this.id;
  }
@@ -22,8 +33,4 @@ function MyTexture(id,file,length_t, length_s) {
 
  MyTexture.prototype.getAppearance = function(){
  	return this.appearance;
- }
-
- MyTexture.prototype.init = function(scene){
-   this.appearance = new CGFtexture(scene,this.file);
  }

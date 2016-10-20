@@ -1,4 +1,4 @@
-/*
+/**
  * Data Struct with my global elements.
  */
 function MyGlobals() {
@@ -10,6 +10,9 @@ function MyGlobals() {
  	this.colorBackground = new MyColor(0,0,0,0);
 }
 
+/**
+ * GETS
+ */
  MyGlobals.prototype.getAxisLength = function(){
  	return this.axis_length;
  }
@@ -22,6 +25,9 @@ function MyGlobals() {
  	return this.colorAmbient;
  }
  
+ /**
+  * SETS
+  */
  MyGlobals.prototype.setRoot = function(newRoot){
  	this.root = newRoot;
  }

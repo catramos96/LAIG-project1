@@ -1,4 +1,4 @@
-/*
+/**
  * Data Struct to perspective
  */
 function MyPerspective() {
@@ -11,18 +11,13 @@ function MyPerspective() {
  	this.default = false;
 }
 
+/**
+ * SETS
+ */
  MyPerspective.prototype.setDefault = function(b){
  	this.default = b;
  }
-
- MyPerspective.prototype.isDefault = function(){
- 	return this.default;
- }
-
- MyPerspective.prototype.getId = function(){
- 	return this.id;
- }
-
+ 
  MyPerspective.prototype.setId = function(id){
  	this.id = id;
  }
@@ -47,10 +42,21 @@ function MyPerspective() {
  	this.fromPoint = point;
  }
 
+ /**
+  * GETS
+  */
+ MyPerspective.prototype.isDefault = function(){
+ 	return this.default;
+ }
+
+ MyPerspective.prototype.getId = function(){
+ 	return this.id;
+ }
+
  MyPerspective.prototype.getFromVec = function(){
-    return vec3.fromValues(this.fromPoint.x, this.fromPoint.y, this.fromPoint.z);
+    return vec3.fromValues(this.fromPoint.getX(), this.fromPoint.getY(), this.fromPoint.getZ());
  } 
 
  MyPerspective.prototype.getToVec = function(){
-     return vec3.fromValues(this.toPoint.x, this.toPoint.y, this.toPoint.z);
+     return vec3.fromValues(this.toPoint.getX(), this.toPoint.getY(), this.toPoint.getZ());
  }

@@ -1,5 +1,6 @@
-/*
- * MyCylinder
+/**
+ * MyCylinder Object Data
+ * Objeto constituido pelas informacoes recolhidas do parser
  */
  function MyCylinderData(id,base,top,height,slices,stacks) {
      this.base = base;
@@ -11,9 +12,13 @@
 
  }
 
- MyCylinderData.prototype = new MyPrimitive(this.id);        // Here's where the inheritance occurs 
+// objeto derivado de MyPrimitive 
+ MyCylinderData.prototype = new MyPrimitive(this.id);   
  MyCylinderData.prototype.constructor = MyCylinderData;
 
+ /**
+  * GETS
+  */
  MyCylinderData.prototype.getBase = function(){
       return this.base;
  } 

@@ -1,6 +1,7 @@
 /**
- * MyTriangleData
- * @constructor
+ * Data Struct of MyTriangleData
+ * Guarda todos os valores lidos no parser sobre a primitiva Triangle
+ * Objeto derivado de MyPrimitive
  */
  function MyTriangleData(id,p1,p2,p3) {
      this.p1 = p1;
@@ -14,8 +15,7 @@
 
  /*
  * Print Info
- */
-   
+ */ 
  MyTriangleData.prototype.printInfo = function(){
  	console.log("Primitive id - " + this.id + " ; type - triangle");
     this.point1.printInfo();
@@ -23,6 +23,9 @@
  	this.point3.printInfo();
  };
 
+ /**
+  * GETS
+  */
  MyTriangleData.prototype.getP1 = function(){
  	return this.p1;
  };

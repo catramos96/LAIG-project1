@@ -1,5 +1,7 @@
-/*
- * MyTorusData
+/**
+ * Data Struct of MyTorusData
+ * Guarda todos os valores lidos no parser sobre a primitiva Torus
+ * Objeto derivado de MyPrimitive
  */
  function MyTorusData(id,inner,outer,slices,loops) {
      this.id = id;
@@ -12,6 +14,9 @@
  MyTorusData.prototype = new MyPrimitive(this.id); 
  MyTorusData.prototype.constructor = MyTorusData;
 
+ /**
+  * GETS
+  */
  MyTorusData.prototype.getInner = function(){
      return this.inner;
  }

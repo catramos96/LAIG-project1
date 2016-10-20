@@ -1,4 +1,4 @@
-/*
+/**
  * Data Struct with a color (r,g,b,a)
  *  r - red component
  *  g - green component
@@ -14,18 +14,16 @@ function MyColor(r,g,b,a) {
  	this.a = a;
 }
 
-/*
+/**
  * PRINT INFO
  */
-
  MyColor.prototype.printInfo = function(){
  	console.log(this.r + " " + this.g + " " + this.b + " " + this.a);
  }
 
-/*
- * Functions that equals our color to another
+/**
+ * Metodo que iguala 2 cores
  */
-
 MyColor.prototype.equals = function(color){
  	this.r = color.getR();
  	this.g = color.getG();
@@ -33,10 +31,9 @@ MyColor.prototype.equals = function(color){
  	this.a = color.getA();
  }
 
-/*
+/**
  * SETS
  */
-
  MyColor.prototype.setCoordinates = function(r,g,b,a){
    if(r < 0 || r > 255 || g < 0 || g >255 || b < 0 || b > 255 || a < 0 || a > 255)
     return "color values to high or low";
@@ -46,10 +43,9 @@ MyColor.prototype.equals = function(color){
  	this.a = a;
  }
 
-/*
+/**
  * GETS
  */
-
  MyColor.prototype.getR = function(){
    return this.r;
  }

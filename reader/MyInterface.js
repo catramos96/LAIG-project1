@@ -2,13 +2,12 @@
  * MyInterface
  * @constructor
  */
- 
- //call CGFinterface constructor 
 function MyInterface(scene) {
 	CGFinterface.call(this);
 	this.scene = scene;
 };
 
+// objeto do tipo interface
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
@@ -20,20 +19,23 @@ MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
 	
-	// init GUI. For more information on the methods, check:
-	//  http://workshop.chromeexperiments.com/examples/gui
-	
+	// init GUI
 	this.gui = new dat.GUI();
 
+	//lights group para ligar e desligar cada luz
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
 
+	// adiciona os metodos para fazer update das camaras e dos materiais
 	this.gui.add(this.scene, 'updateCamera');
 	this.gui.add(this.scene, 'updateMaterials');
 
 	return true;
 };
 
+/**
+ * Adiciona uma luz ao grupo
+ */
 MyInterface.prototype.addLights = function(id) {
 	
 	this.lightsGroup.add(this.scene, id);
@@ -48,10 +50,7 @@ MyInterface.prototype.processKeyboard = function(event) {
 	// call CGFinterface default code (omit if you want to override)
 	CGFinterface.prototype.processKeyboard.call(this,event);
 	
-	// Check key codes e.g. here: http://www.asciitable.com/
-	// or use String.fromCharCode(event.keyCode) to compare chars
-	
-	// for better cross-browser support, you may also check suggestions on using event.which in http://www.w3schools.com/jsref/event_key_keycode.asp
+	// Check key codes~
 	switch (event.keyCode)
 	{
 		case 86: case 118: //Muda de camara - V/v 
