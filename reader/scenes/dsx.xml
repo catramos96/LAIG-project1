@@ -447,7 +447,6 @@
         
             <transformation>
 				<scale x="2" y="0.2" z="2" />
-				<rotate axis="x" angle="90" />
             </transformation>
        
 			<materials>
@@ -521,7 +520,7 @@
 				<material id="shiny" />
             </materials>
                          
-			<texture id="none" />
+			<texture id="sunTexture" />
 
 			<children>
             	<primitiveref id = "primitive4" />
