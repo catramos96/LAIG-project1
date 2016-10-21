@@ -1,11 +1,10 @@
 /**
  * Data Struct of Transformation
- * Guarda todos os dados lidos do parser sobre Transformacoes
- * usa a biblioteca mat4
+ * Use the library for mat4
  */
 function MyTransformation(id){ 
     this.id = id;
-    this.matrix = mat4.create();  //comecamos com a matriz identidade
+    this.matrix = mat4.create();  //Identidy matrix
 }
 
 /**
@@ -27,21 +26,21 @@ function MyTransformation(id){
  }
 
  /**
-  * Aplica um 'translate' a matriz atual com os valores recebidos
+  * Apply 'translate' to the matrix with the parameters recieved
   */
  MyTransformation.prototype.translate = function(x,y,z){
 	mat4.translate(this.matrix,this.matrix,vec3.fromValues(x,y,z));
  }
 
  /**
-  * Aplica um 'scale' a matriz atual com os valores recebidos
+  * Apply a 'scale' to the matrix with the parameters recieved
   */
  MyTransformation.prototype.scale = function(x,y,z){
 	mat4.scale(this.matrix,this.matrix,vec3.fromValues(x,y,z));
  }
 
  /**
-  * Aplica um 'rotate' a matriz atual com os valores recebidos
+  *Apply a 'rotate' to the matrix with the parameters recieved
   */
  MyTransformation.prototype.rotate = function(axis, angle){
      if(axis == "x"){

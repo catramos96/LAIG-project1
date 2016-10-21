@@ -1,9 +1,9 @@
 /**
  * Data Struct of MySphereData
- * Guarda todos os valores lidos no parser sobre a primitiva Sphere
- * Objeto derivado de MyPrimitive
+ * Descendent of MyPrimitive
  */
  function MySphereData(id,radius,slices,stacks) {
+   
      this.radius = radius;
      this.slices = slices;
      this.stacks = stacks;
@@ -15,7 +15,7 @@
 
 
  /**
-  * Print Info
+  * Displays in the console the information about the object
   */
  MySphereData.prototype.printInfo = function(){
  	console.log("Primitive id - " + this.id + " ; type - sphere ");

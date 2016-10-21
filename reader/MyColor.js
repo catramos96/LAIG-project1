@@ -15,14 +15,14 @@ function MyColor(r,g,b,a) {
 }
 
 /**
- * PRINT INFO
+ * Displays on the console the information about the color
  */
  MyColor.prototype.printInfo = function(){
  	console.log(this.r + " " + this.g + " " + this.b + " " + this.a);
  }
 
 /**
- * Metodo que iguala 2 cores
+ * Equals my instance of Color to another
  */
 MyColor.prototype.equals = function(color){
  	this.r = color.getR();
@@ -34,6 +34,7 @@ MyColor.prototype.equals = function(color){
 /**
  * SETS
  */
+ 
  MyColor.prototype.setCoordinates = function(r,g,b,a){
    if(r < 0 || r > 255 || g < 0 || g >255 || b < 0 || b > 255 || a < 0 || a > 255)
     return "color values to high or low";
@@ -46,6 +47,7 @@ MyColor.prototype.equals = function(color){
 /**
  * GETS
  */
+
  MyColor.prototype.getR = function(){
    return this.r;
  }

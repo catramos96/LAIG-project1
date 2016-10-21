@@ -11,14 +11,14 @@ function MyPoint(x,y,z) {
 }
 
 /**
- * Print Info
+ * Displays in the console the information about the object
  */
  MyPoint.prototype.printInfo = function(){
  	console.log("x - " + this.x + " y - " + this.y + " z - " + this.z);
  }
 
 /**
- * Metodo que iguala um ponto a outro
+ * Equals an instance of the object to another
  */
  MyPoint.prototype.equals = function(point){
  	this.x = point.getX();

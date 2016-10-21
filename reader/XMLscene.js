@@ -21,13 +21,7 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE); 	//cull face    = back, enable
     this.gl.depthFunc(this.gl.LEQUAL); 	//depth func  = LEQUAL, enable
     this.gl.frontFace(this.gl.CCW); 	//front face   = CCW
-
-   	//lighting     = enable
-    //shading      = Gouraud
-    //polygon mode = fill
 	
-	
-	//this.tri = new MyTriangle(this, new MyTriangleData(0, new MyPoint(0,0,0), new MyPoint(10,0,0),new MyPoint(5,6,0)),5,3); 
 };
 
 //INIT LIGHTS
@@ -183,20 +177,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initMaterials();
 
-	this.initTextures();
-
-	this.sphere = new MySphere(this,new MySphereData(1,1.5,80,80));
-	this.triangle = new MyTriangle(this,new MyTriangleData(1,new MyPoint(0,0,0),new MyPoint(1,0,0), new MyPoint(1.2,2,0)),1,1);
-
-	/*this.torus = new MyTorus(this,new MyTorusData(1,1,2,100,100));
-*/
-	this.saturn = new CGFappearance(this);
-	this.saturn.setAmbient(0.3,0.3,0.3,1);
-	this.saturn.setDiffuse(0.8 ,0.8 ,0.8 ,1); //forte componente difusa
-	this.saturn.setSpecular(0.2,0.2,0.2,1); // pouca componente especular
-	this.saturn.setShininess(50);
-	this.saturn.loadTexture("../resources/earth.jpg");
-	
+	this.initTextures();	
 };
 
 //DISPLAY COMPONENTS
@@ -320,12 +301,7 @@ XMLscene.prototype.display = function () {
 		this.displayComponents(this.graph.getRoot(), null,null);
 		/*
 		var mat = this.initializedMaterials[1].getAppearance();
-		mat.setTexture(this.initializedTextures[2].getAppearance());
-		
-		this.pushMatrix();
-			this.saturn.apply();
-			this.triangle.display();
-		this.popMatrix();*/
+		mat.setTexture(this.initializedTextures[2].getAppearance());*/
 	}
 };
 
