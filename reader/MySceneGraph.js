@@ -1,5 +1,7 @@
 /**
  * Scene Graph
+ * Objeto que recolhe todas as informacoes do parser e as coloca no objeto respetivo
+ * Apenas recebe a cena e o nome do ficheiro DSX com todas as informacoes
  */
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
@@ -13,8 +15,8 @@ function MySceneGraph(filename, scene) {
 
 	//parameters
 	this.globals = new MyGlobals();				//variaveis globais do grafo
-	this.perspectiveList = new Map();			//map com as diversa perspetivas
-	this.lightsList = new Map();				//map com as diversas luzes
+	this.perspectiveList = new Map();			//map com as diversas perspetivas
+	this.lightsList = [];						//map com as diversas luzes
 	this.texturesList = new Map();				//map com as diversas texturas
 	this.materialsList = new Map();				//map com os diversos materiais
 	this.transformationsList = new Map();		//map com as diversas transformações
@@ -29,7 +31,7 @@ function MySceneGraph(filename, scene) {
 	this.reader.open('scenes/'+filename, this);  
 };
 
-/*
+/**
  * Callback to be executed after successful reading
  */
 MySceneGraph.prototype.onXMLReady=function() 
@@ -37,26 +39,28 @@ MySceneGraph.prototype.onXMLReady=function()
 	console.log("XML Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement; //neste caso, dsx
 	
-	// method that calls all parse functions and verifies errors
-	this.readSceneGraphFile(rootElement);		
-
 	// no errors
 	this.loadedOk=true;
 	
+	// method that calls all parse functions and verifies errors
+	this.readSceneGraphFile(rootElement);		
+	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
-	this.scene.onGraphLoaded();
+	if(this.loadedOk)
+		this.scene.onGraphLoaded();
 };
 
 /**
- * Calls all parsers and verifies errors
+ * Calls all parsers and verifies errors. Also verifies the order of the childrens
  */
 MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
-	//nao e um ficheiro dsx
+	//nao e um ficheiro do tipo dsx
 	if(rootElement.nodeName != "dsx"){
 		this.onXMLError("File does not have 'dsx' tag.");
 		return;
 	}
-
+	
+	//numero de elementos diferente de 9
 	if(rootElement.children.length != 9)
 	{
 		this.onXMLError("File does not have 9 children tags.");
@@ -64,6 +68,7 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 
 	var error;
+	
 	//Parse Globals
 	if(rootElement.children[0].nodeName != "scene"){
 		console.log("WARNING : dsx does not respect the formal order!");
@@ -144,25 +149,37 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 		this.onXMLError(error);
 		return;
 	}
+	
+	//detecao de filhos nao inicializados nos components
+	if(!this.isChildrensDefined()){
+		return "Not all components definied!!!";
+	}
+	
+	//detecao de ciclos
+	var visitedNodes = [];
+	if(this.hasCycles(visitedNodes)){
+		return "This graph has cycles!!!";
+	}
 };
 
-/*
+/**
  * Callback to be executed on any read error
  */
 MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("XML Loading Error: "+message+" Exiting...");	
+	console.error("XML Loading Error: "+message+"\nExiting...");	
 	this.loadedOk=false;
 };
 
-/*
+/**
  * Method that parses elements of one block (Scene) and stores information in a specific data structure (MyGlobals)
  */
 MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
 	var scene_elems =  rootElement.getElementsByTagName('scene');
+	
 	//error cases
 	if (scene_elems == null) {
-		return "scene element is missing.";
+		return "Scene element is missing.";
 	}
 	if (scene_elems.length != 1) {
 		return "either zero or more than one 'scene' element found.";
@@ -171,21 +188,22 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 	//get scene
 	var scene = scene_elems[0];
 
+	//init globals
 	var name = this.reader.getString(scene, 'root');
 	if(name == ""){
 		console.log("WARNING : root without name!");
 	}
-
 	this.globals.setRoot(name);
 
-	//verifies if axis_length is a number
+	//verifies if axis_length is positive
 	var ret = this.globals.setAxisLength(this.reader.getFloat(scene, 'axis_length'));
 	if(ret != null) return ret;
 	
+	//DEBUG
 	//console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
 };
 
-/*
+/**
  * Method that parses elements of one block (Views) and stores information in a specific data structure (perspectiveList)
  * perspectiveList is a list of Objects of type MyPerspective.
  */
@@ -193,39 +211,51 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 	var views_elems = rootElement.getElementsByTagName('views'); 
 
-	if (views_elems == null  || views_elems.length==0) {
-		return "views is missing.";
+	//errors
+	if (views_elems == null  || views_elems.length==0) 
+	{
+		return "'View' element is missing.";
 	}
-
-	var defaultId = this.reader.getString(views_elems[0], 'default');
-
 	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
-
-	if (nnodes.length == 0) {
-		return "zero perspectives";
+	if (nnodes.length == 0) 
+	{
+		return "Zero child elements at 'views'.";
 	}
+	
+	//default perspective
+	var defaultId = this.reader.getString(views_elems[0], 'default');
 
 	//percorre cada perspetiva
 	for (var i=0; i < nnodes; i++)
 	{
 		var tempP = views_elems[0].children[i]; // informacao sobre a perspetiva
+		
+		if(tempP.nodeName != 'perspective')
+		{
+			return "Unknown child element found at the 'views'.";
+		}
 
-		var perspective = new MyPerspective();
+		var perspective = new MyPerspective(); //Cria uma nova perspetiva
 
-		// process each element and store its information
+		//processamento e armezamento
 		var id = this.reader.getString(tempP, 'id');
-		if(!this.perspectiveList.has(id)){	//se ainda não existir, ok. Se não, o id é repetido
+		if(!this.perspectiveList.has(id))	//se ainda não existir, ok. Se não, o id é repetido
+		{	
 			perspective.setId(id);
-		}else
-			return "id repetead!";
+		}
+		else
+			return "id repetead at 'views'!";
 
-		if(defaultId == id)	perspective.setDefault(true);
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
-		var angle=this.reader.getFloat(tempP, 'angle')*Math.PI*2/360;
-		perspective.setAngle(angle);
+		perspective.setAngle(this.reader.getFloat(tempP, 'angle')*Math.PI*2/360);
 
 		//vai buscar os valores dos filhos <to> e <from>
+		if(tempP.children.length != 2)
+		{
+			return "Perspective element does not have two children elements.";
+		}
+		
 		var a,b,c;
 		var elem = tempP.children[0];
 
@@ -244,12 +274,20 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		//coloca o ponto na perspetiva
 		perspective.setToPoint(new MyPoint(a,b,c));
+		
+		if(defaultId == id)	perspective.setDefault(true);
 
 		//adiciona a perspetiva a lista de perspetivas
 		this.perspectiveList.set(id, perspective);
-	};
+	}
+	
+	if(!this.perspectiveList.has(defaultId))
+	{
+		return "No perspective found with the default id.";
+	}
 
 	/*
+	//DEBUG
 	for (var [id, value] of this.perspectiveList) {
   		console.log(id);
 
@@ -265,18 +303,21 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	*/
 };
 
-
-/*
+/**
  * Method that parses elements of one block (ILUMINATION) and stores information in a specific data structure (MyGlobals)
  */
 MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	var illumination_elems =  rootElement.getElementsByTagName('illumination');
-	if (illumination_elems == null) {
-		return "ilumination element is missing.";
+	
+	//errors
+	if (illumination_elems == null)
+	{
+		return "Ilumination element is missing.";
 	}
-	if (illumination_elems.length != 1) {
-		return "either zero or more than one 'ilumination' element found.";
+	if (illumination_elems.length != 1) 
+	{
+		return "Either zero or more than one 'ilumination' element found.";
 	}
 
 	//get first illumination child from block <illumination>
@@ -310,13 +351,14 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 								this.reader.getFloat(temp, 'a'));
 	this.globals.setBackground(background);
 	
+	//DEBUG
 	/*console.log("Illumination read from file: {Doublesided=" + this.globals.doublesided + ", local=" + this.globals.local +"}");
 	  ambient.printInfo();
 	  background.printInfo();*/
 
 }
 
-/*
+/**
  * Method that parses elements of one block (LIGHTS) and stores information in a specific data structure (lightsList).
  * lightsList is a list of Objects of type MyLight.
  */
@@ -325,16 +367,19 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	var lights_elems =  rootElement.getElementsByTagName('lights');
 
 	//errors
-	if (lights_elems == null) {
-		return "lights element is missing.";
+	if (lights_elems == null) 
+	{
+		return "Lights element is missing.";
 	}
-	if (lights_elems.length != 1) {
-		return "either zero or more than one 'lights' element found.";
+	if (lights_elems.length != 1) 
+	{
+		return "Either zero or more than one 'lights' element found.";
 	}
 
 	n_lights = lights_elems[0].children.length;
 
-	if (n_lights == 0) {
+	if (n_lights == 0) 
+	{
 		return "There are zero lights";
 	}
 	
@@ -356,12 +401,17 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			spot = 1;
 		}
 		
-		//verifies if 'id'' is unic on lightsList
+		//verifies if 'id' is unic on lightsList
 		id = this.reader.getString(lights, 'id');
-		if(this.lightsList.has(id)){	//se ainda não existir, ok. Se não, o id é repetido
-			return "id "+id+" from block 'lights' already exists!";
+		
+		for(var i = 0; i < this.lightsList.length; i++)
+		{
+			
+			if(this.lightsList[i].getId() == id)
+				return "id "+id+" from block 'lights' already exists!";
+			
 		}
-
+		
 		enable = this.reader.getFloat(lights, 'enabled');
 
 		//extra elements for spot Light
@@ -407,61 +457,17 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 		//save at the list
 		if(spot == 1){ //SPOT
-			this.lightsList.set(id, new MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target));
+			this.lightsList.push(new MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target));
 		}
 		else{			//OMNI
-			this.lightsList.set(id,new MyLight(id,enable,location,ambient,diffuse,specular));
+			this.lightsList.push(new MyLight(id,enable,location,ambient,diffuse,specular));
 		}
 
+		//DEBUG
 		//this.lightsList.get(id).printInfo();
 	}
+	
 }
-
-/*
- * Method that parses elements of one block (Textures) and stores information in a specific data structure (texturesList).
- * texturesList is a list of Objects of type MyTexture.
- */
-MySceneGraph.prototype.parseTextures = function(rootElement) {
-
-	var texture_elems =  rootElement.getElementsByTagName('textures');
-
-	//errors
-	if (texture_elems == null || texture_elems.length != 1) {
-		return "texture element is missing.";
-	}
-
-	var nnodes = texture_elems[0].children.length;
-	if(nnodes == 0){
-		return "zero 'texture' elements";
-	}
-
-	//courses throught texture_elems childrens
-	for (var i=0; i < nnodes; i++)
-	{
-		var temp = texture_elems[0].children[i];
-
-		var id = this.reader.getString(temp, 'id');
-		if(this.texturesList.has(id)){		//ja existe
-			return "id "+id+" from block 'textures' already exists!";
-		}
-
-		var file = this.reader.getString(temp, 'file');
-		var length_t = this.reader.getFloat(temp, 'length_t');
-		var length_s = this.reader.getFloat(temp, 'length_s');
-
-		//cria o material
-		var texture = new MyTexture(id,file,length_t,length_s);
-
-		//adiciona a lista de texturas
-		this.texturesList.set(id,texture);
-	}
-/*
-	for (var [id, value] of this.texturesList) {
-  		console.log(id);
-  		console.log("Textura "+value.getId() + " , length_t = "+value.getLengthT()+" , length_s = "+value.getLengthS());
-	}
-*/
-};
 
 /*
  * Method that parses elements of one block (Materials) and stores information in a specific data structure (materialsList).
@@ -521,6 +527,52 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
   		console.log(id);
   		console.log("Material "+ value.getId()); //acabar isto?
   	}
+*/
+};
+
+/*
+ * Method that parses elements of one block (Textures) and stores information in a specific data structure (texturesList).
+ * texturesList is a list of Objects of type MyTexture.
+ */
+MySceneGraph.prototype.parseTextures = function(rootElement) {
+
+	var texture_elems =  rootElement.getElementsByTagName('textures');
+
+	//errors
+	if (texture_elems == null || texture_elems.length != 1) {
+		return "texture element is missing.";
+	}
+
+	var nnodes = texture_elems[0].children.length;
+	if(nnodes == 0){
+		return "zero 'texture' elements";
+	}
+
+	//courses throught texture_elems childrens
+	for (var i=0; i < nnodes; i++)
+	{
+		var temp = texture_elems[0].children[i];
+
+		var id = this.reader.getString(temp, 'id');
+		if(this.texturesList.has(id)){		//ja existe
+			return "id "+id+" from block 'textures' already exists!";
+		}
+
+		var file = this.reader.getString(temp, 'file');
+		var length_t = this.reader.getFloat(temp, 'length_t');
+		var length_s = this.reader.getFloat(temp, 'length_s');
+
+		//cria o material
+		var texture = new MyTexture(id,file,length_t,length_s);
+
+		//adiciona a lista de texturas
+		this.texturesList.set(id,texture);
+	}
+/*
+	for (var [id, value] of this.texturesList) {
+  		console.log(id);
+  		console.log("Textura "+value.getId() + " , length_t = "+value.getLengthT()+" , length_s = "+value.getLengthS());
+	}
 */
 };
 
@@ -906,15 +958,6 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		//comp.display();
 	}
-
-	if(!this.isChildrensDefined()){
-		return "Not all components definied!!!";
-	}
-	
-	var visitedNodes = [];
-	/*if(this.hasCycles(visitedNodes)){
-		return "This graph has cycles!!!";
-	}*/
 }
 
 /*
