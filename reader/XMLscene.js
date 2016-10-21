@@ -311,15 +311,15 @@ XMLscene.prototype.display = function () {
 		this.updateLights();
 
 		//leitura de componentes
-		//this.displayComponents(this.graph.getRoot(), null,null);
+		this.displayComponents(this.graph.getRoot(), null,null);
 		/*
 		var mat = this.initializedMaterials[1].getAppearance();
 		mat.setTexture(this.initializedTextures[2].getAppearance());
-		*/
+		
 		this.pushMatrix();
 			this.saturn.apply();
 			this.triangle.display();
-		this.popMatrix();
+		this.popMatrix();*/
 	}
 };
 
