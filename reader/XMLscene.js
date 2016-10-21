@@ -186,7 +186,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.initTextures();
 
 	this.sphere = new MySphere(this,new MySphereData(1,1.5,80,80));
-	this.triangle = new MyTriangle(this,new MyTriangleData(1,new MyPoint(0,0,0),new MyPoint(1,0,0), new MyPoint(1.2,2,0)),1,1);
+	this.triangle = new MyTriangle(this,new MyTriangleData(1,new MyPoint(0.5,1,0),new MyPoint(0,0,1), new MyPoint(1,0,0)),1,1);
 
 	/*this.torus = new MyTorus(this,new MyTorusData(1,1,2,100,100));
 */
