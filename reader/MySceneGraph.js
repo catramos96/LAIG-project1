@@ -249,7 +249,11 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		}
 		else
 			return "id repetead at 'views'!";
-
+		
+		// se o defaultId for nulo, a camara default sera a primeira		
+		if (defaultId == "" && i == 0)	defaultId = id;
+		if (defaultId == id)	perspective.setDefault(true);
+			
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
 		perspective.setAngle(this.reader.getFloat(tempP, 'angle')*Math.PI*2/360);
@@ -278,16 +282,9 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 
 		//coloca o ponto na perspetiva
 		perspective.setToPoint(new MyPoint(a,b,c));
-		
-		if(defaultId == id)	perspective.setDefault(true);
 
 		//adiciona a perspetiva a lista de perspetivas
 		this.perspectiveList.set(id, perspective);
-	}
-	
-	if(!this.perspectiveList.has(defaultId))
-	{
-		return "No perspective found with the default id.";
 	}
 
 	/*

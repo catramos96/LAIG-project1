@@ -23,14 +23,8 @@
  /**
   * GETS
   */
- MyComponent.prototype.getCurrMaterialID = function(){
-	 
-	 return this.materials[this.materialIndex].getId();
-	 
- /*  for(var i = 0; i < this.materials.length; i++){
-     if (i == this.materialIndex) return key;
-     i++;
-   }*/
+ MyComponent.prototype.getMaterialIndex = function(){
+ 	return this.materialIndex;
  }
 
  MyComponent.prototype.isDefined = function(){
