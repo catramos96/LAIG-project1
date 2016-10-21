@@ -16,7 +16,7 @@ function MySceneGraph(filename, scene) {
 	//parameters
 	this.globals = new MyGlobals();				//variaveis globais do grafo
 	this.perspectiveList = new Map();			//map com as diversas perspetivas
-	this.lightsList = [];						//map com as diversas luzes
+	this.lightsList = [];						//lista com as diversas luzes
 	this.texturesList = new Map();				//map com as diversas texturas
 	this.materialsList = new Map();				//map com os diversos materiais
 	this.transformationsList = new Map();		//map com as diversas transformações
@@ -329,7 +329,8 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 	var n_illumination = illumination_elems[0].children.length;
 
 	//we just want background and ambient
-	if (n_illumination != 2) {
+	if (n_illumination != 2) 
+	{
 		return "There are more/less components then ambient and background on illumination";
 	}
 
@@ -469,68 +470,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	
 }
 
-/*
- * Method that parses elements of one block (Materials) and stores information in a specific data structure (materialsList).
- * materialsList is a list of Objects of type MyMaterial.
- */
-MySceneGraph.prototype.parseMaterials = function(rootElement) {
-
-	var material_elems =  rootElement.getElementsByTagName('materials');
-	//errors
-	if (material_elems == null || material_elems.length == 1) {
-		return "materials element is missing or more than one block materials.";
-	}
-
-	var nnodes = material_elems[0].children.length;
-	if(nnodes == 0){
-		return "zero 'material' elements";
-	}
-
-	//courses throught material_elems childrens
-	for (var i=0; i < nnodes; i++)
-	{
-		var temp = material_elems[0].children[i];
-
-		//verifies repetead id
-		var id = this.reader.getString(temp, 'id');
-		if(this.materialsList.has(id)) //existe este id
-		{ 
-			return "id "+id+" from block 'materials' already exists!";
-		}
-		var material = new MyMaterial(id);
-
-		//ler os filhos deste material
-		for(var j = 0; j < 4; j++)
-		{
-			var r,g,b,a;
-			var child = temp.children[j];
-
-			r = this.reader.getFloat(child, 'r');
-			g = this.reader.getFloat(child, 'g');
-			b = this.reader.getFloat(child, 'b');
-			a = this.reader.getFloat(child, 'a');
-
-			if(j==0) material.setMyEmission(r,g,b,a);
-			if(j==1) material.setMyAmbient(r,g,b,a);
-			if(j==2) material.setMyDiffuse(r,g,b,a);
-			if(j==3) material.setMySpecular(r,g,b,a);
-		}
-
-		material.setMyShininess(this.reader.getFloat(temp.children[4], 'value'));
-
-		//juntar a lista de materias
-		this.materialsList.set(id,material);
-	}
-
-/*
-	for (var [id, value] of this.materialsList) {
-  		console.log(id);
-  		console.log("Material "+ value.getId()); //acabar isto?
-  	}
-*/
-};
-
-/*
+/**
  * Method that parses elements of one block (Textures) and stores information in a specific data structure (texturesList).
  * texturesList is a list of Objects of type MyTexture.
  */
@@ -539,23 +479,35 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	var texture_elems =  rootElement.getElementsByTagName('textures');
 
 	//errors
-	if (texture_elems == null || texture_elems.length != 1) {
-		return "texture element is missing.";
+	if (texture_elems == null || texture_elems.length != 1) 
+	{
+		return "'Texture' element is missing.";
 	}
-
 	var nnodes = texture_elems[0].children.length;
-	if(nnodes == 0){
-		return "zero 'texture' elements";
+	if(nnodes == 0)
+	{
+		return "Zero 'texture' elements";
 	}
 
 	//courses throught texture_elems childrens
 	for (var i=0; i < nnodes; i++)
 	{
 		var temp = texture_elems[0].children[i];
+		
+		if(temp.nodeName != 'texture')
+		{
+			return "Unknown child element found at the 'textures' element.";
+		}
 
+		//verifica o id do material
 		var id = this.reader.getString(temp, 'id');
-		if(this.texturesList.has(id)){		//ja existe
+		if(this.texturesList.has(id))
+		{
 			return "id "+id+" from block 'textures' already exists!";
+		}
+		if(id == "inherit" || id == "none")
+		{
+			return "Invalid id for a 'texture'";
 		}
 
 		var file = this.reader.getString(temp, 'file');
@@ -569,6 +521,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		this.texturesList.set(id,texture);
 	}
 /*
+	//DEBUG
 	for (var [id, value] of this.texturesList) {
   		console.log(id);
   		console.log("Textura "+value.getId() + " , length_t = "+value.getLengthT()+" , length_s = "+value.getLengthS());
@@ -576,33 +529,118 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 */
 };
 
+/**
+ * Method that parses elements of one block (Materials) and stores information in a specific data structure (materialsList).
+ * materialsList is a list of Objects of type MyMaterial.
+ */
+MySceneGraph.prototype.parseMaterials = function(rootElement) {
+
+	var material_elems =  rootElement.getElementsByTagName('materials');
+	
+	//errors
+	if (material_elems == null || material_elems.length == 1) 
+	{
+		return "'materials' element is missing or more than one block 'materials'.";
+	}
+	var nnodes = material_elems[0].children.length;
+	if(nnodes == 0)
+	{
+		return "Zero 'material' elements, 'materials' is empty!";
+	}
+
+	//courses throught material_elems childrens
+	for (var i=0; i < nnodes; i++)
+	{
+		var temp = material_elems[0].children[i];
+		
+		if(temp.nodeName != 'material')
+		{
+			return "Unknown child element found at the 'materials' element.";
+		}
+
+		//verifies repetead id
+		var id = this.reader.getString(temp, 'id');
+		if(this.materialsList.has(id)) //existe este id
+		{ 
+			return "id "+id+" from block 'materials' already exists!";
+		}
+		if(id == "inherit")
+		{
+			return "'material' has an invalid id";
+		}
+		
+		//cria o material
+		var material = new MyMaterial(id);
+
+		//ler os filhos deste material (deverao ser 4)
+		if(temp.children.length != 5)
+		{
+			return "'material' has a different number of child elements.";
+		}
+		for(var j = 0; j < 4; j++)
+		{
+			var r,g,b,a;
+			var child = temp.children[j];
+
+			r = this.reader.getFloat(child, 'r');
+			g = this.reader.getFloat(child, 'g');
+			b = this.reader.getFloat(child, 'b');
+			a = this.reader.getFloat(child, 'a');
+
+			if(child.nodeName == 'emission') material.setMyEmission(r,g,b,a);
+			if(child.nodeName == 'ambient') material.setMyAmbient(r,g,b,a);
+			if(child.nodeName == 'diffuse') material.setMyDiffuse(r,g,b,a);
+			if(child.nodeName == 'specular') material.setMySpecular(r,g,b,a);
+		}
+
+		material.setMyShininess(this.reader.getFloat(temp.children[4], 'value'));
+
+		//juntar ao map de materias
+		this.materialsList.set(id,material);
+	}
+
 /*
+	//DEBUG
+	for (var [id, value] of this.materialsList) {
+  		console.log(id);
+  		console.log("Material "+ value.getId()); //acabar isto?
+  	}
+*/
+};
+
+/**
  * Method that parses elements of one block (TRANSFORMATIONS) and stores information in a specific data structure (transformationsList).
  * transformationsList is a list of Objects of type MyTransformation.
  */
 MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	var transformations_elems =  rootElement.getElementsByTagName('transformations');
+	
 	//errors
-	if (transformations_elems == null || transformations_elems.length != 1) {
-		return "transformations element is missing.";
+	if (transformations_elems == null || transformations_elems.length != 1) 
+	{
+		return "'transformations' element is missing.";
 	}
-
 	var n_transformation = transformations_elems[0].children.length;
-	if(n_transformation == 0){
-		return "zero 'transformation' elements";
+	if(n_transformation == 0)
+	{
+		return "Zero 'transformation' elements";
 	}
 
-	var transformation;
 	var final_t; //final transformation
 
 	//courses throught transformations
 	for (var i=0; i < n_transformation; i++)
 	{
-		transformation = transformations_elems[0].children[i];
+		var transformation = transformations_elems[0].children[i];
+		
+		if(transformation.nodeName != 'transformation')
+		{
+			return "Unknown child element found at the 'transformation' element.";
+		}
 
 		var id = this.reader.getString(transformation, 'id')
-		if(this.transformationsList.has(id)) //found
+		if(this.transformationsList.has(id)) //found an identic id
 		{ 	
 			return "id "+id+" from block 'transformations' already exists!";
 		}
@@ -611,16 +649,15 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		final_t = new MyTransformation(id);
 
 		//error (we need at least 1 transformation)
-		if(transformation.children.length == 0){
-			return "Transformation without information";
+		if(transformation.children.length == 0)
+		{
+			return "Transformation without information!";
 		}
 
-		//console.log("INICIO DA MULTIPLICACAO");
 		//multiply all transformations to final_t
-		for(var j = 0; j < transformation.children.length ; j++){
+		for(var j = 0; j < transformation.children.length ; j++)
+		{
 			var tag_name = transformation.children[j].tagName;
-
-			//console.log("its a "+tag_name);
 
 			switch(tag_name){
 				case "translate":
@@ -641,15 +678,15 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 					return "inexisting tag name";
 			}
 		}
-		//saves final matrix at transformationsList
+		//saves final matrix at transformationsList map
 		this.transformationsList.set(id,final_t);
-		//console.log("RESULTADO = "+mat4.str(final_t.getMatrix()));
 
+		//DEBUG
 		//this.transformationsList.get(id).display();
 	}
 }
 
-/*
+/**
  * Method that parses elements of one block (PRIMITIVES) and stores information in a specific data structure (primitivesList).
  * primitivesList is a list of Objects of type MyPrimitive.
  */
@@ -657,13 +694,14 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
 	var primitives_elems =  rootElement.getElementsByTagName('primitives');
 	
-	if (primitives_elems == null || primitives_elems.length != 1) {
-		return "primitives element is missing.";
+	//errors
+	if (primitives_elems == null || primitives_elems.length != 1) 
+	{
+		return "'primitives' element is missing.";
 	}
-
 	var n_primitives = primitives_elems[0].children.length;
-
-	if(n_primitives == 0){
+	if(n_primitives == 0)
+	{
 		return "zero 'primitive' elements";
 	}
 
@@ -674,13 +712,15 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		primitive = primitives_elems[0].children[i];
 
 		//error -> just one element for primitive
-		if(primitive.children.length != 1){
+		if(primitive.children.length != 1)
+		{
 			return "more/less than one primitive component";
 		}
 		
 		tagName = primitive.children[0].tagName;
 		var id = this.reader.getString(primitive, 'id');
-		if(this.primitivesList.has(id)){ //found
+		if(this.primitivesList.has(id))	//found an identical id
+		{
 			return "id "+id+" from block 'primitives' already exists!";
 		}
 
@@ -747,22 +787,27 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 			}
 		}
 		this.primitivesList.set(id,prim);
+		
+		//DEBUG
 		//this.primitivesList.get(id).printInfo();
 	}
 }
 
-/*
- * Method that parses elements of one block (Components) and stores information in a specific data structure (MyGlobals)
+/**
+ * Method that parses elements of one block (Components) and stores information in a specific data structure (ComponentList)
  */
 MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 	//<components>
 	var components_elems =  rootElement.getElementsByTagName('components');
 	
-	if (components_elems == null) {
+	//errors
+	if (components_elems == null) 
+	{
 		return "components element is missing.";
 	}
-	if (components_elems.length != 1) {
+	if (components_elems.length != 1) 
+	{
 		return "either zero or more than one 'components' element found.";
 	}
 
@@ -773,43 +818,55 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		//<component>
 		component = components_elems[0].children[i];
+		if(component.nodeName != 'component')
+		{
+			return "Unknown 'child' element found at the 'components' element."; 
+		}
+		
 		var id = this.reader.getString(component, 'id');	
 
 		//se o component já existe e já está definido => erro
 		if(this.componentsList.has(id))
-			if(this.componentsList.get(id).isDefined()){
+			if(this.componentsList.get(id).isDefined())
+			{
 				return "this component "+id+" is already defined!";
 			}
+	
+		//verificacao do numero de childs dentro do componente
+		if(component.children.length != 4)
+		{
+			return "The component element with id = " + id + " does not have exactly four children elements.";			
+		}
 	
 		//<transformation>
 		var matrixId;
 
 		var transformation = component.children[0];
-		var n_transformations= transformation.children.length;		//inside <transformation>
+		var n_transformations = transformation.children.length;		//inside <transformation>
 
 		/*Error for : 
 			 - more than one <transformationref>
 			 - just one <transformationref> and <rotate>/<scale>/<translate> transformations
-			 - none transformations
 		*/
-		if(	(n_transformations > 1 && transformation.getElementsByTagName("transformationref").length == 1) ||
-			transformation.getElementsByTagName("transformationref").length > 1){
-			return "component with 0 transformation or 'transformationref' and rot/scale/trans tranformations at the same time";
+		if(	(n_transformations > 1 && transformation.getElementsByTagName("transformationref").length == 1))
+		{
+			return "component with 'transformationref' and rot/scale/trans tranformations at the same time.";
+		}
+		if(transformation.getElementsByTagName("transformationref").length > 1)
+		{
+			return "'component' with more than one transformationref tag";
 		}
 
 		// a matriz é a identidade 
 		if(n_transformations == 0 )
 		{
-			matrixId = "default_"+id;
-			var temp = new MyTransformation(matrixId);
-			this.transformationsList.set(matrixId,temp);
+			var temp = new MyTransformation("identity");
+			this.transformationsList.set("identity",temp);	//nova matriz identidade
 
-			var transfComponent = this.transformationsList.get(matrixId); // transformation from component
-		
+			var transfComponent = this.transformationsList.get("identity"); // transformation from component
 		}
 		else if(transformation.getElementsByTagName("transformationref").length == 1) //<transformationref>
 		{
-			var pos;
 			matrixId = this.reader.getString(transformation.getElementsByTagName("transformationref")[0], 'id');
 			
 			if(!this.transformationsList.has(matrixId)) //not found
@@ -872,6 +929,8 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			{
 				if(materialId != "inherit")
 					return "Components '" + id + "' materialsId '" +materialId + "' not found";
+				
+				//se o material for inherit so e tratado no xmlScene
 				else
 				{
 					var newMaterial = MyMaterial(materialId);
