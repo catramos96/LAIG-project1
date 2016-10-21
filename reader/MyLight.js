@@ -112,11 +112,51 @@ MyLight.prototype.printInfo = function(){
 	}
 	
 	scene.lights[i].setVisible(true);
-	
+
+	var bool;
 	if(this.enable){
 		scene.lights[i].enable();
-	}else{
-		scene.lights[i].disable();
+		bool = true;
 	}
+	else{
+		scene.lights[i].disable();
+		bool = false;	
+	}	
+	
+	this.setLight(scene, i,bool);	//atualiza o booleana da cena que esta ligado a interface consoante o valor
+	
  }
+ 
+  MyLight.prototype.setLight = function(scene, i, enable){
+	
+	switch (i){
+		case 0: 
+			scene.light0 = enable;
+			break;
+		case 1: 
+			scene.light1 = enable;
+			break;
+		case 2: 
+			scene.light2 = enable;
+			break;
+		case 3: 
+			scene.light3 = enable;
+			break;
+		case 4: 
+			scene.light4 = enable;
+			break;
+		case 5: 
+			scene.light5 = enable;
+			break;
+		case 6: 
+			scene.light6 = enable;
+			break;
+		case 7: 
+			scene.light7 = enable;
+			break;
+		default:
+			break;
+	}
+	  
+  }
  

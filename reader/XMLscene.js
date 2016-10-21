@@ -35,19 +35,9 @@ XMLscene.prototype.init = function (application) {
  */ 
 XMLscene.prototype.initLights = function () {
 
-	//booleanos para a interface
-	this.light0 = true;
-	this.light1 = true;
-	this.light2 = true;
-	this.light3 = true;
-	this.light4 = true;
-	this.light5 = true;
-	this.light6 = true;
-	this.light7 = true;
-	
 	//percorre as luzes, inicializa-as, atualiza-as e adiciona-as a interface
-    for (var i = 0; i < this.graph.lightsList.length; i++) {
-		
+    for (var i = 0; i < this.graph.lightsList.length; i++) 
+	{
     	this.graph.lightsList[i].init(this,i);	//inicializacao das luzes
 
 		this.lights[i].update();				//update

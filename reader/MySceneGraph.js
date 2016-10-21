@@ -384,6 +384,11 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	{
 		return "There are zero lights";
 	}
+	if(n_lights > 8)
+	{
+		console.log("WARNING: there are too many lights in this scene!\nThe maximum is 8, so there will be displayed only the first 8 lights.")
+		n_lights = 8;
+	}
 	
 	var id, enable, location, ambient,diffuse, specular, angle, target, exponent;
 	var temp;

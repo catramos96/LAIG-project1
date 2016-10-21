@@ -1,5 +1,6 @@
-<dsx>
+<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 
+<dsx>
 	<scene root="sceneRoot" axis_length="3" /> 
 
     <views default="perspective1" >
@@ -28,31 +29,31 @@
 
     </views>  
 
-    <illumination doublesided="1" local="1" >
+    <illumination doublesided="0" local="1" >
     
-        <ambient r="0" g="0" b="0" a="1" />
+        <ambient r="0.1" g="0.1" b="0.1" a="1" />
         <background r="0" g="0" b="0" a="1" />					
         
     </illumination>
 
     <lights>
 		
-        <omni id="lightOmni1" enabled="1" > 
-            <location x="30" y="30" z="30" w="50" />						
+        <omni id="lightOmni1" enabled="0" > 
+            <location x="30" y="30" z="30" w="1" />						
             <ambient r="0" g="0" b="0" a="0" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
 
         <omni id="lightOmni2" enabled="1" >
-            <location x="0" y="1" z="0" w="30" />						
+            <location x="0" y="1" z="0" w="1" />						
             <ambient r="0" g="0" b="0" a="0" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
         
         
-        <spot id="lightSpot1" enabled="1" angle="10" exponent="256">
+        <spot id="lightSpot1" enabled="1" angle="60" exponent="3">
 			
             <target x="0" y="0" z="0" />
             <location x="4" y="4" z="8" />
@@ -86,7 +87,7 @@
             <ambient r="1" g="1" b="1" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
-            <shininess value="1000" />
+            <shininess value="200" />
         </material>
 
         <material id="matt" >
@@ -94,7 +95,7 @@
             <ambient r="0.3" g="0.3" b="0.3" a="1" />
             <diffuse r="1" g="0.6" b="0" a="1" />
             <specular r="1" g="1" b="1" a="1" />
-            <shininess value="1000" />
+            <shininess value="20" />
         </material>
 
         <material id="light" >
@@ -102,12 +103,12 @@
             <ambient r="1" g="1" b="1" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
-            <shininess value="1000" />
+            <shininess value="100" />
         </material>
         
     </materials>
 
-    <transformations>																		<!-- FALTA AS TRANSFORMAÇÕES -->
+    <transformations>																		
     
         <transformation id="solarSystemPosition">
         	<translate x="5" y="5" z="5" />
