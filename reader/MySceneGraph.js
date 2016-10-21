@@ -151,14 +151,18 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 	}
 	
 	//detecao de filhos nao inicializados nos components
-	if(!this.isChildrensDefined()){
-		return "Not all components definied!!!";
+	if(!this.isChildrensDefined())
+	{
+		this.onXMLError("Not all components definied!!!");
+		return;
 	}
 	
 	//detecao de ciclos
 	var visitedNodes = [];
-	if(this.hasCycles(visitedNodes)){
-		return "This graph has cycles!!!";
+	if(this.hasCycles(this.root,visitedNodes))
+	{
+		this.onXMLError("This graph has cycles!!!");
+		return;
 	}
 };
 
@@ -914,7 +918,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 		//<materials>
 		var materials, n_materials, materialId;
-		var materialsComponent = new Map();
+		var materialsComponent = [];
 
 		materials = component.children[1];
 		n_materials = materials.children.length;
@@ -929,16 +933,14 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			{
 				if(materialId != "inherit")
 					return "Components '" + id + "' materialsId '" +materialId + "' not found";
-				
-				//se o material for inherit so e tratado no xmlScene
 				else
 				{
-					var newMaterial = MyMaterial(materialId);
-					this.materialsList.set(materialId,newMaterial);
+					//se o material for inherit so e tratado no xmlScene
+					materialsComponent.push("inherit");
 				}
 			}
-				
-			materialsComponent.set(materialId, this.materialsList.get(materialId));
+			else	
+				materialsComponent.push(this.materialsList.get(materialId));	//coloca o material na lista de materiais da componente
 		}
 
 		//<texture>
@@ -949,25 +951,27 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		}
 
 		var textureId = this.reader.getString(texture[0],'id');
+		var textureComponent;
 		
+		//se a textura ainda nao existe, pode ser erro ou 'inherir' ou 'none'
 		if(!this.texturesList.has(textureId))
 		{
-			 if(textureId == "inherit" || textureId == "none"){
-			 	var newTexture = new MyTexture(textureId,"",0,0);
-			 	this.texturesList.set(textureId, newTexture);
-			 }else 
+			if(textureId == "inherit" || textureId == "none")
+			 	textureComponent = textureId;
+			else 
 				return "Components '" + id + "' textureId '" + textureId + "' not found";
 		}
-
-		var textureComponent = this.texturesList.get(textureId);
+		else
+			textureComponent = this.texturesList.get(textureId);
 
 		//<children>
         var children_elems = component.getElementsByTagName("children");
 		var childrenId;
-		var childComponent = new Map();
-		var primitiveComponent = new Map();
+		var childComponent = [];
+		var primitiveComponent = [];
 
-        if(children_elems.length != 1){
+        if(children_elems.length != 1)
+		{
         	return "Component '" + id + "' has more than one children block";
         }
 
@@ -979,29 +983,41 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
          	//se existir este id, adiciona o que está na lista
          	if(this.componentsList.has(childrenId))
-         		childComponent.set(childrenId,this.componentsList.get(childrenId));
+         		childComponent.push(this.componentsList.get(childrenId));
          	else{
-         		var temp = new MyComponent(childrenId,false);		//cria o component
-         		this.componentsList.set(childrenId,temp); 	//adciona a lista de components
-         		childComponent.set(childrenId,temp);		//adiciona a lista de filhos deste component
+         		var temp = new MyComponent(childrenId,false);	//cria o component com o loaded a false
+         		this.componentsList.set(childrenId,temp); 		//adciona a lista de components
+				
+				//adiciona a lista de filhos deste component. 
+				//Adiciona o que esta na componentList para puder ser atualizado sempre que e atualizado na lista (referencia)
+         		childComponent.push(this.componentsList.get(childrenId));
          	}
          }
 
          //<primitiveref>
          var primitRef = children_elems[0].getElementsByTagName("primitiveref");
+		 
          for(var j = 0; j < primitRef.length ;j++)
          {
          	childrenId = this.reader.getString(primitRef[j],'id'); //id do filho do tipo primitiva
 
-         	if(!this.primitivesList.has(childrenId)){		//not found
+			//esta primitiva nao foi criada
+         	if(!this.primitivesList.has(childrenId))	
+			{
 				return "Component '" + id + "' primitiveref '" + childrenPrimitivesId[j] + "' not in the list of primitives";
          	}
-         	primitiveComponent.set(childrenId,this.primitivesList.get(childrenId));
+         	primitiveComponent.push(this.primitivesList.get(childrenId));
          }
 
-        if(this.componentsList.has(id)){
+		// se o component ja existe, atualiza-o (como nao deu erro antes, significa que este component ainda nao foi loaded)
+		// se nao, cria um novo
+        if(this.componentsList.has(id))
+		{
         	var comp = this.componentsList.get(id);
-        }else{
+			comp.setDefined(true);
+        }
+		else
+		{
         	var comp = new MyComponent(id,true);
         }
 
@@ -1012,53 +1028,67 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
        	comp.setPrimitives(primitiveComponent);
        		
         this.componentsList.set(id,comp);
+		
 		if(id == this.globals.root)
 			this.root = comp;
 
+		//DEBUG
 		//comp.display();
 	}
 }
 
-/*
+/**
  * Method that verifies componentsList.
- * Percorre toda a lista e verifica os seus filhos. Para cada filho, verifica se esse component está na lista
- * e se (caso esteja na lista) está definido.  
+ *
+ * Percorre toda a lista de components e verifica os seus filhos. Para cada component filho verifica se está na lista componentsList.
+ * Caso esteja na lista está definido, se nao retorna falso.  
  */
 MySceneGraph.prototype.isChildrensDefined = function() {
 
-	for (var [id, value] of this.componentsList) {
-		var childrens = value.getComponentsChilds();
+	for (var [id, value] of this.componentsList) 
+	{
+		var childrens = value.getComponentsChilds();	//lista de todos os filhos (components)
   		for(var j = 0; j < childrens.length; j++)
 		{
-			if(!this.componentsList.has(childrens[j]))
+			//o id do filho nao esta no map componentsList
+			if(!this.componentsList.has(childrens[j].getId()))	
 				return false;
-			if(!this.componentsList.get(childrens[j]).isDefined())
+			// o filho esta na lista mas nao esta definido 
+			//(foi so criado um component com esse id mas nao esta preenchido com qualquer informacao)
+			if(!this.componentsList.get(childrens[j].getId()).isDefined()) 
 				return false;
 		}
 	}
-	return true;
+	return true; //percorre tudo sem qualquererro
 }
 
-/*
+/**
  * Method that verifies if the graph has cycles.
- * Percorre toda a lista em profundidade e vais guardando os antecedentes. Se por acaso for verificado um nó
- * com id na lista de antecessores é porque existe um ciclo.
+ *
+ * Percorre os filhos em profundidade e vai guardando os antecedentes. 
+ * Se por acaso for verificado um nó com id igual ao do componente atual na lista de antecessores é porque existe um ciclo.
  */
-MySceneGraph.prototype.hasCycles = function(visitedNodes) {
-
-	for (var [id, value] of this.componentsList) {
-		//coloca na lista de visitados caso ainda não esteja
-		for(var i = 0; i < visitedNodes.length; i++)
-			if(id == visitedNodes[i])
-				return false;
-			
-		visitedNodes.push(id);
+MySceneGraph.prototype.hasCycles = function(atualComponent, visitedNodes) {
+	
+	//coloca o component atual como verificado caso nao esteja na lista
+	for(var i = 0; i < visitedNodes.length; i++){
+		if(atualComponent.getId() == visitedNodes[i])
+			return true;
 	}
-	return true;
+	visitedNodes.push(atualComponent.getId());
+	
+	//verifica os filhos do component atual
+	var list = atualComponent.getComponentsChilds();
+	for(var j = 0; j < list.length; j++)
+	{
+		this.hasCycles(atualComponent,visitedNodes);
+	}
+	
+	return false; //retorna falso se nao tiver ciclos
 }
 
-/*
- *
+/**
+ * GETS
  */
 MySceneGraph.prototype.getGlobals = function() {
 	return this.globals;

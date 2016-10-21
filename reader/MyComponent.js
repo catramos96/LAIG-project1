@@ -5,7 +5,7 @@
      this.id = id;
      this.defined = defined;
      this.materialIndex = 0;
-     this.materials = null;
+     this.materials = [];
  }
 
  /**
@@ -16,7 +16,7 @@
   */
  MyComponent.prototype.incMaterialIndex = function(){
  	this.materialIndex++;
- 	if(this.materials.size == this.materialIndex)
+ 	if(this.materials.length == this.materialIndex)
  	  this.materialIndex = 0;
  }
 
@@ -24,11 +24,13 @@
   * GETS
   */
  MyComponent.prototype.getCurrMaterialID = function(){
-   var i = 0;
-   for(var key of this.materials.keys()){
+	 
+	 return this.materials[this.materialIndex].getId();
+	 
+ /*  for(var i = 0; i < this.materials.length; i++){
      if (i == this.materialIndex) return key;
      i++;
-   }
+   }*/
  }
 
  MyComponent.prototype.isDefined = function(){
@@ -62,7 +64,12 @@
  /**
   * SETS
   */
-MyComponent.prototype.setTransformation = function(m){
+  
+ MyComponent.prototype.setDefined = function(b){
+ 	this.defined = b;
+ }
+ 
+ MyComponent.prototype.setTransformation = function(m){
  	this.transformation = m;
  }
 

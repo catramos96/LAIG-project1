@@ -59,12 +59,12 @@ XMLscene.prototype.initLights = function () {
 //INIT MATERIALS
 XMLscene.prototype.initMaterials = function () {
 	
-	this.initializedMaterials = [];
+	//this.initializedMaterials = [];
 
     for (var [id, value] of this.graph.materialsList) {
-    	if(id != "inherit")
+    	//if(id != "inherit")
     		value.init(this); 
-    	this.initializedMaterials.push(value);
+    	//this.initializedMaterials.push(value);
     }
     
 };
@@ -72,12 +72,12 @@ XMLscene.prototype.initMaterials = function () {
 //INIT TEXTURES
 XMLscene.prototype.initTextures = function () {
 	
-	this.initializedTextures = [];
+	//this.initializedTextures = [];
 
     for (var [id, value] of this.graph.texturesList) {
-    	if(id != "inherit" || id != "none")
+    	//if(id != "inherit" || id != "none")
     		value.init(this);
-    	this.initializedTextures.push(value);
+    	//this.initializedTextures.push(value);
     }
 };
 
@@ -206,45 +206,51 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 	//recebe a transformacao e multiplica na cena
 	this.multMatrix(component.getTransformation().getMatrix()); //descobrir o que está mal aqui
-
+	
 	//recebe os materiais
 	var newMaterials = component.getMaterials();
-	if(newMaterials.has("inherit")){
+	/*if(newMaterials.has("inherit")){
+		newMaterials = materials;
+	}*/
+	if(newMaterials[0].getId() == "inherit"){
 		newMaterials = materials;
 	}
 
 	//id do material para ir buscar aos materiais inicializados
-	var matId = component.getCurrMaterialID();
+	//var matId = component.getCurrMaterialID();
 
-	var appearance = this.graph.materialsList.get(matId).getAppearance();
+	//var appearance = this.graph.materialsList.get(matId).getAppearance();
+	var appearance = newMaterials[component.materialIndex].getAppearance();
 
 	//recebe as texturas
 	var lS = 1;
 	var lT = 1;
 	var newTexture = component.getTexture();
-	var newTextureId = newTexture.getId();
+	//var newTextureId = newTexture.getId();
 	
-	if(newTextureId != "none"){
-		
-		if(newTextureId == "inherit"){
-			newTexture = texture;
-			newTextureId = texture.getId();
-		} 
-		
-		var value = this.graph.texturesList.get(newTextureId);
-
-		lS = value.getLengthS();
-		lT = value.getLengthT();
-		appearance.setTexture(value.getAppearance());
-	}else
-		newTexture = null
+	if(newTexture == "inherit"){
+		newTexture = texture;
+		//newTextureId = texture.getId();
+	}
 	
+	if(newTexture == "none"){
+		newTexture = null;
+	}
+	else{
+		var textAppearance = newTexture.getAppearance();
+		lS = newTexture.getLengthS();
+		lT = newTexture.getLengthT();
+	}
+		
+	appearance.setTexture(textAppearance);
 	appearance.apply();
 
 	//desenha as primitivas
 	var primitives = component.getPrimitives();
-	for (var [id, value] of primitives){
-
+	for (var i = 0; i < primitives.length; i++)
+	{
+		var value = primitives[i];
+		
 		if(value instanceof MyRectangleData){
 			var prim = new MyRectangle(this, value,lS,lT);
 			prim.display();
@@ -270,8 +276,8 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 
 	//chama o proximo componente recursivamente
 	var components = component.getComponentsChilds();
-	for (var [id, value] of components){
-		this.displayComponents(value,newMaterials,newTexture);
+	for (var i = 0; i < components.length; i++){
+		this.displayComponents(components[i],newMaterials,newTexture);
 	}
 
 	this.popMatrix();
