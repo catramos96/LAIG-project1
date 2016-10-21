@@ -36,9 +36,9 @@
 	{
 		for(var j = 0; j < this.slices+1; j++)
 		{
-			this.vertices.push((R+r*Math.cos(j*alfa))*Math.cos(i*beta),r*Math.sin(j*alfa),(R+r*Math.cos(j*alfa))*Math.sin(i*beta));
-			this.normals.push(r*Math.cos(j*alfa)*Math.cos(i*beta),r*Math.cos(j*alfa)*Math.sin(i*beta),r*Math.sin(j*alfa));
-       		this.texCoords.push(i/this.stacks,1-j/this.slices); //(z,x)
+			this.vertices.push((R+r*Math.cos(j*alfa))*Math.cos(i*beta),(R+r*Math.cos(j*alfa))*Math.sin(i*beta),r*Math.sin(j*alfa));
+			this.normals.push((Math.cos(j*alfa))*Math.cos(i*beta),(Math.cos(j*alfa))*Math.sin(i*beta),Math.sin(j*alfa));
+       		this.texCoords.push(i/this.stacks,j/this.slices); //(z,x)
       
             if(i != this.loops && j < this.slices){
               this.indices.push(i*(this.slices+1) + j,(i+1)*(this.slices+1) + j,i*(this.slices+1) + j +1);

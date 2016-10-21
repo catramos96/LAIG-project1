@@ -30,14 +30,14 @@
      
  	  for(var j = 0; j < this.slices+1; j++)
 	  {
-            this.vertices.push(this.radius*Math.sin(alfa*j)*Math.sin(beta*i),this.radius*Math.cos(-Math.PI+beta*i),this.radius*Math.cos(alfa*j)*Math.sin(beta*i));
-            this.normals.push(Math.sin(alfa*j)*Math.sin(beta*i),Math.cos(-Math.PI+beta*i),Math.cos(alfa*j)*Math.sin(beta*i));
-            this.texCoords.push(j/(this.slices),-i/(this.stacks));
+            this.vertices.push(this.radius*Math.sin(alfa*j)*Math.sin(beta*i),this.radius*Math.cos(alfa*j)*Math.sin(beta*i),this.radius*Math.cos(-Math.PI+beta*i));
+            this.normals.push(Math.sin(alfa*j)*Math.sin(beta*i),Math.cos(alfa*j)*Math.sin(beta*i),Math.cos(-Math.PI+beta*i));
+            this.texCoords.push(1-j/(this.slices),1-i/(this.stacks));
             
            if(i != this.stacks && j != this.slices)
 		   {
-              this.indices.push(j+(i)*(this.slices+1),1+j+(i)*(this.slices+1),1+j+(i+1)*(this.slices+1));
-              this.indices.push(j+(i)*(this.slices+1),1+j+(i+1)*(this.slices+1),j+(i+1)*(this.slices+1));
+              this.indices.push(j+(i)*(this.slices+1),1+j+(i+1)*(this.slices+1),1+j+(i)*(this.slices+1));
+              this.indices.push(j+(i)*(this.slices+1),j+(i+1)*(this.slices+1),1+j+(i+1)*(this.slices+1));
             }
 		}
  	}
