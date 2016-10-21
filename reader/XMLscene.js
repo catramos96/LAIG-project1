@@ -36,11 +36,7 @@ XMLscene.prototype.initLights = function () {
 	this.light6 = true;
 	this.light7 = true;
 	
-	console.log("estava aqui 2 e ");
-
     for (var i = 0; i < this.graph.lightsList.length; i++) {
-		
-		console.log("entrou aqui 2");
 		
     	this.graph.lightsList[i].init(this,i);					//inicializacao das luzes
 
@@ -299,9 +295,6 @@ XMLscene.prototype.display = function () {
 
 		//leitura de componentes
 		this.displayComponents(this.graph.getRoot(), null,null);
-		/*
-		var mat = this.initializedMaterials[1].getAppearance();
-		mat.setTexture(this.initializedTextures[2].getAppearance());*/
 	}
 };
 
