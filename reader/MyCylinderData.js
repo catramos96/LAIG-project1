@@ -1,6 +1,6 @@
 /**
  * MyCylinder Object Data
- * Objeto constituido pelas informacoes recolhidas do parser
+ * Descendent of MyPrimitive
  */
  function MyCylinderData(id,base,top,height,slices,stacks) {
      this.base = base;
@@ -9,7 +9,6 @@
      this.slices = slices;
      this.stacks = stacks;
      this.id = id;
-
  }
 
 // objeto derivado de MyPrimitive 

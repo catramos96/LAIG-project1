@@ -1,11 +1,11 @@
 /**
  * MyTriangle
+ * Recieves the attributes from MyTriangleData (data)
  * @constructor
  */
  function MyTriangle(scene,data,lS,lT) {
      CGFobject.call(this,scene);
 	 
-	 //pontos de acordo com o pdf no moodle
      this.p0 = data.getP1();
      this.p1 = data.getP2();
      this.p2 = data.getP3();
@@ -19,18 +19,14 @@
  MyTriangle.prototype = Object.create(CGFobject.prototype);
 
  /**
-  * Inicializacao dos buffers para a criacao do triangulo
+  * Init
   */
  MyTriangle.prototype.initBuffers = function() {
-   //vetores que define o plano onde estão os 3 pontos
-    var v1 = new MyPoint(this.p1.getX()-this.p0.getX(),this.p1.getY()-this.p0.getY(),this.p1.getZ()-this.p0.getZ());	//P0P1
-    var v2 = new MyPoint(this.p2.getX()-this.p1.getX(),this.p2.getY()-this.p1.getY(),this.p2.getZ()-this.p1.getZ()); 	//P1P2
-    var v3 = new MyPoint(this.p2.getX()-this.p0.getX(),this.p2.getY()-this.p0.getY(),this.p2.getZ()-this.p0.getZ());	//P0P2
 
-    //vector normal ao plano de v1 com v3 (produto vetorial)
-    var nx = v1.getY()*v3.getZ() - v1.getZ()*v3.getY();
-    var ny = -(v1.getX()*v3.getZ() - v1.getZ()*v3.getX());
-    var nz = v1.getX()*v3.getY() -v1.getY()*v3.getX();
+   //Vertices v1 = p0p1 v2 = p1p2 v3 = p2p0
+    var v1 = new MyPoint(this.p1.getX()-this.p0.getX(),this.p1.getY()-this.p0.getY(),this.p1.getZ()-this.p0.getZ());	
+    var v2 = new MyPoint(this.p2.getX()-this.p1.getX(),this.p2.getY()-this.p1.getY(),this.p2.getZ()-this.p1.getZ()); 	
+    var v3 = new MyPoint(this.p2.getX()-this.p0.getX(),this.p2.getY()-this.p0.getY(),this.p2.getZ()-this.p0.getZ());	
 
  	this.vertices = [
 		this.p0.getX(), this.p0.getY(), this.p0.getZ(),
@@ -41,6 +37,11 @@
  	this.indices = [
 		0, 1, 2
  	];
+
+	//Calculate Normals with Cross Product (v1xv3)
+    var nx = v1.getY()*v3.getZ() - v1.getZ()*v3.getY();
+    var ny = -(v1.getX()*v3.getZ() - v1.getZ()*v3.getX());
+    var nz = v1.getX()*v3.getY() -v1.getY()*v3.getX();
 
  	this.normals = [   
 		nx,ny,nz,

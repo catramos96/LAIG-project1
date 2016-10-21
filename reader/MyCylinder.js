@@ -1,11 +1,12 @@
 /**
  * MyCylinder Object
+  * Recieves the attributes from MyCylinderData (data)
  */
  function MyCylinder(scene,data) {
      CGFobject.call(this,scene);
 
-     this.base = data.getBase();
-     this.top = data.getTop();
+     this.base = data.getBase();			//the radius
+     this.top = data.getTop();				//the radius
      this.height = data.getHeight();
      this.slices = data.getSlices();
      this.stacks = data.getStacks();
@@ -16,60 +17,61 @@
  MyCylinder.prototype = Object.create(CGFobject.prototype);
 
  /**
-  * Inicializacao do Object
-  * Esta orientado no eixo zz pousado no plano xOy
+  * Initializes the object where top is on z = height/2 and the base in z = -height/2 
   */
  MyCylinder.prototype.initBuffers = function() {
 
-	//incrementos
+	//Incrementation 
  	var incAng = 2*Math.PI/this.slices;
  	var incHeight = this.height / this.stacks;
- 	var incRadius = (this.top - this.base) / this.stacks; //acho que não se divide por 2
+ 	var incRadius = (this.top - this.base) / this.stacks;	
 
-	//inicializacoes
+	//Properties
  	this.vertices = [];
  	this.indices = [];
  	this.normals = [];
  	this.texCoords = [];
 
+
+	//DRAW SIDES
  	for(var i = 0; i < this.stacks+1;i++)
  	{        
- 	  for(var j = 0; j < this.slices+1;j++){ //mais um vetice no final para fazer o mapeamento da textura
+ 	  for(var j = 0; j < this.slices+1;j++){ 	//+1 for the texture mapping
 
  	    this.vertices.push((this.base + incRadius*i)*Math.cos(incAng*j),
  	                      (this.base + incRadius*i)*Math.sin(incAng*j),
  	                      incHeight*i);
 
- 	    this.texCoords.push(j/this.slices,i/this.stacks); // nao percebo
+ 	    this.texCoords.push(j/this.slices,i/this.stacks);
  	    	
- 	    //calculo das normais : produto vetorial do vetor tangente com o vetor da superficie
- 	    var v1 = [-Math.sin(incAng*j),Math.cos(incAng*j),0]; //tangente
-        var v2 = [(this.base-this.top)*Math.cos(incAng*j), (this.base-this.top)*Math.sin(incAng*j), this.height]; //vetor da superficie
-
+ 	    //Calculate Normals
+ 	    var v1 = [-Math.sin(incAng*j),Math.cos(incAng*j),0]; //tangent vector
+        var v2 = [(this.base-this.top)*Math.cos(incAng*j), (this.base-this.top)*Math.sin(incAng*j), this.height]; //surface vector
+		
+		//Cross Product between tangent and surface vectors
         var norm = [v1[1]*v2[2] - v1[2]*v2[1], v1[2]*v2[0] - v1[0]*v2[2], v1[0]*v2[1] - v1[1]*v2[0]];
 	 
  	    this.normals.push(norm[0],norm[1],norm[2]);
 		
-		//os indices não precisam de ser feitos para a slice/stack extras (causa indices a mais)
- 	    if(j != this.slices && i != this.stacks)
+		if(j != this.slices && i != this.stacks)
  	    {       
- 	        this.indices.push( i*(this.slices+1)+j+1,
- 	                          (i+1)*(this.slices+1)+j,
-                              i*(this.slices+1)+j); //0,4,1 (stacks = 1,slices 3)
+ 	        this.indices.push( i*(this.slices+1)+j+1,		//next vertice to process
+ 	                          (i+1)*(this.slices+1)+j,		//vertice of the stack above
+                              i*(this.slices+1)+j);			//vertice processed
 
-            this.indices.push(i*(this.slices+1)+j+1,
-                              (i+1)*(this.slices+1)+j+1,
-                              (i+1)*(this.slices+1)+j); //4,5,1*/
+            this.indices.push(i*(this.slices+1)+j+1,		//next vertice to process
+                              (i+1)*(this.slices+1)+j+1,	//next vertice of the stack above
+                              (i+1)*(this.slices+1)+j);		//vertice of the stack above
  	    }
  	  }
  	}
-
-	//construcao da base e do topo do cilindro
-    var index = (this.slices+1)*(this.stacks+1);	//continuacao dos indices...
-    
-    //desenho da topo
 	
-	//centro
+	//next vertice index
+    var index = (this.slices+1)*(this.stacks+1);
+    
+    //DRAW TOP
+	
+	//center
     this.vertices.push(0, 0, this.height);
     this.texCoords.push(0.5,0.5);
     this.normals.push(0, 0, 1);
@@ -78,7 +80,6 @@
     {
         this.texCoords.push(0.5+Math.cos(incAng*i)/2,0.5-Math.sin(incAng*i)/2);
         this.vertices.push(Math.cos(incAng * i)*this.top, Math.sin(incAng * i)*this.top, this.height);
-       
         this.normals.push(0, 0, 1);
         
         if (i > 0) {
@@ -86,11 +87,12 @@
         }
     } 
 	
-    index += this.slices+2;		////continuacao dos indices...
+	//next vertice index
+    index += this.slices+2;
 
-    //desenho da base
+    //DRAW BASE
 	
-	//centro
+	//center
     this.vertices.push(0, 0, 0);
     this.texCoords.push(0.5,0.5);
     this.normals.push(0, 0, -1);
@@ -99,7 +101,6 @@
     {
         this.texCoords.push(0.5+Math.cos(incAng*i)/2,0.5-Math.sin(incAng*i)/2);
         this.vertices.push(Math.cos(incAng * i)*this.base, Math.sin(incAng * i)*this.base, 0);
-       
         this.normals.push(0, 0, -1);
         
         if (i > 0) {

@@ -1,12 +1,11 @@
 /**
  * Data Struct of MyTorusData
- * Guarda todos os valores lidos no parser sobre a primitiva Torus
- * Objeto derivado de MyPrimitive
+ * Descendent of MyPrimitive
  */
  function MyTorusData(id,inner,outer,slices,loops) {
      this.id = id;
-     this.inner = inner;
-     this.outer = outer;
+     this.inner = inner;  //Inside radius
+     this.outer = outer;  //Outside radius
      this.slices = slices;
      this.loops = loops;
  }

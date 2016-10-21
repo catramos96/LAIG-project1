@@ -1,6 +1,10 @@
 /**
  * Data Struct for a texture
- * Le os dados sobre uma textura do parser
+ * (0,0)
+ * ---------> t
+ * |
+ * |
+ * v s
  */
 function MyTexture(id,file,length_t, length_s) {
  	this.id = id;

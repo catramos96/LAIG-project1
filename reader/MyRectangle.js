@@ -1,13 +1,14 @@
 /**
  * Data Struct of MyRectangle
- * Cria o objeto na cena com as informacaoes do MyRectangleData e as length S e T para as texturas
+ * Recieves the attributes from MyRectangleData (data)
+ * lS and lT are the tilling (lS,lT) parameters of the texture mapping
+ * If one of these parameters = x than the texture repeats itself from x to x coordinates
  */
  function MyRectangle(scene,data,lS,lT) {
      CGFobject.call(this,scene);
      
      this.p1 = data.getP1();
      this.p2 = data.getP2();
-
      this.lS = lS;
      this.lT = lT;
 
@@ -21,7 +22,7 @@
   */
  MyRectangle.prototype.initBuffers = function() {
 
-	//escolhe x e y para os pontos dependendo de qual e o menor
+	//Max and Min values on x and y coordinates
     var xmin, xmax, ymin,ymax;
     
     //x
@@ -43,7 +44,7 @@
       ymin = this.p1.getY();
     }
     
-	// so e aplicado no plano xOy pelo que z = 0
+	//Always of the xOy surface
  	this.vertices = [
       xmin,ymin,0,   
       xmax,ymin,0,
@@ -63,7 +64,7 @@
       0,0,1
  	];
 
-	//coordenadas de textura para aplicar lS e lT
+	//Texture coordinates to map the texture
  	var S = (xmax - xmin) / this.lS;
  	var T = (ymax - ymin) / this.lT;
 

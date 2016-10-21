@@ -2,6 +2,7 @@
  * Data Struct of Light
  */
  function MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target){
+
    this.id = id;
    this.enable = enable;
 
@@ -19,7 +20,7 @@
 		this.exponent = 0;
 		this.target = new MyPoint(0,0,0);
     }
-	//valores comuns
+	//mutual attributs
 	this.location = location;
 	this.ambient = ambient;
 	this.diffuse = diffuse;
@@ -27,7 +28,7 @@
  }
 
 /**
- * PRINT
+ * Displays on the console the ligh information
  */
 MyLight.prototype.printInfo = function(){   
  
@@ -40,6 +41,7 @@ MyLight.prototype.printInfo = function(){
      console.log("Light - Omni; Id - " + this.id + " ; enable - " + this.enable);
    }
    console.log("Location - " + this.location);
+
    this.ambient.printInfo();
    this.diffuse.printInfo();
    this.specular.printInfo();
@@ -90,9 +92,9 @@ MyLight.prototype.printInfo = function(){
  }
 
  /**
-  * Inicializacao das luzes.
-  * Recebe a cena onde vao ser inicializadas bem como o id da light[i].
-  * Inicializa com todas as informacoes recebidas do parser
+  * Light Initialization
+  * Recieves the scene and the id of light[i]
+  * Initializes the information recieved from the parser
   */
  MyLight.prototype.init = function(scene, i){
 	
