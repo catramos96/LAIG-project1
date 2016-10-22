@@ -45,7 +45,7 @@
 								(Math.cos(j*alfa))*Math.sin(i*beta),		//cos(a)*sin(b)
 								Math.sin(j*alfa));							//sin(a)
 
-       		this.texCoords.push(i/this.stacks,j/this.slices);
+       		this.texCoords.push(i/this.loops,j/this.slices);
       
             if(i != this.loops && j < this.slices){
               this.indices.push(i*(this.slices+1) + j,				//vertice processed
