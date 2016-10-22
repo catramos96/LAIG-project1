@@ -77,6 +77,7 @@
         <texture id="venusTexture" file="../resources/venus.jpg" length_s="1" length_t="1" />
         <texture id="mercuryTexture" file="../resources/mercury.png" length_s="1" length_t="1" />
         <texture id="spaceshipTexture" file="../resources/spaceship.png" length_s="1" length_t="1" />
+        <texture id="metalTexture" file="../resources/metal.jpg" length_s="1" length_t="1" />
         
     </textures>
 
@@ -111,33 +112,41 @@
     <transformations>																		
     
         <transformation id="solarSystemPosition">
-        	<translate x="5" y="5" z="5" />
-			<translate x="1" y="0" z="1" />
-			<scale x="0.6" y = "0.6" z="0.6" />
+        	<translate x="6" y="6" z="6" />
+			<translate x="1" y="0" z="2" />
+			<scale x="0.8" y = "0.8" z="0.8" />
         </transformation>
 
     </transformations>
 
     <primitives>
 		
-        <primitive id="primitive1">
+        <primitive id="rectangle">
             <rectangle x1="0" y1="0" x2="1" y2="1" />				
         </primitive>
 
-        <primitive id="primitive2">
+        <primitive id="triangle">
             <triangle x1="0" y1="0" z1="0" x2="1" y2="0" z2="0" x3="0" y3="1" z3="0" />
         </primitive>
 
-        <primitive id="primitive3">
-            <cylinder base="0" top="2" height="3" slices="3" stacks="10" />
+        <primitive id="hexCylinder">
+            <cylinder base="1" top="1" height="1" slices="6" stacks="10" />
         </primitive>
 
-        <primitive id="primitive4">
+        <primitive id="cone">
+            <cylinder base="1" top="0.5" height="1" slices="6" stacks="10" />
+        </primitive>
+
+        <primitive id="sphere">
             <sphere radius="1" slices="30" stacks="30" />
         </primitive>
 
-        <primitive id="primitive5">
+        <primitive id="torus">
             <torus inner="0.7" outer="1" slices="50" loops="50" />
+        </primitive>
+
+        <primitive id="miniTorus">
+            <torus inner="0.4" outer="0.5" slices="10" loops="10" />
         </primitive>
         
     </primitives>
@@ -157,13 +166,13 @@
                      
 			<children>
 				<componentref id="Space" />
-				<componentref id="Spaceship" />
+				<componentref id="Spaceships" />
 				<componentref id="Planets" />
 				<componentref id="Stars" />
             </children>
             
         </component>
-			
+
 		 <component id="Space">																
         
             <transformation>
@@ -176,14 +185,17 @@
 			<texture id="skyTexture" />
 
 			<children>
-            	<componentref id = "LeftWall" />
-            	<componentref id = "RightWall" />
-            	<componentref id = "BottomFloor" />
+            	<componentref id = "Wall1" />
+            	<componentref id = "Wall2" />
+            	<componentref id = "Wall3" />
+            	<componentref id = "Wall4" />
+            	<componentref id = "Wall5" />
+            	<componentref id = "Wall6" /> 
             </children>
             
           </component>
 
-           <component id="LeftWall">																
+           <component id="Wall1">																
         
             <transformation>
             	<scale x="12" y="12" z="12" />
@@ -199,12 +211,12 @@
 			<texture id="inherit" />
 
 			<children>
-            	<primitiveref id="primitive1"/>
+            	<primitiveref id="rectangle"/>
             </children>
             
         </component>
 
-        <component id="RightWall">																
+        <component id="Wall2">																
         
             <transformation>
             	<scale x="12" y="12" z="12" />
@@ -218,12 +230,12 @@
 			<texture id="inherit" />
 
 			<children>
-            	<primitiveref id="primitive1"/>
+            	<primitiveref id="rectangle"/>
             </children>
             
         </component>
 
-           <component id="BottomFloor">																
+           <component id="Wall3">																
         
             <transformation>
             	<scale x="12" y="12" z="12" />
@@ -239,17 +251,79 @@
 			<texture id="inherit" />
 
 			<children>
-            	<primitiveref id="primitive1"/>
+            	<primitiveref id="rectangle"/>
             </children>
             
         </component>
 
-        <component id="Spaceship">																
+        <component id="Wall4">																
         
             <transformation>
-            	<translate x="5" y="6" z ="10"/>
-            	<scale x="1" y="0.2" z="1"/>
-            	<rotate axis="z" angle="45"/>          	
+            	<translate x="12" y ="0" z ="1"/>
+            	<scale x="12" y="12" z="12" />
+            	<translate x="0" y ="0" z ="1"/>
+            	<rotate axis="y" angle="180"/>
+            	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="rectangle"/>
+            </children>
+            
+        </component>
+
+        <component id="Wall5">																
+        
+            <transformation>
+            	<translate x="12" y ="0" z ="1"/>
+            	<scale x="12" y="12" z="12" />
+            	<rotate axis="y" angle="-90"/>
+            	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="rectangle"/>
+            </children>
+            
+        </component>
+
+           <component id="Wall6">																
+        
+            <transformation>
+            	
+            	<translate x="0" y ="12" z ="0"/>
+            	<scale x="12" y="12" z="12" />
+            	<rotate axis="x" angle="90"/>
+            	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="rectangle"/>
+            </children>
+            
+        </component>
+
+        <component id="Spaceships">																
+        
+            <transformation>    	
             </transformation>
        
 			<materials>
@@ -259,11 +333,189 @@
 			<texture id="spaceshipTexture" />
 
 			<children>
-            	<primitiveref id="primitive3"/>
+				<componentref id = "Spaceship1" />
+				<componentref id = "Spaceship2" />
             </children>
             
         </component>
 
+        <component id="Spaceship1">																
+        
+            <transformation>
+            	<translate x="4" y="7" z ="10"/>
+            	<rotate axis = "x" angle = "-20" />
+            	<rotate axis = "y" angle = "80" />
+            	<scale x="0.7" y="0.7" z="0.7" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="none" />
+
+			<children>
+				<componentref id = "SpaceshipBasic" />
+            </children>
+            
+        </component>
+
+        <component id="Spaceship2">																
+        
+            <transformation>
+            	<translate x="6" y="3" z ="2"/>
+            	<rotate axis = "x" angle = "-35" />
+            	<rotate axis = "y" angle = "-70" />
+            	<scale x="0.5" y="0.5" z="0.5" />  	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="none" />
+
+			<children>
+				<componentref id = "SpaceshipBasic" />
+            </children>
+            
+        </component>
+
+        <component id="SpaceshipBasic">																
+        
+            <transformation>  	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="spaceshipTexture" />
+
+			<children>
+				<componentref id = "SidePart1" />
+				<componentref id = "SidePart2" />
+				<componentref id = "ControlPart" />
+				<componentref id = "Conection1" />
+				<componentref id = "Conection2" />
+				<componentref id = "Cabine" />
+            </children>
+            
+        </component>
+
+        <component id="SidePart1">																
+        
+            <transformation>
+            	<translate x="0" y="0" z ="0.7"/> 
+            	<scale x="1" y="1" z="0.1"/>  	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="hexCylinder"/> -->
+            </children>
+            
+        </component>
+
+         <component id="SidePart2">																
+        
+            <transformation>
+            	<translate x="0" y="0" z ="-0.8"/> 
+            	<scale x="1" y="1" z="0.1"/>  	
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="hexCylinder"/> -->
+            </children>
+            
+        </component>
+
+        <component id="ControlPart">																
+        
+            <transformation>	
+            	<scale x = "0.4" y = "0.4" z = "0.4" />
+            	<rotate axis = "y" angle = "90" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="sphere"/> -->
+            </children>
+            
+        </component>
+
+        <component id="Conection1">																
+        
+            <transformation>	
+            	<scale x = "0.15" y = "0.15" z = "0.85" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="cone"/> -->
+            </children>
+            
+        </component>
+
+        <component id="Conection2">																
+        
+            <transformation>	
+            	<scale x = "0.15" y = "0.15" z = "0.85" />
+            	<rotate axis = "x" angle = "180" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="inherit" />
+
+			<children>
+            	<primitiveref id="cone"/> -->
+            </children>
+            
+        </component>
+
+        <component id="Cabine">																
+        
+            <transformation>
+            	<translate x = "0.3" y = "0" z = "0" />	
+            	<scale x = "0.6" y = "0.6" z = "0.6" />
+            	<rotate axis = "y" angle = "90" />
+            </transformation>
+       
+			<materials>
+				<material id="shiny" />
+            </materials>
+                         
+			<texture id="metalTexture" />
+
+			<children>
+            	<primitiveref id="miniTorus"/> -->
+            </children>
+            
+        </component>
          
           <component id="Planets">																
         
@@ -308,7 +560,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -330,7 +582,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -352,7 +604,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -374,7 +626,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -396,7 +648,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -437,7 +689,7 @@
 
 			<children>
             
-                <primitiveref id = "primitive4" />
+                <primitiveref id = "sphere" />
                 
             </children>
             
@@ -457,7 +709,7 @@
 
 			<children>
             
-               <primitiveref id = "primitive5" />
+               <primitiveref id = "torus" />
                 
             </children>
             
@@ -479,7 +731,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -501,7 +753,7 @@
 
 			<children>
             
-                <primitiveref id="primitive4" />
+                <primitiveref id="sphere" />
                 
             </children>
             
@@ -524,7 +776,7 @@
 			<texture id="sunTexture" />
 
 			<children>
-            	<primitiveref id = "primitive4" />
+            	<primitiveref id = "sphere" />
             </children>
             
         </component>
