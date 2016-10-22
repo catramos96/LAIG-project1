@@ -17,16 +17,17 @@
  MyComponent.prototype.incMaterialIndex = function(){
  	this.materialIndex++;
  	if(this.materials.length == this.materialIndex)
- 	  this.materialIndex = 0;
+		this.materialIndex = 0;
  }
 
  /**
   * GETS
   */
- MyComponent.prototype.getMaterialIndex = function(){
- 	return this.materialIndex;
- }
 
+ MyComponent.prototype.getCurrMaterial = function(){
+ 	return this.materials[this.materialIndex];
+ }
+ 
  MyComponent.prototype.isDefined = function(){
  	return this.defined;
  }

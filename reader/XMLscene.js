@@ -129,6 +129,8 @@ XMLscene.prototype.updateLights = function() {
  */
 XMLscene.prototype.updateMaterials = function () {
 
+	console.log(">>>>>>>UPDATE MATERIALS!<<<<<<<<<<");
+
 	for(var [id,value] of this.graph.componentsList){
 		value.incMaterialIndex();
 	}
@@ -212,14 +214,14 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	this.multMatrix(component.getTransformation().getMatrix());
 	
 	//recebe os materiais, se 'inherit' recebe o do antecessor.
-	var newMaterials = component.getMaterials();
-	if(newMaterials[0].getId() == "inherit")
+	//var currMaterial = component.getCurrMaterial();
+	if(component.getCurrMaterial() == "inherit")
 	{
-		newMaterials = materials;
+		component.setMaterials(materials);
 	}
 
 	//appearance associada ao material
-	var appearance = newMaterials[component.getMaterialIndex()].getAppearance();
+	var appearance = component.getCurrMaterial().getAppearance();
 
 	//recebe as texturas
 	var newTexture = component.getTexture();
@@ -277,7 +279,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	var components = component.getComponentsChilds();
 	for (var i = 0; i < components.length; i++)
 	{
-		this.displayComponents(components[i],newMaterials,newTexture);
+		this.displayComponents(components[i],component.getMaterials(),newTexture);
 	}
 
 	this.popMatrix();
