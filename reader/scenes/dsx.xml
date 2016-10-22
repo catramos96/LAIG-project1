@@ -84,11 +84,11 @@
     <materials>
     
         <material id="shiny" >
-            <emission r="1" g="1" b="1" a="1" />
+            <emission r="0" g="0" b="0" a="0" />
             <ambient r="1" g="1" b="1" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
-            <shininess value="200" />
+            <shininess value="100" />
         </material>
 
         <material id="matt" >
@@ -100,11 +100,11 @@
         </material>
 
         <material id="light" >
-            <emission r="1" g="1" b="1" a="1" />
-            <ambient r="1" g="1" b="1" a="1" />
-            <diffuse r="1" g="1" b="1" a="1" />
-            <specular r="1" g="1" b="1" a="1" />
-            <shininess value="100" />
+            <emission r="1" g="1" b="1" a="100" />
+            <ambient r="1" g="1" b="1" a="100" />
+            <diffuse r="1" g="1" b="1" a="100" />
+            <specular r="1" g="1" b="1" a="100" />
+            <shininess value="200" />
         </material>
         
     </materials>
@@ -762,15 +762,13 @@
         <component id="Stars">																
         
            <transformation>
-           		<translate x="5" y="5" z="5"/>
+           		<translate x="6" y="6" z="6"/>
            		<rotate axis= "x" angle="-90"/>
             	<scale x="1.6" y="1.6" z="1.6"/>
             </transformation>
        
 			<materials>
 				<material id="light" />
-				<material id="matt" />
-				<material id="shiny" />
             </materials>
                          
 			<texture id="sunTexture" />
