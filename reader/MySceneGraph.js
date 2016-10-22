@@ -578,7 +578,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		//cria o material
 		var material = new MyMaterial(id);
 
-		//ler os filhos deste material (deverao ser 4)
+		//ler os filhos deste material (deverao ser 5)
 		if(temp.children.length != 5)
 		{
 			return "'material' has a different number of child elements.";
@@ -594,9 +594,9 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 			a = this.reader.getFloat(child, 'a');
 
 			if(child.nodeName == 'emission') material.setMyEmission(r,g,b,a);
-			if(child.nodeName == 'ambient') material.setMyAmbient(r,g,b,a);
-			if(child.nodeName == 'diffuse') material.setMyDiffuse(r,g,b,a);
-			if(child.nodeName == 'specular') material.setMySpecular(r,g,b,a);
+			else if(child.nodeName == 'ambient') material.setMyAmbient(r,g,b,a);
+			else if(child.nodeName == 'diffuse') material.setMyDiffuse(r,g,b,a);
+			else if(child.nodeName == 'specular') material.setMySpecular(r,g,b,a);
 		}
 
 		material.setMyShininess(this.reader.getFloat(temp.children[4], 'value'));

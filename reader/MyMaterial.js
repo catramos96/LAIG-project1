@@ -11,6 +11,7 @@ function MyMaterial(id) {
  MyMaterial.prototype.init = function(scene)
  {
  	this.appearance = new CGFappearance(scene);
+	this.appearance.setEmission(this.emission.getR(),this.emission.getG(),this.emission.getB(),this.emission.getA());
  	this.appearance.setAmbient(this.ambient.getR(),this.ambient.getG(),this.ambient.getB(),this.ambient.getA());
 	this.appearance.setDiffuse(this.diffuse.getR() ,this.diffuse.getG() ,this.diffuse.getB() ,this.diffuse.getA());
 	this.appearance.setSpecular(this.specular.getR(),this.specular.getG(),this.specular.getB(),this.specular.getA());

@@ -129,8 +129,6 @@ XMLscene.prototype.updateLights = function() {
  */
 XMLscene.prototype.updateMaterials = function () {
 
-	console.log(">>>>>>>UPDATE MATERIALS!<<<<<<<<<<");
-
 	for(var [id,value] of this.graph.componentsList){
 		value.incMaterialIndex();
 	}
