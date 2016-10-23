@@ -1,7 +1,7 @@
 /**
  * Scene Graph
- * Objeto que recolhe todas as informacoes do parser e as coloca no objeto respetivo
- * Apenas recebe a cena e o nome do ficheiro DSX com todas as informacoes
+ * Gets all the information from the parser and analizes it to display the scene
+ * Only recieves the scene and the name of the .dsx file with the scene description
  */
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
@@ -14,14 +14,14 @@ function MySceneGraph(filename, scene) {
 	this.reader = new CGFXMLreader();
 
 	//parameters
-	this.globals = new MyGlobals();				//variaveis globais do grafo
-	this.perspectiveList = new Map();			//map com as diversas perspetivas
-	this.lightsList = [];						//lista com as diversas luzes
-	this.texturesList = new Map();				//map com as diversas texturas
-	this.materialsList = new Map();				//map com os diversos materiais
-	this.transformationsList = new Map();		//map com as diversas transformações
-	this.primitivesList = new Map();			//map com as diversas primitivas
-	this.componentsList = new Map();			//map com os diversos componentes
+	this.globals = new MyGlobals();				//globals variables
+	this.perspectiveList = new Map();			//perspectives map
+	this.lightsList = [];						//lights list
+	this.texturesList = new Map();				//textures map
+	this.materialsList = new Map();				//materials map
+	this.transformationsList = new Map();		//transformations map
+	this.primitivesList = new Map();			//primitives map
+	this.componentsList = new Map();			//components map
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -54,13 +54,13 @@ MySceneGraph.prototype.onXMLReady=function()
  * Calls all parsers and verifies errors. Also verifies the order of the childrens
  */
 MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
-	//nao e um ficheiro do tipo dsx
+	//The file is not .dsx
 	if(rootElement.nodeName != "dsx"){
 		this.onXMLError("File does not have 'dsx' tag.");
 		return;
 	}
 	
-	//numero de elementos diferente de 9
+	//The number of elements must be equal to 9
 	if(rootElement.children.length != 9)
 	{
 		this.onXMLError("File does not have 9 children tags.");
@@ -69,6 +69,7 @@ MySceneGraph.prototype.readSceneGraphFile = function(rootElement) {
 
 	var error;
 	
+	//To insure that the order of the elements is correct
 	//Parse Globals
 	if(rootElement.children[0].nodeName != "scene"){
 		console.log("WARNING : dsx does not respect the formal order!");
@@ -179,7 +180,7 @@ MySceneGraph.prototype.onXMLError=function (message) {
  */
 MySceneGraph.prototype.parseGlobals = function(rootElement) {
 
-	var scene_elems =  rootElement.getElementsByTagName('scene');
+	var scene_elems =  rootElement.getElementsByTagName('scene');		//ELEMENT 0
 	
 	//error cases
 	if (scene_elems == null) {
@@ -197,11 +198,13 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
 	if(name == ""){
 		console.log("WARNING : root without name!");
 	}
+
 	this.globals.setRoot(name);
 
 	//verifies if axis_length is positive
 	var ret = this.globals.setAxisLength(this.reader.getFloat(scene, 'axis_length'));
-	if(ret != null) return ret;
+	if(ret != null) 
+		return ret;
 	
 	//DEBUG
 	//console.log("Globals read from file: {Root=" + this.globals.root + ", axis_length=" + this.globals.axis_length +"}");
@@ -213,14 +216,14 @@ MySceneGraph.prototype.parseGlobals = function(rootElement) {
  */
 MySceneGraph.prototype.parseViews = function(rootElement) {
 
-	var views_elems = rootElement.getElementsByTagName('views'); 
+	var views_elems = rootElement.getElementsByTagName('views');		//ELEMENT 1
 
 	//errors
 	if (views_elems == null  || views_elems.length==0) 
 	{
 		return "'View' element is missing.";
 	}
-	var nnodes = views_elems[0].children.length; // retorna o numero de perspetivas
+	var nnodes = views_elems[0].children.length; // number of perspectives
 	if (nnodes.length == 0) 
 	{
 		return "Zero child elements at 'views'.";
@@ -229,36 +232,40 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 	//default perspective
 	var defaultId = this.reader.getString(views_elems[0], 'default');
 
-	//percorre cada perspetiva
+	//Each perspective...
 	for (var i=0; i < nnodes; i++)
 	{
-		var tempP = views_elems[0].children[i]; // informacao sobre a perspetiva
+		var tempP = views_elems[0].children[i];
 		
 		if(tempP.nodeName != 'perspective')
 		{
 			return "Unknown child element found at the 'views'.";
 		}
 
-		var perspective = new MyPerspective(); //Cria uma nova perspetiva
+		var perspective = new MyPerspective(); //Creates a nem object MyPerspective
 
-		//processamento e armezamento
+		//Processes and gathers the perspective information
 		var id = this.reader.getString(tempP, 'id');
-		if(!this.perspectiveList.has(id))	//se ainda não existir, ok. Se não, o id é repetido
+
+		if(!this.perspectiveList.has(id))	//ok if it doesn't exist already
 		{	
 			perspective.setId(id);
 		}
 		else
 			return "id repetead at 'views'!";
 		
-		// se o defaultId for nulo, a camara default sera a primeira		
-		if (defaultId == "" && i == 0)	defaultId = id;
-		if (defaultId == id)	perspective.setDefault(true);
+		// If the defaultId is not defined then this perspective is the default one		
+		if (defaultId == "" && i == 0)	
+			defaultId = id;
+
+		if (defaultId == id)	
+			perspective.setDefault(true);
 			
 		perspective.setNear(this.reader.getFloat(tempP, 'near'));
 		perspective.setFar(this.reader.getFloat(tempP, 'far'));
 		perspective.setAngle(this.reader.getFloat(tempP, 'angle')*Math.PI*2/360);
 
-		//vai buscar os valores dos filhos <to> e <from>
+		//Gathers the children values <to> and <from>
 		if(tempP.children.length != 2)
 		{
 			return "Perspective element does not have two children elements.";
@@ -271,7 +278,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		b = this.reader.getFloat(elem, 'y');
 		c = this.reader.getFloat(elem, 'z');
 
-		//coloca o ponto na perspetiva
+		//sets point from perspective
 		perspective.setFromPoint(new MyPoint(a,b,c));
 
 		elem = tempP.children[1];
@@ -280,10 +287,10 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		b = this.reader.getFloat(elem, 'y');
 		c = this.reader.getFloat(elem, 'z');
 
-		//coloca o ponto na perspetiva
+		//sets point to perspective
 		perspective.setToPoint(new MyPoint(a,b,c));
 
-		//adiciona a perspetiva a lista de perspetivas
+		//adds the perspective to the list
 		this.perspectiveList.set(id, perspective);
 	}
 
@@ -309,7 +316,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
  */
 MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
-	var illumination_elems =  rootElement.getElementsByTagName('illumination');
+	var illumination_elems =  rootElement.getElementsByTagName('illumination');	//ELEMENT 2
 	
 	//errors
 	if (illumination_elems == null)
@@ -366,7 +373,7 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
  */
 MySceneGraph.prototype.parseLights = function(rootElement) {
 
-	var lights_elems =  rootElement.getElementsByTagName('lights');
+	var lights_elems =  rootElement.getElementsByTagName('lights');		//ELEMENT 3
 
 	//errors
 	if (lights_elems == null) 
@@ -378,7 +385,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		return "Either zero or more than one 'lights' element found.";
 	}
 
-	n_lights = lights_elems[0].children.length;
+	n_lights = lights_elems[0].children.length;	//number of lights
 
 	if (n_lights == 0) 
 	{
@@ -396,7 +403,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 
 	var lights;
 
-	//courses througth lights_elems childrens
+	//Each Light ...
 	for(var i = 0; i < n_lights; i++){
 
 		lights = lights_elems[0].children[i];
@@ -408,7 +415,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			spot = 1;
 		}
 		
-		//verifies if 'id' is unic on lightsList
+		//verifies if 'id' is unique on lightsList
 		id = this.reader.getString(lights, 'id');
 		
 		for(var i = 0; i < this.lightsList.length; i++)
@@ -462,7 +469,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 								this.reader.getFloat(lights, 'b'),
 								this.reader.getFloat(lights, 'a'));
 
-		//save at the list
+		//Creates a MyLight object and adds it to the lights list
 		if(spot == 1){ //SPOT
 			this.lightsList.push(new MyLight(id,enable,location,ambient,diffuse,specular,angle,exponent,target));
 		}
@@ -482,20 +489,21 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
  */
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 
-	var texture_elems =  rootElement.getElementsByTagName('textures');
+	var texture_elems =  rootElement.getElementsByTagName('textures');	//ELEMENT 4
 
 	//errors
 	if (texture_elems == null || texture_elems.length != 1) 
 	{
 		return "'Texture' element is missing.";
 	}
-	var nnodes = texture_elems[0].children.length;
+	var nnodes = texture_elems[0].children.length;	//number of textures
+
 	if(nnodes == 0)
 	{
 		return "Zero 'texture' elements";
 	}
 
-	//courses throught texture_elems childrens
+	//Each texture...
 	for (var i=0; i < nnodes; i++)
 	{
 		var temp = texture_elems[0].children[i];
@@ -505,8 +513,9 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 			return "Unknown child element found at the 'textures' element.";
 		}
 
-		//verifica o id do material
+		//checks if the id already exists on texturesList
 		var id = this.reader.getString(temp, 'id');
+
 		if(this.texturesList.has(id))
 		{
 			return "id "+id+" from block 'textures' already exists!";
@@ -520,10 +529,10 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		var length_t = this.reader.getFloat(temp, 'length_t');
 		var length_s = this.reader.getFloat(temp, 'length_s');
 
-		//cria o material
+		//creates the texture
 		var texture = new MyTexture(id,file,length_t,length_s);
 
-		//adiciona a lista de texturas
+		//adds to the texture list
 		this.texturesList.set(id,texture);
 	}
 /*
@@ -541,20 +550,21 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
  */
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
-	var material_elems =  rootElement.getElementsByTagName('materials');
+	var material_elems =  rootElement.getElementsByTagName('materials');	//ELEMENT 5
 	
 	//errors
 	if (material_elems == null || material_elems.length == 1) 
 	{
 		return "'materials' element is missing or more than one block 'materials'.";
 	}
-	var nnodes = material_elems[0].children.length;
+	var nnodes = material_elems[0].children.length;	//number of materials
+
 	if(nnodes == 0)
 	{
 		return "Zero 'material' elements, 'materials' is empty!";
 	}
 
-	//courses throught material_elems childrens
+	//Each material ...
 	for (var i=0; i < nnodes; i++)
 	{
 		var temp = material_elems[0].children[i];
@@ -566,6 +576,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 		//verifies repetead id
 		var id = this.reader.getString(temp, 'id');
+
 		if(this.materialsList.has(id)) //existe este id
 		{ 
 			return "id "+id+" from block 'materials' already exists!";
@@ -575,10 +586,10 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 			return "'material' has an invalid id";
 		}
 		
-		//cria o material
+		//creates a MyMaterial object
 		var material = new MyMaterial(id);
 
-		//ler os filhos deste material (deverao ser 5)
+		//Checks the material information (5 tags under material)
 		if(temp.children.length != 5)
 		{
 			return "'material' has a different number of child elements.";
@@ -601,7 +612,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 
 		material.setMyShininess(this.reader.getFloat(temp.children[4], 'value'));
 
-		//juntar ao map de materias
+		//adds to the materialsList
 		this.materialsList.set(id,material);
 	}
 
@@ -620,14 +631,16 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
  */
 MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
-	var transformations_elems =  rootElement.getElementsByTagName('transformations');
+	var transformations_elems =  rootElement.getElementsByTagName('transformations');	//ELEMENT 6
 	
 	//errors
 	if (transformations_elems == null || transformations_elems.length != 1) 
 	{
 		return "'transformations' element is missing.";
 	}
-	var n_transformation = transformations_elems[0].children.length;
+
+	var n_transformation = transformations_elems[0].children.length;	//number of transformations
+
 	if(n_transformation == 0)
 	{
 		return "Zero 'transformation' elements";
@@ -635,7 +648,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 
 	var final_t; //final transformation
 
-	//courses throught transformations
+	//Each transformation...
 	for (var i=0; i < n_transformation; i++)
 	{
 		var transformation = transformations_elems[0].children[i];
@@ -646,7 +659,9 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 		}
 
 		var id = this.reader.getString(transformation, 'id')
-		if(this.transformationsList.has(id)) //found an identic id
+
+		//Verify if id already exists
+		if(this.transformationsList.has(id))
 		{ 	
 			return "id "+id+" from block 'transformations' already exists!";
 		}
@@ -684,7 +699,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 					return "inexisting tag name";
 			}
 		}
-		//saves final matrix at transformationsList map
+		//adds the final matrix at transformationsList map
 		this.transformationsList.set(id,final_t);
 
 		//DEBUG
@@ -698,21 +713,24 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
  */
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 
-	var primitives_elems =  rootElement.getElementsByTagName('primitives');
+	var primitives_elems =  rootElement.getElementsByTagName('primitives');	//ELEMENT 7
 	
 	//errors
 	if (primitives_elems == null || primitives_elems.length != 1) 
 	{
 		return "'primitives' element is missing.";
 	}
-	var n_primitives = primitives_elems[0].children.length;
+
+	var n_primitives = primitives_elems[0].children.length;	//number of primitives
+
 	if(n_primitives == 0)
 	{
 		return "zero 'primitive' elements";
 	}
 
-	//courses throught 'primitives' childrens
 	var primitive,prim,tagName;
+
+	//Each primitice...
 	for(var i = 0; i < n_primitives; i++){
 
 		primitive = primitives_elems[0].children[i];
@@ -724,8 +742,11 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		}
 		
 		tagName = primitive.children[0].tagName;
+
 		var id = this.reader.getString(primitive, 'id');
-		if(this.primitivesList.has(id))	//found an identical id
+
+		//Check if the id already exists
+		if(this.primitivesList.has(id))	
 		{
 			return "id "+id+" from block 'primitives' already exists!";
 		}
@@ -805,7 +826,7 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 	//<components>
-	var components_elems =  rootElement.getElementsByTagName('components');
+	var components_elems =  rootElement.getElementsByTagName('components');	//ELEMENT 8 
 	
 	//errors
 	if (components_elems == null) 
@@ -819,11 +840,12 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 
 	var n_components = components_elems[0].children.length;
 
-	//Check all components
+	//Each component ...
 	for(var i = 0 ; i < n_components ; i++){
 
 		//<component>
 		component = components_elems[0].children[i];
+
 		if(component.nodeName != 'component')
 		{
 			return "Unknown 'child' element found at the 'components' element."; 
@@ -831,14 +853,14 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		
 		var id = this.reader.getString(component, 'id');	
 
-		//se o component já existe e já está definido => erro
+		//Checks if the id already exists
 		if(this.componentsList.has(id))
-			if(this.componentsList.get(id).isDefined())
+			if(this.componentsList.get(id).isDefined())	//already has been processed
 			{
 				return "this component "+id+" is already defined!";
 			}
 	
-		//verificacao do numero de childs dentro do componente
+		//Checks the number of children (tags) inside component
 		if(component.children.length != 4)
 		{
 			return "The component element with id = " + id + " does not have exactly four children elements.";			
@@ -846,9 +868,9 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 	
 		//<transformation>
 		var matrixId;
-
 		var transformation = component.children[0];
-		var n_transformations = transformation.children.length;		//inside <transformation>
+
+		var n_transformations = transformation.children.length;		//number of transformations
 
 		/*Error for : 
 			 - more than one <transformationref>
@@ -863,15 +885,16 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			return "'component' with more than one transformationref tag";
 		}
 
-		// a matriz é a identidade 
+		// Identidy matrix
 		if(n_transformations == 0 )
 		{
 			var temp = new MyTransformation("identity");
-			this.transformationsList.set("identity",temp);	//nova matriz identidade
+			this.transformationsList.set("identity",temp);	//new
 
 			var transfComponent = this.transformationsList.get("identity"); // transformation from component
 		}
-		else if(transformation.getElementsByTagName("transformationref").length == 1) //<transformationref>
+		//<transformationref> (only one)
+		else if(transformation.getElementsByTagName("transformationref").length == 1) 
 		{
 			matrixId = this.reader.getString(transformation.getElementsByTagName("transformationref")[0], 'id');
 			
@@ -881,10 +904,13 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 			}
 			var transfComponent = this.transformationsList.get(matrixId);
 		}
-		else		//<rotate>/<scale>/<translate>
+		//<rotate>/<scale>/<translate>
+		else		
 		{
 			matrixId = "default_"+id;
 			var transfComponent = new MyTransformation(matrixId);
+
+			//Each rot/scale/transl transformation...
 			for(var j = 0; j < n_transformations ;j++){
 		
 				var tag_name = transformation.children[j].tagName;
@@ -914,8 +940,9 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 				}
 			
 			}
-			
-			this.transformationsList.set(matrixId,transfComponent);	//adicionar a nova matriz
+
+			//Adds the nem transformation to the list (identity or transformationref or new)
+			this.transformationsList.set(matrixId,transfComponent);	
 		}
 
 		//<materials>
@@ -923,8 +950,10 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		var materialsComponent = [];
 
 		materials = component.children[1];
-		n_materials = materials.children.length;
 
+		n_materials = materials.children.length;	//number of materials
+
+		//Each material...
 		for(var j = 0; j < n_materials ; j++){
 			
 			materialId = this.reader.getString(materials.children[j], 'id');
@@ -937,12 +966,12 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 					return "Components '" + id + "' materialsId '" +materialId + "' not found";
 				else
 				{
-					//se o material for inherit so e tratado no xmlScene
-					materialsComponent.push("inherit");
+					//It will be processed later on XML scene
+					materialsComponent.push("inherit"); //adds to the list of materials (from component)
 				}
 			}
 			else	
-				materialsComponent.push(this.materialsList.get(materialId));	//coloca o material na lista de materiais da componente
+				materialsComponent.push(this.materialsList.get(materialId));	 //adds to the list of materials (from component)
 		}
 
 		//<texture>
@@ -955,7 +984,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
 		var textureId = this.reader.getString(texture[0],'id');
 		var textureComponent;
 		
-		//se a textura ainda nao existe, pode ser erro ou 'inherir' ou 'none'
+		//If the texture id doesn't exists (can be an error, "inherit" or "none")
 		if(!this.texturesList.has(textureId))
 		{
 			if(textureId == "inherit" || textureId == "none")
@@ -978,46 +1007,53 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
         }
 
       	//<componentref>
-         var compRef = children_elems[0].getElementsByTagName("componentref");
+         var compRef = children_elems[0].getElementsByTagName("componentref"); //number of references to components
+
+
+		//Each referenced component...
          for(var j = 0; j < compRef.length ;j++)
          {
-         	childrenId = this.reader.getString(compRef[j],'id');	//id do filho tipo component
+         	childrenId = this.reader.getString(compRef[j],'id');
 
-         	//se existir este id, adiciona o que está na lista
+         	//If the componentref id exists than adds it to the list of childcomponents of the component
          	if(this.componentsList.has(childrenId))
          		childComponent.push(this.componentsList.get(childrenId));
+
+         	//if id doesn't exists
          	else{
-         		var temp = new MyComponent(childrenId,false);	//cria o component com o loaded a false
-         		this.componentsList.set(childrenId,temp); 		//adciona a lista de components
+         		var temp = new MyComponent(childrenId,false);	//creates a new component with defined = false
+         		this.componentsList.set(childrenId,temp); 		//adds it to the componentsList
 				
-				//adiciona a lista de filhos deste component. 
-				//Adiciona o que esta na componentList para puder ser atualizado sempre que e atualizado na lista (referencia)
+				//adds the list of children of this componentref
+				//adds this new component from the componentsList to the childcomponents of our component
          		childComponent.push(this.componentsList.get(childrenId));
          	}
          }
 
          //<primitiveref>
-         var primitRef = children_elems[0].getElementsByTagName("primitiveref");
+         var primitRef = children_elems[0].getElementsByTagName("primitiveref"); //number of primitiveref
 		 
+		 //For each primitiveref...
          for(var j = 0; j < primitRef.length ;j++)
          {
          	childrenId = this.reader.getString(primitRef[j],'id'); //id do filho do tipo primitiva
 
-			//esta primitiva nao foi criada
+			//If the primitive's id exists
          	if(!this.primitivesList.has(childrenId))	
 			{
 				return "Component '" + id + "' primitiveref '" + childrenPrimitivesId[j] + "' not in the list of primitives";
          	}
+         	//adds to the primitivescomponets of the component
          	primitiveComponent.push(this.primitivesList.get(childrenId));
          }
 
-		// se o component ja existe, atualiza-o (como nao deu erro antes, significa que este component ainda nao foi loaded)
-		// se nao, cria um novo
+		// If the processing component already exists, than it's updated
         if(this.componentsList.has(id))
 		{
         	var comp = this.componentsList.get(id);
 			comp.setDefined(true);
         }
+        //Or creates a new one that has defined = true
 		else
 		{
         	var comp = new MyComponent(id,true);
@@ -1029,6 +1065,7 @@ MySceneGraph.prototype.parseComponents = function(rootElement) {
         comp.setComponents(childComponent);
        	comp.setPrimitives(primitiveComponent);
        		
+       	//Adds the component to the componentsList
         this.componentsList.set(id,comp);
 		
 		if(id == this.globals.root)
@@ -1049,10 +1086,10 @@ MySceneGraph.prototype.isChildrensDefined = function() {
 
 	for (var [id, value] of this.componentsList) 
 	{
-		if(!value.isDefined())	//foi colocado um elemento não definido
+		if(!value.isDefined())	//There is a component not defined
 			return false;
 	}
-	return true; //percorre tudo sem qualquer erro
+	return true; 
 }
 
 /**

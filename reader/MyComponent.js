@@ -3,17 +3,16 @@
  */
   function MyComponent(id,defined) {
      this.id = id;
-     this.defined = defined;
-     this.materialIndex = 0;
-     this.materials = [];
-	 this.components = [];
+     this.defined = defined;    //To know if it has been processed in the parser
+     this.materialIndex = 0;    //Index of the material in use
+     this.materials = [];       //List of materials
+	 this.components = [];      //Children components
  }
 
  /**
-  * Cada componente é caracterizada por um ou mais materiais. 
-  * O 'materialIndex' indica a posição do material na lista dos materiais.
-  * incMaterialIndex serve para mudar o material aumentando o materialIndex. 
-  * Quando chega ao maximo retorna a zero.
+  * Each component can have more than one materials
+  * This function changes the component material to the next one
+  * by incrementing the materialIndex
   */
  MyComponent.prototype.incMaterialIndex = function(){
  	this.materialIndex++;
@@ -25,35 +24,35 @@
   * GETS
   */
 
- MyComponent.prototype.getCurrMaterial = function(){
+ MyComponent.prototype.getCurrMaterial = function(){      //Material in use
  	return this.materials[this.materialIndex];
  }
  
- MyComponent.prototype.isDefined = function(){
+ MyComponent.prototype.isDefined = function(){            //Has been processed
  	return this.defined;
  }
 
- MyComponent.prototype.getId = function(){
+ MyComponent.prototype.getId = function(){                //Id
  	return this.id;
  }
 
- MyComponent.prototype.getTransformation = function(){
+ MyComponent.prototype.getTransformation = function(){    //Transformation matrix
  	return this.transformation;
  }
 
- MyComponent.prototype.getMaterials = function(){
+ MyComponent.prototype.getMaterials = function(){         //List of materials
  	return this.materials;
  }
  
- MyComponent.prototype.getTexture = function(){
+ MyComponent.prototype.getTexture = function(){           //Texture
  	return this.texture;
  }
 
- MyComponent.prototype.getPrimitives = function(){
+ MyComponent.prototype.getPrimitives = function(){        //Primitives
  	return this.primitives;
  }
 
- MyComponent.prototype.getComponentsChilds = function(){
+ MyComponent.prototype.getComponentsChilds = function(){  //Components children
  	return this.components;
  }
 

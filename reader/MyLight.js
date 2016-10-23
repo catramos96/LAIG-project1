@@ -93,7 +93,7 @@ MyLight.prototype.printInfo = function(){
 
  /**
   * Light Initialization
-  * Recieves the scene and the id of light[i]
+  * Recieves the scene and the index i of light[i] of the scene
   * Initializes the information recieved from the parser
   */
  MyLight.prototype.init = function(scene, i){
@@ -114,15 +114,17 @@ MyLight.prototype.printInfo = function(){
 	scene.lights[i].setVisible(true);
 	
 	var bool;
+
+	//Enable?
 	if(this.enable){
 		scene.lights[i].enable();
-		eval("scene."+this.id+"=true");	//adiciona booleano a scene
+		eval("scene."+this.id+"=true");		//adds boolean = true to scene
 	}
 	else{
 		scene.lights[i].disable();
-		eval("scene."+this.id+"=false");	
+		eval("scene."+this.id+"=false");	//adds boolean = false to scene
 	}	
 	
-	scene.interface.addLights(this.id,this.spot);	//adiciona o booleano da scene a interface
+	scene.interface.addLights(this.id,this.spot);	//adds the light to the interface folder of lights
 
  }

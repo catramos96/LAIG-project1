@@ -6,7 +6,7 @@ function MyMaterial(id) {
 }
 
 /**
- * Inicializacao da aparencia de um material
+ * Init
  */
  MyMaterial.prototype.init = function(scene)
  {
