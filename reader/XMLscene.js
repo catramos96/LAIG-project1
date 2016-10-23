@@ -41,8 +41,6 @@ XMLscene.prototype.initLights = function () {
     	this.graph.lightsList[i].init(this,i);	//inicializacao das luzes
 
 		this.lights[i].update();				//update
-
-		this.interface.addLights('light'+i);	//adiciona as luzes a interface com o nome 'light'i 
     }
 };
 
@@ -97,25 +95,10 @@ XMLscene.prototype.initCamera = function () {
 XMLscene.prototype.updateLights = function() {
 	
 	for (i = 0; i < this.graph.lightsList.length; i++){
+		
+		eval("var on = this."+this.graph.lightsList[i].getId());
 
-		if(i == 0)
-			b = this.light0;
-		else if(i == 1)
-			b = this.light1;
-		else if(i == 2)
-			b = this.light2;
-		else if(i == 3)
-			b = this.light3;
-		else if( i == 4)
-			b = this.light4;
-		else if( i == 5)
-			b = this.light5;
-		else if( i == 6)
-			b = this.light6;
-		else if( i == 7)
-			b = this.light7;
-
-		if(b) this.lights[i].enable();
+		if(on) this.lights[i].enable();
 		else this.lights[i].disable();
 
 		this.lights[i].update();

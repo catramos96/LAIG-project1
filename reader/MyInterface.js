@@ -23,8 +23,10 @@ MyInterface.prototype.init = function(application) {
 	this.gui = new dat.GUI();
 
 	//LightsGroup to switch on/off lights
-	this.lightsGroup = this.gui.addFolder("Lights");
-	this.lightsGroup.open();
+	this.omniGroup = this.gui.addFolder("Omni Lights");
+	this.omniGroup.open();
+	this.spotGroup = this.gui.addFolder("Spot Lights");
+	this.spotGroup.open();
 
 	//Methods to update camera/materials
 	this.gui.add(this.scene, 'updateCamera');
@@ -36,8 +38,10 @@ MyInterface.prototype.init = function(application) {
 /**
  * Adds a light to the group
  */
-MyInterface.prototype.addLights = function(id) {
-	this.lightsGroup.add(this.scene, id);
+MyInterface.prototype.addLights = function(id, isSpot) {
+	
+	if(isSpot)	this.spotGroup.add(this.scene, id);
+	else	this.omniGroup.add(this.scene, id);
 }
 
 /**
