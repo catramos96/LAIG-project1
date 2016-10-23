@@ -14,11 +14,6 @@
             <from x="6" y="20" z="10" />
             <to x="6" y="6" z="6" />
         </perspective>
-
-        <perspective id="from_far" near="0.1" far="500" angle="70">
-            <from x="15" y="15" z="15" />
-            <to x="0" y="0" z="0" />     
-        </perspective>
 		
 		<perspective id="from_down" near="0.1" far="500" angle="70">
             <from x="0" y="0" z="0" />
@@ -35,6 +30,10 @@
             <to x="7" y="6" z="2" />     
         </perspective>
 
+		<perspective id="comets_details" near="0.1" far="500" angle="30">
+            <from x="3" y="8" z="8" />
+            <to x="3" y="7" z="6" />     
+        </perspective>
 
     </views>  
 
@@ -100,14 +99,6 @@
     </textures>
 
     <materials>
-    
-        <material id="shiny" >
-            <emission r="0" g="0" b="0" a="0" />
-            <ambient r="1" g="1" b="1" a="1" />
-            <diffuse r="1" g="1" b="1" a="1" />
-            <specular r="1" g="1" b="1" a="1" />
-            <shininess value="100" />
-        </material>
 
         <material id="light" >
             <emission r="1" g="1" b="1" a="100" />
@@ -117,11 +108,27 @@
             <shininess value="100" />
         </material>
 		
+		<material id="light2" >
+            <emission r="1" g="1" b="0" a="100" />
+            <ambient r="1" g="1" b="0" a="100" />
+            <diffuse r="1" g="1" b="0" a="100" />
+            <specular r="1" g="1" b="0" a="100" />
+            <shininess value="100" />
+        </material>
+		
+		<material id="shiny" >
+            <emission r="0" g="0" b="0" a="0" />
+            <ambient r="1" g="1" b="1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+            <shininess value="100" />
+        </material>
+		
 		<material id="matt1" >
             <emission r="0" g="0" b="0" a="0" />
-            <ambient r="1" g="1" b="0.1" a="1.0" />
-            <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
-            <specular r="0.6" g="0.6" b="0.6" a="1.0" />
+            <ambient r="0.1" g="0.6" b="0.3" a="1" />
+            <diffuse r="0.1" g="0.6" b="0.3" a="1" />
+            <specular r="0.1" g="0.6" b="0.3" a="1" />
             <shininess value="20" />
         </material>
 		
@@ -129,15 +136,15 @@
             <emission r="0" g="0" b="0" a="0" />
             <ambient r="0.8" g="0.6" b="0.6" a="1" />
             <diffuse r="0.8" g="0.6" b="0.6" a="1" />
-            <specular r="0" g="0" b="0" a="1.0" />
+            <specular r="0.8" g="0.6" b="0.6" a="1" />
             <shininess value="20" />
         </material>
 				
 		<material id="matt3" >
             <emission r="0" g="0" b="0" a="0" />
-            <ambient r="0.1" g="1" b="0.1" a="1.0" />
-            <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
-            <specular r="0.6" g="0.6" b="0.6" a="1.0" />
+            <ambient r="0.6" g="0.6" b="0.1" a="1" />
+            <diffuse r="0.6" g="0.6" b="0.1" a="1" />
+            <specular r="0.6" g="0.6" b="0.1" a="1" />
             <shininess value="20" />
         </material>
         
@@ -217,7 +224,7 @@
             </transformation>
 			
 			<materials>
-                <material id="inherit" />
+                <material id="light" />
             </materials>
 			
 			<texture id="none" />
@@ -233,7 +240,6 @@
 		<component id="Comet1">
 		
 			<transformation>	
-				<translate x="0" y ="0" z ="0"/>
             </transformation>
 			
 			<materials>
@@ -294,7 +300,8 @@
             </transformation>
 			
 			<materials>
-                <material id="inherit" />
+                <material id="light" />
+				<material id="light2" />
             </materials>
 			
 			<texture id="cometHeadTexture" />
@@ -311,7 +318,7 @@
             </transformation>
 			
 			<materials>
-                <material id="inherit" />
+				<material id="inherit" />
             </materials>
 			
 			<texture id="cometTailTexture" />
@@ -524,6 +531,7 @@
             </transformation>
        
 			<materials>
+				<material id="shiny" />
 				<material id="matt1" />
 				<material id="matt2" />
 				<material id="matt3" />
