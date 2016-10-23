@@ -29,16 +29,15 @@ XMLscene.prototype.init = function (application) {
 
 /**
  * Init Lights.
- * Percorre a lista de luzes lidas no parser e inicializa-as com a cena e o id para a light[i] respetiva.
- * A inicializacao individual e feita em MyLight.
- * Tambem cria 8 booleanos (numero maximo de luzes) para suportar a interface on/off.
+ * For each light processed by the parser it initializes them  with the scene and the id for light[i]
+ * The individual initialization is done on the MyLight
+ * It also creates 8 booleans (max number of lights) that the interface on/off supports
  */ 
 XMLscene.prototype.initLights = function () {
 
-	//percorre as luzes, inicializa-as, atualiza-as e adiciona-as a interface
     for (var i = 0; i < this.graph.lightsList.length; i++) 
 	{
-    	this.graph.lightsList[i].init(this,i);	//inicializacao das luzes
+    	this.graph.lightsList[i].init(this,i);	//individual initialization
 
 		this.lights[i].update();				//update
     }
@@ -46,8 +45,7 @@ XMLscene.prototype.initLights = function () {
 
 /**
  * Init materials.
- * Para cada material interpretado pelo parser MySceneGraph, e inicializada a aparencia do material.
- * A aparencia e inicializada pelo metodo init(scene) do objeto MyMaterial
+ * For each material processed by the parser calls the init function of MyMaterial
  */
 XMLscene.prototype.initMaterials = function () {
 
@@ -58,8 +56,7 @@ XMLscene.prototype.initMaterials = function () {
 
 /**
  * Init textures.
- * Para cada textura interpretada pelo parser MySceneGraph, e inicializada a aparencia respetiva.
- * A aparencia e inicializada pelo metodo init(scene) do objeto MyTexture
+ * For each texture processed by the parser it calls the function init from MyTexture
  */
 XMLscene.prototype.initTextures = function () {
 	
@@ -70,12 +67,12 @@ XMLscene.prototype.initTextures = function () {
 
 /**
  * Init textures.
- * Procura a camara default e inicializa-a.
+ * Search for the default camera ant initializes it
  */
 XMLscene.prototype.initCamera = function () {
-	this.numCamera = 0; 	//informacao sobre a camara atual 
+	this.numCamera = 0; 	//actual camera
 	
-	//camara inicial
+	//For each perspective...
 	for (var [id, value] of this.graph.perspectiveList){
 		if(value.isDefault()){
 			this.camera = new CGFcamera(value.angle, value.near, value.far, value.getFromVec(), value.getToVec());
@@ -89,8 +86,8 @@ XMLscene.prototype.initCamera = function () {
 
 /**
  * Update Lights.
- * Metodo chamado a cada display da cena. Verifica o estado de cada booleano.
- * Se o booleno respetivo da light estiver a true, a luz e ligada, se nao e desligada.
+ * Method called every scene display.
+ * Checks the status of every boolean. If its set to true then the light is switch on or otherwise.
  */
 XMLscene.prototype.updateLights = function() {
 	
@@ -107,8 +104,8 @@ XMLscene.prototype.updateLights = function() {
 
 /**
  * Update Materials.
- * Metodo invocado pela interface sempre que e pressionada a tecla m/M.
- * Para cada componente incrementa o seu material index, fazendo com que, na lista dos seus materiais, seja feito o display do seguinte.
+ * Method called by the interface each time the keys m/M are pressed.
+ * For each component, the material index is incremented.
  */
 XMLscene.prototype.updateMaterials = function () {
 
@@ -119,9 +116,8 @@ XMLscene.prototype.updateMaterials = function () {
 
 /**
  * Update Camera.
- * Metodo invocado pela interface sempre que pressionada a tecla v/V.
- * Incrementa o numCamera e procura na lista das perspetivas a que contem o numero respetivo.
- * De seguida atualiza a camara.
+ * Method called by the interface each time the keys v/V are pressed.
+ * Each time the numCamera is incrementes and searches in the perspectiveList the one with the numCamera number.
  */
 XMLscene.prototype.updateCamera = function () {
 	
@@ -142,7 +138,8 @@ XMLscene.prototype.updateCamera = function () {
 
 /**
  * Default appearance.
- * Coloca valores default na cena e atualiza a global ambient light e limpa a cor com os valores interpretads no parser.
+ * Puts the default values in the scene and updates the global ambient light.
+ * Also updates the color values interpreted by the parser.
  */
 XMLscene.prototype.setDefaultAppearance = function () {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
@@ -182,32 +179,34 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 /**
  * Display Components.
- * Metodo que faz o display de cada componente. Recebe a componente que sera feito o display, bem como os materiais e texturas do antecessor.
- * Comeca por aplicar a transformada. De seguida interpreta os materiais e as texturas. Se forem do tipo 'inherit', recebem os materiais/textura do antecessor.
- * Aplica o material e a textura a cena, e cria as primitivas. 
- * Chama-se recursivamente com o componente seguinte da lista dos seus filhos.
+ * Method that displays a certain component.
+ * Recieves the components to be displayed and the materials and texture of its ancestor.
+ * Starts by applying the transformation matrix. 
+ * Then interprets the materials and texture. It they are "inherit" then the component recieves them form the ancestor.
+ * The correct texture and material is applyed.
+ * The primitives are created.
+ * It calls recursivelly (the following component of its child components)
  */
 XMLscene.prototype.displayComponents = function (component, materials, texture) {
 
 	this.pushMatrix();
 
-	//recebe a transformacao e multiplica na cena
+	//Transformation matrix
 	this.multMatrix(component.getTransformation().getMatrix());
 	
-	//recebe os materiais, se 'inherit' recebe o do antecessor.
+	//Materials
 	//var currMaterial = component.getCurrMaterial();
 	if(component.getCurrMaterial() == "inherit")
 	{
 		component.setMaterials(materials);
 	}
 
-	//appearance associada ao material
+	//appearance associated to the material
 	var appearance = component.getCurrMaterial().getAppearance();
 
-	//recebe as texturas
+	//texture
 	var newTexture = component.getTexture();
 	
-	// se 'inherit' recebe a textura do antecessor
 	if(newTexture == "inherit")
 	{
 		newTexture = texture;
@@ -215,20 +214,22 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 	
 	var lS = 1;
 	var lT = 1;
+
 	var textAppearance = null;
-	//se nao for 'none' atualiza a aparencia
+	
+	//if not 'none' updates the appearance
 	if(newTexture != "none")
 	{
-		textAppearance = newTexture.getAppearance();	//aparencia da textura
+		textAppearance = newTexture.getAppearance();	//textAppearance
 		lS = newTexture.getLengthS();
 		lT = newTexture.getLengthT();
 	}
 	
-	//aplica o material e a textura a cena
+	//Application of the material and texture
 	appearance.setTexture(textAppearance);
 	appearance.apply();
 
-	//desenha as primitivas de acordo com a data recebida
+	//Draws the primitives
 	var primitives = component.getPrimitives();
 	for (var i = 0; i < primitives.length; i++)
 	{
@@ -256,7 +257,7 @@ XMLscene.prototype.displayComponents = function (component, materials, texture) 
 		}
 	}
 
-	//chama o proximo componente recursivamente
+	//next child component
 	var components = component.getComponentsChilds();
 	for (var i = 0; i < components.length; i++)
 	{
@@ -295,7 +296,7 @@ XMLscene.prototype.display = function () {
 		//update lights
 		this.updateLights();
 
-		//leitura de componentes
+		//Processes the components
 		this.displayComponents(this.graph.getRoot(), null,null);
 	}
 };
