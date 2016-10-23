@@ -1049,7 +1049,7 @@ MySceneGraph.prototype.isChildrensDefined = function() {
 
 	for (var [id, value] of this.componentsList) 
 	{
-		var childrens = value.getComponentsChilds();	//lista de todos os filhos (components)
+		var childrens = value.getComponentsChilds();	//lista de todos os filhos (components)		
   		for(var j = 0; j < childrens.length; j++)
 		{
 			//o id do filho nao esta no map componentsList

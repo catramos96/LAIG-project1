@@ -6,6 +6,7 @@
      this.defined = defined;
      this.materialIndex = 0;
      this.materials = [];
+	 this.components = [];
  }
 
  /**
