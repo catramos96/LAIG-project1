@@ -1049,19 +1049,10 @@ MySceneGraph.prototype.isChildrensDefined = function() {
 
 	for (var [id, value] of this.componentsList) 
 	{
-		var childrens = value.getComponentsChilds();	//lista de todos os filhos (components)		
-  		for(var j = 0; j < childrens.length; j++)
-		{
-			//o id do filho nao esta no map componentsList
-			if(!this.componentsList.has(childrens[j].getId()))	
-				return false;
-			// o filho esta na lista mas nao esta definido 
-			//(foi so criado um component com esse id mas nao esta preenchido com qualquer informacao)
-			if(!this.componentsList.get(childrens[j].getId()).isDefined()) 
-				return false;
-		}
+		if(!value.isDefined())	//foi colocado um elemento não definido
+			return false;
 	}
-	return true; //percorre tudo sem qualquererro
+	return true; //percorre tudo sem qualquer erro
 }
 
 /**
