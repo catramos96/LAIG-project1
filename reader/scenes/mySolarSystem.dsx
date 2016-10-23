@@ -101,18 +101,18 @@
     <materials>
 
         <material id="light" >
-            <emission r="1" g="1" b="1" a="100" />
-            <ambient r="1" g="1" b="1" a="100" />
-            <diffuse r="1" g="1" b="1" a="100" />
-            <specular r="1" g="1" b="1" a="100" />
+            <emission r="1" g="1" b="1" a="1" />
+            <ambient r="1" g="1" b="1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
             <shininess value="100" />
         </material>
 		
 		<material id="light2" >
-            <emission r="1" g="1" b="0" a="100" />
-            <ambient r="1" g="1" b="0" a="100" />
-            <diffuse r="1" g="1" b="0" a="100" />
-            <specular r="1" g="1" b="0" a="100" />
+            <emission r="1" g="1" b="0" a="1" />
+            <ambient r="1" g="1" b="0" a="1" />
+            <diffuse r="1" g="1" b="0" a="1" />
+            <specular r="1" g="1" b="0" a="1" />
             <shininess value="100" />
         </material>
 		
