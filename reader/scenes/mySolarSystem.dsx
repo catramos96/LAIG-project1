@@ -94,7 +94,7 @@
         <texture id="spaceshipTexture" file="../resources/spaceship.png" length_s="1" length_t="1" />
         <texture id="metalTexture" file="../resources/metal.jpg" length_s="1" length_t="1" />
 		<texture id="cometHeadTexture" file="../resources/cometa.jpg" length_s="1" length_t="1" />
-		<texture id="cometTailTexture" file="../resources/cauda.jpg" length_s="0.1" length_t="0.1" />
+		<texture id="cometTailTexture" file="../resources/cauda.jpg" length_s="0.4" length_t="0.4" />
         
     </textures>
 

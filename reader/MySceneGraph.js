@@ -1111,7 +1111,9 @@ MySceneGraph.prototype.hasCycles = function(atualComponent, visitedNodes) {
 	var list = atualComponent.getComponentsChilds();
 	for(var j = 0; j < list.length; j++)
 	{
-		this.hasCycles(atualComponent,visitedNodes);
+		if(this.hasCycles(list[j],visitedNodes))
+			return true;
+		visitedNodes.pop();
 	}
 	
 	return false; //retorna falso se nao tiver ciclos

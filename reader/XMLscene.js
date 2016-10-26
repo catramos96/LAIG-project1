@@ -164,8 +164,7 @@ XMLscene.prototype.setDefaultAppearance = function () {
  * As loading is asynchronous, this may be called already after the application has started the run loop.
  * Faz as inicializacoes que requerem informacoes da leitura do parser.
  */
-XMLscene.prototype.onGraphLoaded = function () 
-{  
+XMLscene.prototype.onGraphLoaded = function () {  
 	this.axis = new CGFaxis(this, this.graph.getGlobals().getAxisLength(),0.05);
 
 	this.initLights();
